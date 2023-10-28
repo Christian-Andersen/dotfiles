@@ -145,13 +145,12 @@ require('lazy').setup({
   },
 
   {
-    -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help indent_blankline.txt`
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
+    {
+      -- Add indentation guides even on blank lines
+      "lukas-reineke/indent-blankline.nvim",
+      main = "ibl",
+      opts = {
+      },
     },
   },
 
@@ -248,11 +247,19 @@ vim.o.termguicolors = true
 -- [[ Basic Keymaps ]]
 
 -- Keymap for running python file
-vim.keymap.set({ 'n', 'i' }, '<F5>', '<Escape>:w<CR>:!tmux send-keys -t \\! "python %" C-m<CR><Escape>',
-  { noremap = true, silent = true })
+vim.keymap.set({ 'n', 'i' }, '<F5>', function()
+  vim.api.nvim_command('w')
+  vim.api.nvim_command('!tmux send-keys -t \\! "python %" C-m')
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
+end, { noremap = true, silent = true })
 
--- Keymap for saving
-vim.keymap.set({ 'n', 'i' }, '<C-s>', '<Escape>:Format<CR>:w<CR>', { noremap = true, silent = true })
+-- Keymap for formatting and saving on python files
+vim.keymap.set({ 'n', 'i' }, '<C-s>', function()
+  if vim.bo.filetype == 'python' then
+    vim.api.nvim_command('%!autopep8 -')
+  end
+  vim.api.nvim_command('w')
+end, { noremap = true, silent = true })
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -430,32 +437,17 @@ end
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
-  -- tsserver = {},
-
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
     },
   },
-  pylsp = {
-    pylsp = {
-      plugins = {
-        pycodestyle = {
-          ignore = { 'E501' },
-        },
-      },
-    },
-  },
+  pyright = {},
 }
 
 -- Setup neovim lua configuration
 require('neodev').setup()
-
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)

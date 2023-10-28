@@ -92,8 +92,22 @@
         {
           "foreground": "#FFDE57",
           "style": "plain",
-          "template": "\u2570\u2500 {{if .Root}}#{{else}}${{end}}",
+          "template": "\u2570\u2500 ",
           "type": "text"
+        },
+        {
+          "foreground": "#FFDE57",
+          "style": "plain",
+          "template": "{{if .Root}}#{{else}}${{end}}",
+          "properties": {
+            "always_enabled": true,
+            "shell": "bash",
+            "command": "echo $TERM"
+          },
+          "foreground_templates": [
+            "{{if contains \"screen\" .Output}}#00ff00{{end}}"
+          ],
+          "type": "command"
         }
       ],
       "type": "prompt"
