@@ -248,15 +248,19 @@ vim.o.termguicolors = true
 
 -- Keymap for running python file
 vim.keymap.set({ 'n', 'i' }, '<F5>', function()
+  vim.api.nvim_input('<Esc>')
   vim.api.nvim_command('w')
   vim.api.nvim_command('!tmux send-keys -t \\! "python %" C-m')
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
+  vim.api.nvim_input('<Esc>')
 end, { noremap = true, silent = true })
 
 -- Keymap for formatting and saving on python files
 vim.keymap.set({ 'n', 'i' }, '<C-s>', function()
+  vim.api.nvim_input('<Esc>')
   if vim.bo.filetype == 'python' then
+    local lineNum = vim.api.nvim_win_get_cursor(0)
     vim.api.nvim_command('%!autopep8 -')
+    vim.api.nvim_win_set_cursor(0, lineNum)
   end
   vim.api.nvim_command('w')
 end, { noremap = true, silent = true })

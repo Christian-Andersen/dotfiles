@@ -20,7 +20,7 @@ fi
 cd ~/c/"$selected_dir"
 
 # Create a new tmux session with the selected directory name and open nvim
-tmux new-session -d -s "$selected_dir" "nvim $file_to_open"
+tmux new-session -d -s "$selected_dir"
 
 # Split the pane horizontally
 tmux split-window -h
