@@ -1,3 +1,12 @@
+-- Make F5 run python code
+vim.keymap.set({ "n", "i", "v" }, "<F5>", function()
+	vim.api.nvim_input("<cmd>w<CR>")
+	vim.api.nvim_command("!tmux send-keys -t \\! C-c")
+	vim.api.nvim_command("!tmux send-keys -t \\! C-l")
+	vim.api.nvim_command('!tmux send-keys -t \\! "python %" C-m')
+	vim.api.nvim_input("<Esc>")
+end, { noremap = true, silent = true })
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -70,9 +79,6 @@ vim.opt.scrolloff = 10
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
-
--- Make F5 run python code
-vim.keymap.set({ "n", "i", "v" }, "<F5>", "<cmd>w<CR><cmd>!python %<CR>")
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
