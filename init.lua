@@ -1,3 +1,6 @@
+-- Make CTRL-S save
+vim.keymap.set({ "n", "i", "v" }, "<C-s>", "<cmd>w<CR>")
+
 -- Make F5 run python code
 vim.keymap.set({ "n", "i", "v" }, "<F5>", function()
 	vim.api.nvim_input("<cmd>w<CR>")
