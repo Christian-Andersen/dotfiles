@@ -9,24 +9,11 @@ if [ -z "$selected_dir" ]; then
     exit 1
 fi
 
-# Check if main.py exists in the selected directory
-if [ -e ~/c/"$selected_dir"/main.py ]; then
-    file_to_open="main.py"
-else
-    file_to_open=""
-fi
-
 # Change to the selected directory
 cd ~/c/"$selected_dir"
 
 # Create a new tmux session with the selected directory name and open nvim
 tmux new-session -d -s "$selected_dir"
-
-# Split the pane horizontally
-tmux split-window -h
-
-# Select the left pane
-tmux select-pane -L
 
 # Attach to the newly created tmux session
 tmux attach-session -t "$selected_dir"
