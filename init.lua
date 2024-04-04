@@ -3,10 +3,10 @@ vim.keymap.set({ "n", "i", "v" }, "<C-s>", "<cmd>w<CR>", { noremap = true, silen
 
 -- Make F5 run python code
 vim.keymap.set({ "n", "i", "v" }, "<F5>", function()
-	vim.api.nvim_input("<cmd>w<CR>")
-	vim.api.nvim_command("!tmux send-keys -t \\! C-c")
-	vim.api.nvim_command("!tmux send-keys -t \\! C-l")
-	vim.api.nvim_command('!tmux send-keys -t \\! "python %" C-m')
+	vim.cmd("w")
+	vim.cmd("!tmux send-keys -t \\! C-c")
+	vim.cmd("!tmux send-keys -t \\! C-l")
+	vim.cmd('!tmux send-keys -t \\! "python %" C-m')
 	vim.api.nvim_input("<Esc>")
 end, { noremap = true, silent = true })
 
@@ -28,7 +28,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = "a"
