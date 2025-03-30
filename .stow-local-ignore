@@ -1,5 +1,6 @@
 \.git
 \.gitignore
+\.gitmodules
 
 ftp_backup.sh
 lady.png
