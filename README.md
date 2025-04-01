@@ -20,8 +20,9 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 ## Install Neovim
 [Grab the .deb package](https://github.com/neovim/neovim-releases/releases/latest)
 ```
-https://github.com/neovim/neovim-releases/releases/latest/download/nvim-linux-x86_64.deb
-dpkg -i nvim-linux-x86_64.deb
+wget https://github.com/neovim/neovim-releases/releases/latest/download/nvim-linux-x86_64.deb
+sudo dpkg -i nvim-linux-x86_64.deb
+rm nvim-linux-x86_64.deb
 ```
 
 ## Install UV
