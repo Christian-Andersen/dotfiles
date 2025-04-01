@@ -2,6 +2,7 @@
 \.gitignore
 \.gitmodules
 
+README.md
 ftp_backup.sh
 lady.png
 
