@@ -35,10 +35,10 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 ```
 
 ## Stow
-Run first `rm .zshrc` first for stow to work.
+Run first `rm ~/.zshrc` first for stow to work.
 ```
 mkdir -p ~/.config/nvim
-cd dotfiles && stow .; cd ~
+cd ~/dotfiles && stow .; cd ~
 ```
 
 ## Install UV
