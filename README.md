@@ -3,6 +3,7 @@
 ## Update Debian/Ubuntu
 ```
 sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
+sudo dpkg-reconfigure tzdata
 ```
 
 ## Install all dependencies
