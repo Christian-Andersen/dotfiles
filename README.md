@@ -7,7 +7,7 @@ sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
 
 ## Install all dependencies
 ```
-sudo apt install gcc unzip luarocks ripgrep npm python3-venv python3-pip fd-find python3-pynvim xclip fzf bat -y
+sudo apt install gcc curl unzip luarocks ripgrep npm python3-venv python3-pip fd-find python3-pynvim xclip fzf bat -y
 mkdir -p ~/.local/bin
 ln -s $(which batcat) ~/.local/bin/bat
 ln -s $(which fdfind) ~/.local/bin/fd
