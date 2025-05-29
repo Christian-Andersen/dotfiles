@@ -42,7 +42,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 ## Stow
 You may need to remove ~/.zshrc first. This needs the directories to be made first.
 ```
-sudo apt install stow -y
 mkdir -p ~/.config/nvim
 cd dotfiles && stow . && cd ~
 ```
