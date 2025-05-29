@@ -43,7 +43,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 You may need to remove ~/.zshrc first. This needs the directories to be made first.
 ```
 mkdir -p ~/.config/nvim
-cd dotfiles && stow . && cd ~
+cd dotfiles && stow .; cd ~
 ```
 
 ## Install UV
