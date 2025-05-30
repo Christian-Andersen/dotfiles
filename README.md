@@ -28,20 +28,14 @@ Else just clone it.
 git clone --recursive https://github.com/Christian-Andersen/dotfiles.git
 ```
 
-## Install zsh
+## Install zsh and oh-my-zsh
 ```
 sudo apt install zsh -y
-chsh -s $(which zsh)
-```
-Now reload your shell.
-
-## Install oh-my-zsh
-```
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
 ## Stow
-You may need to remove ~/.zshrc first. This needs the directories to be made first.
+Remove you .zshrc file first
 ```
 mkdir -p ~/.config/nvim
 cd dotfiles && stow .; cd ~
