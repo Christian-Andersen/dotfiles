@@ -35,7 +35,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 ```
 
 ## Stow
-Remove you .zshrc file first
+Run first `rm .zshrc` first for stow to work.
 ```
 mkdir -p ~/.config/nvim
 cd dotfiles && stow .; cd ~
