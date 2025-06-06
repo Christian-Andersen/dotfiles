@@ -8,7 +8,7 @@ sudo dpkg-reconfigure tzdata
 
 ## Install all dependencies
 ```
-sudo apt install curl stow bat gcc unzip luarocks ripgrep npm fd-find xclip fzf python3-venv python3-pip python3-pynvim --no-install-recommends neovim neovim-runtime -y
+sudo apt install curl stow bat gcc unzip luarocks ripgrep npm fd-find xclip fzf python3-venv python3-pip -y
 mkdir -p ~/.local/bin
 ln -s $(which batcat) ~/.local/bin/bat
 ln -s $(which fdfind) ~/.local/bin/fd
@@ -53,4 +53,5 @@ source ~/.zshrc
 wget https://github.com/neovim/neovim-releases/releases/latest/download/nvim-linux-x86_64.deb
 sudo dpkg -i nvim-linux-x86_64.deb
 rm nvim-linux-x86_64.deb
+sudo apt install python3-pynvim -y
 ```
