@@ -9,3 +9,21 @@ export UV_MANAGED_PYTHON=true
 function py() {
     uv run -- $@
 }
+a() {
+    local current_dir="$(pwd)"
+    local venv_path
+    while true; do
+        venv_path="$current_dir/.venv/bin/activate"
+        if [[ -f "$venv_path" ]]; then
+            source "$venv_path"
+            echo "Virtual environment activated from: $current_dir/.venv"
+            return 0
+        fi
+        local parent_dir="$(dirname "$current_dir")"
+        if [[ "$parent_dir" == "$current_dir" ]]; then
+            echo "No virtual environment found."
+            return 1
+        fi
+        current_dir="$parent_dir"
+    done
+}
