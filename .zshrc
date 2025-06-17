@@ -13,6 +13,9 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 PATH=~/.local/bin:$PATH
 export UV_MANAGED_PYTHON=true
+function py() {
+    uv run -- $@
+}
 a() {
     local current_dir="$(pwd)"
     local venv_path
@@ -30,7 +33,6 @@ a() {
     done
 }
 alias t="tmux attach || tmux"
-alias py="uv run"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
