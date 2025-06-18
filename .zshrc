@@ -13,9 +13,6 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 PATH=~/.local/bin:$PATH
 export UV_MANAGED_PYTHON=true
-function py() {
-    uv run -- $@
-}
 a() {
     local current_dir="$(pwd)"
     local venv_path
@@ -32,7 +29,11 @@ a() {
         current_dir="$parent_dir"
     done
 }
-alias t="tmux attach || tmux"
+py() {
+    uv run -- $@
+}
+alias ipy='uv run ipython -i'
+alias t='tmux attach || tmux'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -42,3 +43,4 @@ alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
 
 eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
+eval "$(zoxide init zsh)"
