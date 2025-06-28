@@ -32,7 +32,10 @@ a() {
 py() {
     uv run -- $@
 }
-alias ipy='uv run ipython -i'
+ipy() {
+    uv run -- ipython -i $@
+}
+alias c='cd ~/c && ls -lAh'
 alias t='tmux attach || tmux'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
