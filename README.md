@@ -40,8 +40,7 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$
 ## Stow
 Run first `rm ~/.zshrc` first for stow to work.
 ```
-mkdir -p ~/.config/nvim
-cd ~/dotfiles && stow .; cd ~
+cd ~/dotfiles && stow --no-folding .; cd ~
 ```
 
 ## Install UV
