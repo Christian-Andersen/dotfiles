@@ -10,14 +10,16 @@
 
 [Zoxide](https://github.com/ajeetdsouza/zoxide)
 
+[Eza](https://github.com/eza-community/eza)
+
 # Meh
 
 [Nushell](https://github.com/nushell/nushell)
 
+[Fish](https://github.com/fish-shell/fish-shell) - prefer ZSH for now
+
 # Yet to Try
 
-Fish
-Eza
 Xh
 Zellij
 Gitui
