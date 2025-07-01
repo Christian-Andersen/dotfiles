@@ -3,8 +3,11 @@
 # Using
 
 Ripgrep
+
 Fd
+
 Bat
+
 Zoxide
 
 # Meh
