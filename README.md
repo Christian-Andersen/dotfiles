@@ -1,6 +1,6 @@
 # Tools
 
-# Using
+# Yes
 
 [Ripgrep](https://github.com/BurntSushi/ripgrep)
 
@@ -12,19 +12,27 @@
 
 [Eza](https://github.com/eza-community/eza)
 
-# Meh
+[lazygit](https://github.com/jesseduffield/lazygit)
+
+[du-dust](https://github.com/bootandy/dust?tab=readme-ov-file)
+
+[dua](https://github.com/Byron/dua-cli)
+
+# Maybe
+
+[Gitui](https://github.com/gitui-org/gitui)
+
+# No
 
 [Nushell](https://github.com/nushell/nushell)
 
 [Fish](https://github.com/fish-shell/fish-shell) - prefer ZSH for now
 
+[Xh](https://github.com/ducaale/xh) - Seems unnecessary/not enough use cases
+
 # Yet to Try
 
-Xh
 Zellij
-Gitui
-du-dust
-dua
 starship
 yazi
 hyperfine
