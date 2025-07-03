@@ -2,6 +2,12 @@
 
 ## Yes
 
+[Zellij](https://github.com/zellij-org/zellij)
+
+[Fish](https://github.com/fish-shell/fish-shell)
+
+[starship](https://github.com/starship/starship)
+
 [Ripgrep](https://github.com/BurntSushi/ripgrep)
 
 [Fd](https://github.com/sharkdp/fd)
@@ -14,6 +20,8 @@
 
 [lazygit](https://github.com/jesseduffield/lazygit)
 
+# Niche
+
 [du-dust](https://github.com/bootandy/dust?tab=readme-ov-file)
 
 [dua](https://github.com/Byron/dua-cli)
@@ -22,21 +30,11 @@
 
 [tokei](https://github.com/XAMPPRocky/tokei)
 
-## Maybe
-
-[Zellij](https://github.com/zellij-org/zellij)
-
-[Fish](https://github.com/fish-shell/fish-shell)
-
 ## Broken
 
 [yazi](https://github.com/sxyazi/yazi)
 
 [Gitui](https://github.com/gitui-org/gitui)
-
-## Yet to Try
-
-[starship](https://github.com/starship/starship)
 
 # Install Guide
 
