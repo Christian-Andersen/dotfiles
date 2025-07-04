@@ -2,17 +2,17 @@
 
 # Using
 
-Ripgrep
+[Ripgrep](https://github.com/BurntSushi/ripgrep)
 
-Fd
+[Fd](https://github.com/sharkdp/fd)
 
-Bat
+[Bat](https://github.com/sharkdp/bat)
 
-Zoxide
+[Zoxide](https://github.com/ajeetdsouza/zoxide)
 
 # Meh
 
-Nushell
+[Nushell](https://github.com/nushell/nushell)
 
 # Yet to Try
 
