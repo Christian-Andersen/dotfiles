@@ -44,6 +44,10 @@ alias t='tmux attach || tmux'
 alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
 alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
 
+alias ls='eza'
+alias l='ls -lAh --group --git'
+alias lsize='l --total-size --sort=size'
+
 eval "$(uv generate-shell-completion zsh)"
 eval "$(uvx --generate-shell-completion zsh)"
 eval "$(zoxide init zsh)"
