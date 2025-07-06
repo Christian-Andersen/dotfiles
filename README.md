@@ -22,6 +22,14 @@
 
 [Gitui](https://github.com/gitui-org/gitui)
 
+[Zellij](https://github.com/zellij-org/zellij)
+
+[yazi](https://github.com/sxyazi/yazi)
+
+[hyperfine](https://github.com/sharkdp/hyperfine)
+
+[tokei](https://github.com/XAMPPRocky/tokei)
+
 # No
 
 [Nushell](https://github.com/nushell/nushell)
@@ -32,28 +40,7 @@
 
 # Yet to Try
 
-Zellij
-starship
-yazi
-hyperfine
-evil-helix
-bacon
-cargo-info
-fselect
-ncspot
-rusty-man
-delta
-ripgrep-all
-tokei
-wiki-tui
-just
-mask
-mprocs
-presenterm
-kondo
-bob-nvim
-rtx
-espanso
+[starship](https://github.com/starship/starship)
 
 
 # Install Guide
