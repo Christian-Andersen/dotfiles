@@ -1,9 +1,9 @@
 # --- Environment Variables ---
 set -x EDITOR nvim
 set -x VISUAL nvim
+set -x UV_MANAGED_PYTHON true
 set -gx PATH ~/.local/bin $PATH
 set -gx PATH ~/.cargo/bin $PATH
-set -x UV_MANAGED_PYTHON true
 
 function c
     cd ~/c && eza --long --header --group --git
