@@ -18,17 +18,17 @@
 
 [dua](https://github.com/Byron/dua-cli)
 
-# Maybe
-
-[Gitui](https://github.com/gitui-org/gitui)
-
-[Zellij](https://github.com/zellij-org/zellij)
-
 [yazi](https://github.com/sxyazi/yazi)
 
 [hyperfine](https://github.com/sharkdp/hyperfine)
 
 [tokei](https://github.com/XAMPPRocky/tokei)
+
+# Maybe
+
+[Gitui](https://github.com/gitui-org/gitui)
+
+[Zellij](https://github.com/zellij-org/zellij)
 
 # No
 
