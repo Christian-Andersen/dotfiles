@@ -1,6 +1,6 @@
 # Tools
 
-# Yes
+## Yes
 
 [Ripgrep](https://github.com/BurntSushi/ripgrep)
 
@@ -24,13 +24,13 @@
 
 [tokei](https://github.com/XAMPPRocky/tokei)
 
-# Maybe
+## Maybe
 
 [Gitui](https://github.com/gitui-org/gitui)
 
 [Zellij](https://github.com/zellij-org/zellij)
 
-# No
+## No
 
 [Nushell](https://github.com/nushell/nushell)
 
@@ -38,7 +38,7 @@
 
 [Xh](https://github.com/ducaale/xh) - Seems unnecessary/not enough use cases
 
-# Yet to Try
+## Yet to Try
 
 [starship](https://github.com/starship/starship)
 
