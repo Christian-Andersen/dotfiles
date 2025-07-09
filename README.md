@@ -18,30 +18,25 @@
 
 [dua](https://github.com/Byron/dua-cli)
 
-[yazi](https://github.com/sxyazi/yazi)
-
 [hyperfine](https://github.com/sharkdp/hyperfine)
 
 [tokei](https://github.com/XAMPPRocky/tokei)
 
 ## Maybe
 
-[Gitui](https://github.com/gitui-org/gitui)
-
 [Zellij](https://github.com/zellij-org/zellij)
 
-## No
+[Fish](https://github.com/fish-shell/fish-shell)
 
-[Nushell](https://github.com/nushell/nushell)
+## Broken
 
-[Fish](https://github.com/fish-shell/fish-shell) - prefer ZSH for now
+[yazi](https://github.com/sxyazi/yazi)
 
-[Xh](https://github.com/ducaale/xh) - Seems unnecessary/not enough use cases
+[Gitui](https://github.com/gitui-org/gitui)
 
 ## Yet to Try
 
 [starship](https://github.com/starship/starship)
-
 
 # Install Guide
 
