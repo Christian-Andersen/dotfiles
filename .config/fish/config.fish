@@ -2,6 +2,7 @@
 set -x EDITOR nvim
 set -x VISUAL nvim
 set -gx PATH ~/.local/bin $PATH
+set -gx PATH ~/.cargo/bin $PATH
 set -x UV_MANAGED_PYTHON true
 
 # --- Functions (useful in both interactive and non-interactive contexts if called by scripts) ---
