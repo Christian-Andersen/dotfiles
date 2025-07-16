@@ -12,6 +12,7 @@ source $ZSH/oh-my-zsh.sh
 export EDITOR="nvim"
 export VISUAL="nvim"
 PATH=~/.local/bin:$PATH
+PATH=~/.cargo/bin:$PATH
 export UV_MANAGED_PYTHON=true
 a() {
     local current_dir="$(pwd)"
