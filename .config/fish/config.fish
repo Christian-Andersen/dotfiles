@@ -32,13 +32,7 @@ end
 
 # --- Interactive-only configurations ---
 if status is-interactive
-   set fish_greeting
-    # --- Aliases ---
-    alias c 'cd ~/c; and ls -lAh'
-    alias t 'tmux attach; or tmux'
-    alias ls 'eza'
-    alias l 'ls -lAh --group --git'
-    alias lsize 'l --total-size --sort=size'
+    set fish_greeting
 
     # Global aliases for help
     abbr -a --position anywhere -- --help '--help | bat -plhelp'
