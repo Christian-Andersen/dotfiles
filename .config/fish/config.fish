@@ -30,9 +30,20 @@ function ipy
     uv run -- ipython -i $argv
 end
 
+function c
+    cd ~/c && eza --long --header --group --git
+end
+
 # --- Interactive-only configurations ---
 if status is-interactive
     set fish_greeting
+
+    # Abbreviations
+    abbr -a ls eza
+    abbr -a l eza --long --header --group --git
+    abbr -a la eza --all --long --header --group --git
+    abbr -a lsize eza --all --long --header --group --git --total-size --sort=size
+    abbr -a tree eza --tree --long --header --group --git --total-size --sort=size
 
     # Global aliases for help
     abbr -a --position anywhere -- --help '--help | bat -plhelp'
