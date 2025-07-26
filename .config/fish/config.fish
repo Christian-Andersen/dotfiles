@@ -21,7 +21,13 @@ if status is-interactive
     abbr -a tree eza --tree --long --header --group --git --total-size --sort=size
     abbr -a a source .venv/bin/activate.fish
     abbr -a py uv run --
-    abbr -a ipy ipy run -- ipython -i
+    abbr -a ipy uv run -- ipython -i
+    abbr -a pc pre-commit
+    abbr -a gs git status
+    abbr -a gc git commit
+    abbr -a gf git fetch
+    abbr -a gp git pull
+    abbr -a gP git push
 
     # Global aliases for help
     abbr -a --position anywhere -- --help '--help | bat -plhelp'
