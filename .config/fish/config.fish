@@ -14,6 +14,7 @@ if status is-interactive
     set fish_greeting
 
     # Abbreviations
+    abbr z zellij attach --create main
     abbr -a ls eza
     abbr -a l eza --long --header --group --git
     abbr -a la eza --all --long --header --group --git
@@ -22,7 +23,9 @@ if status is-interactive
     abbr -a a source .venv/bin/activate.fish
     abbr -a py uv run --
     abbr -a ipy uv run -- ipython -i
+    abbr -a p sudo pacman
     abbr -a pc pre-commit
+    abbr -a lg lazygit
     abbr -a gs git status
     abbr -a gc git commit
     abbr -a gf git fetch
