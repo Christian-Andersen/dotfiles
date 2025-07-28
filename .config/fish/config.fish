@@ -20,7 +20,7 @@ if status is-interactive
     abbr -a la eza --all --long --header --group --git
     abbr -a lsize eza --all --long --header --group --git --total-size --sort=size
     abbr -a tree eza --tree --long --header --group --git --total-size --sort=size
-    abbr -a a source .venv/bin/activate.fish
+    abbr -a a . .venv/bin/activate.fish
     abbr -a py uv run --
     abbr -a ipy uv run -- ipython -i
     abbr -a p sudo pacman
