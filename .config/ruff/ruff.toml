@@ -1,9 +1,4 @@
 line-length = 120
 
-[lint]
-select = ["ALL"]
-ignore = ["COM812", "COM819", "T201", "ERA001", "S101"]
-
 [lint.pydocstyle]
 convention = "google"
-
