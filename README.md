@@ -40,7 +40,7 @@
 
 ## Install all dependencies
 ```sh
-sudo pacman -Syu --noconfirm neovim uv man curl stow bat base-devel gcc unzip luarocks ripgrep npm fd xclip fzf python-pip python-pynvim
+curl git stow
 ```
 
 ## Clone this Repo
@@ -59,4 +59,9 @@ git clone --recursive https://github.com/Christian-Andersen/dotfiles.git
 ## Stow
 ```sh
 cd ~/dotfiles && stow --no-folding .; cd ~
+```
+
+## Brew
+```sh
+/home/linuxbrew/.linuxbrew/bin/brew bundle --global
 ```
