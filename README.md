@@ -1,36 +1,10 @@
-# Tools
+  # Tools
 
 ## Yes
 
-[Zellij](https://github.com/zellij-org/zellij)
 
-[Fish](https://github.com/fish-shell/fish-shell)
 
-[starship](https://github.com/starship/starship)
 
-[Ripgrep](https://github.com/BurntSushi/ripgrep)
-
-[Fd](https://github.com/sharkdp/fd)
-
-[Bat](https://github.com/sharkdp/bat)
-
-[Zoxide](https://github.com/ajeetdsouza/zoxide)
-
-[Eza](https://github.com/eza-community/eza)
-
-[lazygit](https://github.com/jesseduffield/lazygit)
-
-# Niche
-
-[du-dust](https://github.com/bootandy/dust?tab=readme-ov-file)
-
-[dua](https://github.com/Byron/dua-cli)
-
-[hyperfine](https://github.com/sharkdp/hyperfine)
-
-[tokei](https://github.com/XAMPPRocky/tokei)
-
-## Broken
 
 [yazi](https://github.com/sxyazi/yazi)
 
