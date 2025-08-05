@@ -139,11 +139,13 @@ keybinds clear-defaults=true {
         }
     }
     shared {
-        bind "Alt q" { Quit; }
+        bind "Alt x" { CloseFocus; }
         bind "Alt f" { ToggleFocusFullscreen; }
-        bind "Alt n" { NewPane; }
-        bind "Alt i" { MoveTab "Left"; }
-        bind "Alt o" { MoveTab "Right"; }
+        bind "Alt n" { NewPane ; }
+        bind "Alt b" { NewPane "down"; }
+        bind "Alt w" { NewTab; }
+        bind "Alt q" { GoToPreviousTab; }
+        bind "Alt e" { GoToNextTab; }
         bind "Alt h" "Alt Left" { MoveFocusOrTab "Left"; }
         bind "Alt l" "Alt Right" { MoveFocusOrTab "Right"; }
         bind "Alt j" "Alt Down" { MoveFocus "Down"; }
@@ -246,7 +248,7 @@ load_plugins {
 //   - true (default)
 //   - false
 //
-// session_serialization false
+session_serialization false
 
 // Whether pane viewports are serialized along with the session, default is false
 // (Requires restart)
