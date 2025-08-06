@@ -40,7 +40,7 @@
 
 ## Install all dependencies
 ```sh
-sudo pacman -Syu --noconfirm neovim uv man curl stow bat gcc unzip luarocks ripgrep npm fd xclip fzf python-pip python-pynvim
+sudo pacman -Syu --noconfirm neovim uv man curl stow bat base-devel gcc unzip luarocks ripgrep npm fd xclip fzf python-pip python-pynvim
 ```
 
 ## Clone this Repo
