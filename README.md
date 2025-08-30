@@ -1,15 +1,3 @@
-  # Tools
-
-## Yes
-
-
-
-
-
-[yazi](https://github.com/sxyazi/yazi)
-
-[Gitui](https://github.com/gitui-org/gitui)
-
 # Install Guide
 
 ## Install all dependencies
@@ -38,4 +26,6 @@ cd ~/dotfiles && stow --no-folding .; cd ~
 ## Brew
 ```sh
 /home/linuxbrew/.linuxbrew/bin/brew bundle --global
+echo /home/linuxbrew/.linuxbrew/bin/fish | sudo tee --append /etc/shells
+chsh -s /home/linuxbrew/.linuxbrew/bin/fish
 ```
