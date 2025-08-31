@@ -40,7 +40,6 @@ if status is-interactive
     abbr -a a . .venv/bin/activate.fish
     abbr -a py uv run --
     abbr -a ipy uv run -- ipython -i
-    abbr -a p sudo pacman
     abbr -a pc pre-commit
     abbr -a lg lazygit
     abbr -a gs git status
