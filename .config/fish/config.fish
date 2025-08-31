@@ -31,7 +31,7 @@ if status is-interactive
     set fish_greeting
 
     # Abbreviations
-    abbr z zellij attach --create main
+    abbr -a z zellij attach --create main
     abbr -a ls eza
     abbr -a l eza --long --header --group --git
     abbr -a la eza --all --long --header --group --git
