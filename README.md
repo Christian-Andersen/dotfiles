@@ -24,7 +24,7 @@ Create an SSH key and add it do your [GitHub SSH keys](https://github.com/settin
 ssh-keygen -t ed25519 -C "@gmail.com"
 cat ~/.ssh/id_ed25519.pub
 ...
-git clone --recursive git@github.com:Christian-Andersen/dotfiles.git
+git clone git@github.com:Christian-Andersen/dotfiles.git
 ```
 Else just clone it.
 ```sh
