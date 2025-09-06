@@ -15,7 +15,7 @@ brew bundle dump --global --force --no-vscode
 
 ## Dependencies
 ```sh
-build-essential procps curl file git stow
+build-essential procps curl file git stow uidmap
 ```
 
 ## Clone this Repo
