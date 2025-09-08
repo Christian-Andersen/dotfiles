@@ -41,6 +41,8 @@ if status is-interactive
     abbr -a py uv run --
     abbr -a ipy uv run -- ipython -i
     abbr -a pc pre-commit
+    abbr -a au 'sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y'
+    abbr -a bu 'brew update && brew upgrade && brew cleanup'
     abbr -a lg lazygit
     abbr -a gs git status
     abbr -a gc git commit
