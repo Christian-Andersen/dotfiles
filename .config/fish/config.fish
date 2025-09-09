@@ -23,7 +23,7 @@ end
 # Functions
 
 function c
-    cd ~/c && eza --long --header --group --git
+    builtin cd ~/c && eza --long --header --group --git
 end
 
 # --- Interactive-only configurations ---
