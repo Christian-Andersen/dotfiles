@@ -39,7 +39,7 @@ if status is-interactive
     abbr -a tree eza --tree --long --header --group --git --total-size --sort=size
     abbr -a a . .venv/bin/activate.fish
     abbr -a py uv run --
-    abbr -a ipy uv run -- ipython -i
+    abbr -a ipy uv run --with ipython -- ipython -i
     abbr -a pc pre-commit
     abbr -a au 'sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y'
     abbr -a bu 'brew update && brew upgrade && brew cleanup'
