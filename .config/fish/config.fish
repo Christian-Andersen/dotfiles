@@ -32,6 +32,7 @@ if status is-interactive
 
     # Abbreviations
     abbr -a z zellij attach --create main
+    abbr -a j just
     abbr -a ls eza
     abbr -a l eza --long --header --group --git
     abbr -a la eza --all --long --header --group --git
