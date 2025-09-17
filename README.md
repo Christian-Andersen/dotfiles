@@ -1,16 +1,3 @@
-
-## Brew
-Intial setup
-```sh
-/home/linuxbrew/.linuxbrew/bin/brew bundle --global --cleanup
-echo /home/linuxbrew/.linuxbrew/bin/fish | sudo tee --append /etc/shells
-chsh -s /home/linuxbrew/.linuxbrew/bin/fish
-```
-Dump current setup
-```sh
-brew bundle dump --global --force --no-vscode
-```
-
 # Install Guide
 
 ## Dependencies
