@@ -3,6 +3,7 @@ set -x EDITOR nvim
 set -x VISUAL nvim
 set -x UV_MANAGED_PYTHON true
 fish_add_path --global --move --path ~/.local/bin
+fish_add_path --global --move --path ~/.cargo/bin
 # Homebrew
 set --global --export HOMEBREW_PREFIX "/home/linuxbrew/.linuxbrew"
 
@@ -20,10 +21,33 @@ if not contains "/home/linuxbrew/.linuxbrew/share/info" $INFOPATH
     set --global --export INFOPATH "/home/linuxbrew/.linuxbrew/share/info" $INFOPATH
 end
 
-# Functions
+# --- Functions ---
 
-function c
+function c --description 'Change to the coding directory and list it'
     builtin cd ~/c && eza --long --header --group --git
+end
+
+function t --description 'Create a random directory in /tmp and change to it'
+    set dir_path (mktemp -d -t XXXXXX)
+    if test $status -eq 0
+        echo "Created and changing to: $dir_path"
+        cd $dir_path
+    else
+        echo "Error: Could not create a temporary directory." >&2
+        return 1
+    end
+end
+
+function u --description 'Detect the system and update it'
+    if command -v pacman >/dev/null 2>&1
+        sudo pacman -Syu --noconfirm
+    end
+    if command -v apt >/dev/null 2>&1
+        sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y
+    end
+    if command -v brew >/dev/null 2>&1
+        brew update && brew upgrade && brew cleanup
+    end
 end
 
 # --- Interactive-only configurations ---
@@ -42,8 +66,6 @@ if status is-interactive
     abbr -a py uv run --
     abbr -a ipy uv run --with ipython -- ipython -i
     abbr -a pc pre-commit
-    abbr -a au 'sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y'
-    abbr -a bu 'brew update && brew upgrade && brew cleanup'
     abbr -a lg lazygit
     abbr -a gs git status
     abbr -a gc git commit
