@@ -1,84 +1,97 @@
-# --- Environment Variables ---
-set -x EDITOR nvim
-set -x VISUAL nvim
-set -x UV_MANAGED_PYTHON true
-fish_add_path --global --move --path ~/.local/bin
-fish_add_path --global --move --path ~/.cargo/bin
-# Homebrew
-set --global --export HOMEBREW_PREFIX "/home/linuxbrew/.linuxbrew"
+# ~/.config/fish/config.fish
+# This configuration is designed to be portable across different Linux systems.
 
-set --global --export HOMEBREW_CELLAR "/home/linuxbrew/.linuxbrew/Cellar"
+# ==============================================================================
+# Environment Variables
+# ==============================================================================
+set -gx EDITOR nvim
+set -gx VISUAL nvim
+set -gx UV_MANAGED_PYTHON true
 
-set --global --export HOMEBREW_REPOSITORY "/home/linuxbrew/.linuxbrew/Homebrew"
+fish_add_path --global --move ~/.local/bin
+fish_add_path --global --move ~/.cargo/bin
 
-fish_add_path --global --move --path "/home/linuxbrew/.linuxbrew/bin" "/home/linuxbrew/.linuxbrew/sbin"
-
-if test -n "$MANPATH[1]"
-    set --global --export MANPATH '' $MANPATH
+# --- Homebrew (Conditional) ---
+# This block only runs if Homebrew is found at its standard Linux path.
+if test -f /home/linuxbrew/.linuxbrew/bin/brew
+    /home/linuxbrew/.linuxbrew/bin/brew shellenv | source
 end
 
-if not contains "/home/linuxbrew/.linuxbrew/share/info" $INFOPATH
-    set --global --export INFOPATH "/home/linuxbrew/.linuxbrew/share/info" $INFOPATH
-end
 
-# --- Functions ---
+# ==============================================================================
+# Functions
+# ==============================================================================
 
-function c --description 'Change to the coding directory and list it'
+### Change to the coding directory and list it
+function c --description 'Change to ~/c and list contents'
     builtin cd ~/c && eza --long --header --group --git
 end
 
-function t --description 'Create a random directory in /tmp and change to it'
-    set dir_path (mktemp -d -t XXXXXX)
-    if test $status -eq 0
-        echo "Created and changing to: $dir_path"
-        cd $dir_path
+### Create a temporary directory and change into it
+function t --description 'Create and cd into a temp directory'
+    set -l tmp_dir (mktemp -d -t 'tmp.XXXXXX')
+    if test -n "$tmp_dir"
+        echo "Created and changing to: $tmp_dir"
+        cd "$tmp_dir"
     else
         echo "Error: Could not create a temporary directory." >&2
         return 1
     end
 end
 
-function u --description 'Detect the system and update it'
-    if command -v pacman >/dev/null 2>&1
+### Universal update function
+function u --description 'Update system packages (pacman, apt, brew)'
+    # It detects the native package manager and runs the correct command.
+    if command -v pacman >/dev/null
         sudo pacman -Syu --noconfirm
-    end
-    if command -v apt >/dev/null 2>&1
+    else if command -v apt >/dev/null
         sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y
     end
-    if command -v brew >/dev/null 2>&1
+
+    # It also checks separately for Homebrew and updates it if present.
+    if command -v brew >/dev/null
         brew update && brew upgrade && brew cleanup
     end
 end
 
-# --- Interactive-only configurations ---
+
+# ==============================================================================
+# Interactive-only Configuration
+# ==============================================================================
 if status is-interactive
     set fish_greeting
 
-    # Abbreviations
-    abbr -a z zellij attach --create main
-    abbr -a j just
-    abbr -a ls eza
-    abbr -a l eza --long --header --group --git
-    abbr -a la eza --all --long --header --group --git
-    abbr -a lsize eza --all --long --header --group --git --total-size --sort=size
-    abbr -a tree eza --tree --long --header --group --git --total-size --sort=size
-    abbr -a a . .venv/bin/activate.fish
-    abbr -a py uv run --
-    abbr -a ipy uv run --with ipython -- ipython -i
-    abbr -a pc pre-commit
-    abbr -a lg lazygit
-    abbr -a gs git status
-    abbr -a gc git commit
-    abbr -a gf git fetch
-    abbr -a gp git pull
-    abbr -a gP git push
+    # --- Abbreviations ---
+    abbr -a z 'zellij attach --create main'
+    abbr -a j 'just'
+
+    # eza
+    abbr -a ls 'eza'
+    abbr -a l 'eza --long --header --group --git'
+    abbr -a la 'eza --all --long --header --group --git'
+    abbr -a lsize 'eza --all --long --header --group --git --total-size --sort=size'
+    abbr -a tree 'eza --tree --long --header --group --git --total-size --sort=size'
+
+    # Python
+    abbr -a a '. .venv/bin/activate.fish'
+    abbr -a py 'uv run --'
+    abbr -a ipy 'uv run --with ipython -- ipython -i'
+    abbr -a pc 'pre-commit'
+
+    # Git
+    abbr -a lg 'lazygit'
+    abbr -a gs 'git status'
+    abbr -a gc 'git commit'
+    abbr -a gf 'git fetch'
+    abbr -a gp 'git pull'
+    abbr -a gP 'git push'
 
     # Global aliases for help
     abbr -a --position anywhere -- --help '--help | bat -plhelp'
     abbr -a --position anywhere -- -h '-h | bat -plhelp'
 
-    # --- Shell Completions ---
-    # These are typically sourced once for the interactive shell's benefit
+    # --- Shell Tools & Completions ---
+    # Sourced directly, assuming these commands are always present.
     uv generate-shell-completion fish | source
     uvx --generate-shell-completion fish | source
     zoxide init fish --cmd cd | source
