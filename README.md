@@ -15,7 +15,7 @@ git clone git@github.com:Christian-Andersen/dotfiles.git
 ```
 Else just clone it.
 ```sh
-git clone --recursive https://github.com/Christian-Andersen/dotfiles.git
+git clone https://github.com/Christian-Andersen/dotfiles.git
 ```
 
 ## Stow
