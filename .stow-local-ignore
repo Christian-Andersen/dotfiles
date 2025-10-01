@@ -5,3 +5,5 @@
 README.md
 lady.png
 trev.png
+.pre-commit-config.yaml
+pyproject.toml
