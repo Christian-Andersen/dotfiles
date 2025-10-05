@@ -41,16 +41,16 @@ end
 
 ### Universal update function
 function u --description 'Update system packages (pacman, apt, brew)'
-    # It detects the native package manager and runs the correct command.
     if command -v pacman >/dev/null
         sudo pacman -Syu --noconfirm
     else if command -v apt >/dev/null
         sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y
     end
-
-    # It also checks separately for Homebrew and updates it if present.
     if command -v brew >/dev/null
         brew update && brew upgrade && brew cleanup
+    end
+    if command -v uv >/dev/null
+        uv tool upgrade --all
     end
 end
 
