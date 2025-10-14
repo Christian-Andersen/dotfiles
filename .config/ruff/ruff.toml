@@ -1,4 +1,8 @@
 line-length = 120
 
+[lint]
+select = ["ALL"]
+ignore = ["COM812"]
+
 [lint.pydocstyle]
 convention = "google"
