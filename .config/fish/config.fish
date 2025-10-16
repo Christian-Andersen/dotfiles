@@ -92,6 +92,7 @@ function t --description 'Create and cd into a temp directory'
 end
 
 function u --description 'Update system packages (pacman, apt, brew, uv)'
+    sudo --validate
     if command -v pacman >/dev/null
         echo "--- Updating Pacman ---"
         sudo pacman -Syu --noconfirm
