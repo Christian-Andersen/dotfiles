@@ -1,22 +1,7 @@
-return {
-    'nvim-neo-tree/neo-tree.nvim',
-    version = '*',
-    dependencies = {
-        'nvim-lua/plenary.nvim',
-        'nvim-tree/nvim-web-devicons',
-        'MunifTanjim/nui.nvim',
-    },
-    lazy = false,
-    keys = {
-        { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
-    },
-    opts = {
-        filesystem = {
-            window = {
-                mappings = {
-                    ['\\'] = 'close_window',
-                },
-            },
-        },
-    },
-}
+-- ============================================================================
+-- NEO-TREE FILE BROWSER
+-- ============================================================================
+-- neo-tree.nvim: Modern and feature-rich file tree browser for Neovim
+-- 
+-- Features:
+--   - Browse file system with an expanding tree view\n--   - Create, rename, delete files and directories\n--   - Git status indicators (modified, added, ignored, etc.)\n--   - Quick preview of files\n--   - Toggle hidden files\n--   - Fuzzy search within tree\n--   - Customizable appearance and behavior\n--   - Multiple sources (filesystem, buffers, git status)\n--\n-- Keybindings:\n--   \\         : Toggle neo-tree file browser\n--   (in tree) : various navigation and file operations\n--\n-- Repo: https://github.com/nvim-neo-tree/neo-tree.nvim\n-- ============================================================================\n\nreturn {\n    'nvim-neo-tree/neo-tree.nvim',\n    -- Use latest stable version (all versions)\n    version = '*',\n    \n    -- Required dependencies\n    dependencies = {\n        -- Utility library for plugin development in Neovim\n        'nvim-lua/plenary.nvim',\n        -- Web dev icons for file type icons in the tree\n        'nvim-tree/nvim-web-devicons',\n        -- NUI: UI components library for building Neovim UIs\n        'MunifTanjim/nui.nvim',\n    },\n    \n    -- Don't lazy load - load immediately on startup\n    -- Having the file tree available immediately is important for browsing the project\n    lazy = false,\n    \n    -- Keybindings to open/toggle neo-tree\n    keys = {\n        {\n            '\\\\',  -- Backslash as the toggle key\n            ':Neotree reveal<CR>',  -- Command to open neo-tree and reveal current file\n            desc = 'NeoTree reveal',\n            silent = true,  -- Don't echo the command\n        },\n    },\n    \n    -- Configuration options\n    opts = {\n        -- Configure the filesystem source (file tree view)\n        filesystem = {\n            window = {\n                -- Custom keybindings within the neo-tree window\n                mappings = {\n                    -- Pressing \\ in the tree closes the window (toggles it)\n                    ['\\\\'] = 'close_window',\n                },\n            },\n        },\n    },\n}
