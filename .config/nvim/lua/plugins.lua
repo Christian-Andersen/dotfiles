@@ -1,0 +1,20 @@
+-- Load all plugins from the plugins directory
+return {
+    require('plugins.guess-indent'),
+    require('plugins.gitsigns'),
+    require('plugins.which-key'),
+    require('plugins.telescope'),
+    require('plugins.lazydev'),
+    require('plugins.lspconfig'),
+    require('plugins.conform'),
+    require('plugins.blink-cmp'),
+    require('plugins.tokyonight'),
+    require('plugins.todo-comments'),
+    require('plugins.mini'),
+    require('plugins.treesitter'),
+    require('plugins.dap'),
+    require('plugins.indent-blankline'),
+    require('plugins.lint'),
+    require('plugins.autopairs'),
+    require('plugins.neo-tree'),
+}
