@@ -1,132 +1,23 @@
-return {
-    'neovim/nvim-lspconfig',
-    dependencies = {
-        { 'mason-org/mason.nvim', opts = {} },
-        'mason-org/mason-lspconfig.nvim',
-        'WhoIsSethDaniel/mason-tool-installer.nvim',
-        { 'j-hui/fidget.nvim', opts = {} },
-        'saghen/blink.cmp',
-    },
-    config = function()
-        vim.api.nvim_create_autocmd('LspAttach', {
-            group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
-            callback = function(event)
-                local map = function(keys, func, desc, mode)
-                    mode = mode or 'n'
-                    vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
-                end
-
-                map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
-                map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
-                map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-                map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-                map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-                map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-                map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
-                map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
-                map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
-
-                ---@param client vim.lsp.Client
-                ---@param method vim.lsp.protocol.Method
-                ---@param bufnr? integer
-                ---@return boolean
-                local function client_supports_method(client, method, bufnr)
-                    return client:supports_method(method, bufnr)
-                end
-
-                local client = vim.lsp.get_client_by_id(event.data.client_id)
-                if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
-                    local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight',
-                        { clear = false })
-                    vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-                        buffer = event.buf,
-                        group = highlight_augroup,
-                        callback = vim.lsp.buf.document_highlight,
-                    })
-
-                    vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-                        buffer = event.buf,
-                        group = highlight_augroup,
-                        callback = vim.lsp.buf.clear_references,
-                    })
-
-                    vim.api.nvim_create_autocmd('LspDetach', {
-                        group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
-                        callback = function(event2)
-                            vim.lsp.buf.clear_references()
-                            vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
-                        end,
-                    })
-                end
-
-                if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
-                    map('<leader>th', function()
-                        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-                    end, '[T]oggle Inlay [H]ints')
-                end
-            end,
-        })
-
-        vim.diagnostic.config {
-            severity_sort = true,
-            float = { border = 'rounded', source = 'if_many' },
-            underline = { severity = vim.diagnostic.severity.ERROR },
-            signs = vim.g.have_nerd_font and {
-                text = {
-                    [vim.diagnostic.severity.ERROR] = '󰅚 ',
-                    [vim.diagnostic.severity.WARN] = '󰀪 ',
-                    [vim.diagnostic.severity.INFO] = '󰋽 ',
-                    [vim.diagnostic.severity.HINT] = '󰌶 ',
-                },
-            } or {},
-            virtual_text = {
-                source = 'if_many',
-                spacing = 2,
-                format = function(diagnostic)
-                    local diagnostic_message = {
-                        [vim.diagnostic.severity.ERROR] = diagnostic.message,
-                        [vim.diagnostic.severity.WARN] = diagnostic.message,
-                        [vim.diagnostic.severity.INFO] = diagnostic.message,
-                        [vim.diagnostic.severity.HINT] = diagnostic.message,
-                    }
-                    return diagnostic_message[diagnostic.severity]
-                end,
-            },
-        }
-
-        local capabilities = require('blink.cmp').get_lsp_capabilities()
-
-        local servers = {
-            ruff = {},
-            ty = {
-                cmd = { 'ty', 'server' },
-                filetypes = { 'python' },
-                root_markers = { 'pyproject.toml', 'uv.lock', '.git' },
-                settings = {
-                    ty = {
-                        experimental = {
-                            rename = true,
-                        },
-                    },
-                },
-            },
-            lua_ls = {
-                settings = {
-                    Lua = {
-                        completion = { callSnippet = 'Replace' },
-                    },
-                },
-            },
-        }
-
-        local ensure_installed = vim.tbl_keys(servers or {})
-        vim.list_extend(ensure_installed, { 'stylua' })
-        require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
-        for name, config in pairs(servers) do
-            config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
-            vim.lsp.config[name] = config
-            vim.lsp.enable(name)
-        end
-    end,
-}
+-- ============================================================================
+-- LSP CONFIGURATION (Language Server Protocol)
+-- ============================================================================
+-- nvim-lspconfig: Configures language servers for IntelliSense and diagnostics
+-- 
+-- Features:
+--   - Code completion, type hints, and parameter info
+--   - Goto definition, references, implementations
+--   - Rename variables and apply code actions (refactorings)
+--   - Real-time error/warning/info diagnostics
+--   - Symbol navigation within files and workspace
+--   - Hover documentation
+--
+-- LSP Keybindings:
+--   grn  : Rename symbol
+--   gra  : Code action (refactorings, fixes)
+--   grr  : Find references
+--   gri  : Go to implementation
+--   grd  : Go to definition
+--   grD  : Go to declaration
+--   gO   : Document symbols (outline)
+--   gW   : Workspace symbols
+--   grt  : Go to type definition\n--   <leader>th : Toggle inline type hints\n--\n-- Repos: https://github.com/neovim/nvim-lspconfig\n--        https://github.com/mason-org/mason.nvim\n-- ============================================================================\n\nreturn {\n    'neovim/nvim-lspconfig',\n    dependencies = {\n        -- Mason: Package manager for LSPs, formatters, linters, and DAP adapters\n        { 'mason-org/mason.nvim', opts = {} },\n        -- Mason LSPConfig: Bridges Mason and lspconfig for easy server setup\n        'mason-org/mason-lspconfig.nvim',\n        -- Mason Tool Installer: Auto-installs tools (formatters, linters, etc.)\n        'WhoIsSethDaniel/mason-tool-installer.nvim',\n        -- Fidget: Shows LSP progress notifications during initialization\n        { 'j-hui/fidget.nvim', opts = {} },\n        -- Blink.cmp: Completion engine that integrates with LSP\n        'saghen/blink.cmp',\n    },\n    config = function()\n        -- ===== LSP KEYBINDINGS =====\n        -- Set up keybindings when an LSP attaches to a buffer\n        vim.api.nvim_create_autocmd('LspAttach', {\n            group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),\n            callback = function(event)\n                -- Helper to create LSP keybindings for this buffer\n                local map = function(keys, func, desc, mode)\n                    mode = mode or 'n'  -- Default to normal mode\n                    vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })\n                end\n\n                -- Rename: Rename the symbol under cursor throughout the file\n                map('grn', vim.lsp.buf.rename, '[R]e[n]ame')\n                -- Code Actions: Show available refactorings and fixes (works in normal and visual mode)\n                map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })\n                -- References: Find all places where this symbol is used\n                map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')\n                -- Implementations: Find all implementations of this interface/abstract method\n                map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')\n                -- Definitions: Jump to where this symbol is defined\n                map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')\n                -- Declaration: Jump to where this symbol is declared\n                map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')\n                -- Document Symbols: Show outline/symbols in current file (like ctags)\n                map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')\n                -- Workspace Symbols: Search for symbols across the entire workspace/project\n                map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')\n                -- Type Definition: Jump to the type definition of the symbol under cursor\n                map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')\n\n                -- Helper function to check if a language server supports a capability\n                local function client_supports_method(client, method, bufnr)\n                    return client:supports_method(method, bufnr)\n                end\n\n                -- Get the language server client for this buffer\n                local client = vim.lsp.get_client_by_id(event.data.client_id)\n                \n                -- ===== DOCUMENT HIGHLIGHTING =====\n                -- Highlight all references to the symbol under the cursor\n                if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then\n                    local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight',\n                        { clear = false })\n                    -- Highlight when cursor is held (not moving)\n                    vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {\n                        buffer = event.buf,\n                        group = highlight_augroup,\n                        callback = vim.lsp.buf.document_highlight,\n                    })\n\n                    -- Clear highlighting when cursor moves\n                    vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {\n                        buffer = event.buf,\n                        group = highlight_augroup,\n                        callback = vim.lsp.buf.clear_references,\n                    })\n\n                    -- Clean up highlighting when LSP detaches\n                    vim.api.nvim_create_autocmd('LspDetach', {\n                        group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),\n                        callback = function(event2)\n                            vim.lsp.buf.clear_references()\n                            vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }\n                        end,\n                    })\n                end\n\n                -- ===== INLAY HINTS =====\n                -- Toggle inline type hints (if the language server supports them)\n                -- Type hints show inferred types like: function(x: number) or var = 42\n                if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then\n                    map('<leader>th', function()\n                        -- Toggle inlay hints on/off for this buffer\n                        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })\n                    end, '[T]oggle Inlay [H]ints')\n                end\n            end,\n        })\n\n        -- ===== DIAGNOSTIC DISPLAY CONFIGURATION =====\n        -- Configure how LSP diagnostics (errors, warnings, info, hints) are displayed\n        vim.diagnostic.config {\n            -- Sort diagnostics by severity (errors first, then warnings, then info, then hints)\n            severity_sort = true,\n            -- Configure the floating window that appears when hovering over diagnostics\n            float = { \n                border = 'rounded',      -- Use rounded borders for a modern look\n                source = 'if_many',      -- Show the source (e.g., \"pylint\") only if multiple diagnostics\n            },\n            -- Only underline errors (not warnings or info)\n            underline = { severity = vim.diagnostic.severity.ERROR },\n            -- Configure the signs (symbols) shown in the gutter for diagnostics\n            signs = vim.g.have_nerd_font and {\n                text = {\n                    [vim.diagnostic.severity.ERROR] = '󰅚 ',   -- Red X for errors\n                    [vim.diagnostic.severity.WARN] = '󰀪 ',   -- Yellow warning for warnings\n                    [vim.diagnostic.severity.INFO] = '󰋽 ',   -- Blue info for info\n                    [vim.diagnostic.severity.HINT] = '󰌶 ',   -- Purple hint for hints\n                },\n            } or {},  -- Empty table if no Nerd Font (uses default symbols)\n            -- Virtual text: Shows diagnostic messages inline (at the end of the line)\n            virtual_text = {\n                source = 'if_many',      -- Show source only when there are multiple diagnostics\n                spacing = 2,             -- Space between error code and message\n            },\n        }\n\n        -- ===== LANGUAGE SERVER CONFIGURATIONS =====\n        -- Define which language servers to use and their settings\n        local servers = {\n            -- Ruff: Fast Python linter (for style checking)\n            ruff = {},  -- Empty config = use defaults\n            \n            -- Ty: Modern Python language server (type checking and analysis)\n            ty = {\n                cmd = { 'ty', 'server' },     -- Command to start the server\n                filetypes = { 'python' },    -- Only load for Python files\n                root_markers = { 'pyproject.toml', 'uv.lock', '.git' },  -- Find project root by these files\n                settings = {\n                    ty = {\n                        experimental = {\n                            rename = true,   -- Enable experimental rename functionality\n                        },\n                    },\n                },\n            },\n            \n            -- Lua LS: Language server for Lua\n            lua_ls = {\n                settings = {\n                    Lua = {\n                        -- Use snippet completion (show function signatures, insert params)\n                        completion = { callSnippet = 'Replace' },\n                    },\n                },\n            },\n        }\n\n        -- ===== AUTO-INSTALL LANGUAGE SERVERS AND TOOLS =====\n        -- Collect all server names that need to be installed\n        local ensure_installed = vim.tbl_keys(servers or {})\n        -- Also ensure stylua (Lua formatter) is installed\n        vim.list_extend(ensure_installed, { 'stylua' })\n        -- Tell Mason to auto-install all the tools\n        require('mason-tool-installer').setup { ensure_installed = ensure_installed }\n\n        -- ===== ENABLE LANGUAGE SERVERS =====\n        -- Configure and enable each language server\n        for name, config in pairs(servers) do\n            -- Add completion capabilities from blink.cmp to the LSP config\n            config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)\n            -- Set this server's configuration\n            vim.lsp.config[name] = config\n            -- Enable the language server (start it when needed)\n            vim.lsp.enable(name)\n        end\n    end,\n}

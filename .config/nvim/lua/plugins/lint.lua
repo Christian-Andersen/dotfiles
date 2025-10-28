@@ -1,20 +1,3 @@
-return {
-    'mfussenegger/nvim-lint',
-    event = { 'BufReadPre', 'BufNewFile' },
-    config = function()
-        local lint = require 'lint'
-        lint.linters_by_ft = {
-            markdown = { 'markdownlint' },
-        }
-
-        local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
-        vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
-            group = lint_augroup,
-            callback = function()
-                if vim.bo.modifiable then
-                    lint.try_lint()
-                end
-            end,
-        })
-    end,
-}
+-- ============================================================================
+-- NVIM-LINT CODE LINTER\n-- ============================================================================
+-- nvim-lint: Asynchronous linting framework for Neovim\n-- \n-- Features:\n--   - Runs linters on files to check for style issues and errors\n--   - Non-blocking (async) operation - doesn't freeze the editor\n--   - Integrates with multiple linters per language\n--   - Works alongside LSP diagnostics\n--   - Can be triggered on file open, after write, or manually\n--   - Shows results in the location list or as virtual text\n--\n-- Linters vs LSP:\n--   - LSP: Type checking, semantic analysis\n--   - Linters: Code style, convention checking\n--   - Both complement each other for comprehensive code quality\n--\n-- Repo: https://github.com/mfussenegger/nvim-lint\n-- ============================================================================\n\nreturn {\n    'mfussenegger/nvim-lint',\n    -- Load on file open and when creating new files\n    -- This ensures linting is ready when you start editing\n    event = { 'BufReadPre', 'BufNewFile' },\n    \n    -- Configuration function: runs after plugin is loaded\n    config = function()\n        -- Load the lint module\n        local lint = require 'lint'\n        \n        -- Define which linters to use for each filetype\n        -- Map: filetype -> list of linter names\n        -- Multiple linters can be used per filetype (they'll all run)\n        lint.linters_by_ft = {\n            -- Use markdownlint for Markdown files\n            -- Checks for style issues like:\n            -- - Proper heading hierarchy\n            -- - Code block formatting\n            -- - Link and image syntax\n            markdown = { 'markdownlint' },\n        }\n        -- You can add more filetypes here, e.g.:\n        -- python = { 'pylint', 'flake8' },\n        -- javascript = { 'eslint' },\n        -- lua = { 'luacheck' },\n\n        -- Create an autocommand group for linting\n        -- Groups allow us to manage multiple related autocommands\n        local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })\n        \n        -- Set up automatic linting on certain events\n        vim.api.nvim_create_autocmd(\n            { 'BufEnter', 'BufWritePost', 'InsertLeave' },  -- Trigger events\n            {\n                group = lint_augroup,\n                -- Callback function that runs when the events occur\n                callback = function()\n                    -- Only lint if the buffer is modifiable\n                    -- Skip read-only files, special buffers, etc.\n                    if vim.bo.modifiable then\n                        -- Try to lint the current file\n                        -- Gracefully handles cases where no linter is configured\n                        lint.try_lint()\n                    end\n                end,\n            }\n        )\n    end,\n}
