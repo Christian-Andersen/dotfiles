@@ -2,7 +2,7 @@
 -- LAZYDEV PLUGIN
 -- ============================================================================
 -- lazydev.nvim: Provides LSP support for Neovim API documentation in Lua
--- 
+--
 -- Features:
 --   - IntelliSense for Neovim API functions and modules
 --   - Type hints for vim.* functions
@@ -32,8 +32,8 @@ return {
             -- Load the Luv (Libuv bindings) library for vim.uv completions
             -- Luv provides async I/O, filesystem, and system operations
             -- This allows completions for vim.uv.* functions
-            { 
-                path = '${3rd}/luv/library',  -- Path to the Luv library stubs
+            {
+                path = '${3rd}/luv/library', -- Path to the Luv library stubs
                 words = { 'vim%.uv' }        -- Which words should trigger this library
             },
         },

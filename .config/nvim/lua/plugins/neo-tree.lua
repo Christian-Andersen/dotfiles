@@ -2,6 +2,64 @@
 -- NEO-TREE FILE BROWSER
 -- ============================================================================
 -- neo-tree.nvim: Modern and feature-rich file tree browser for Neovim
--- 
+--
 -- Features:
---   - Browse file system with an expanding tree view\n--   - Create, rename, delete files and directories\n--   - Git status indicators (modified, added, ignored, etc.)\n--   - Quick preview of files\n--   - Toggle hidden files\n--   - Fuzzy search within tree\n--   - Customizable appearance and behavior\n--   - Multiple sources (filesystem, buffers, git status)\n--\n-- Keybindings:\n--   \\         : Toggle neo-tree file browser\n--   (in tree) : various navigation and file operations\n--\n-- Repo: https://github.com/nvim-neo-tree/neo-tree.nvim\n-- ============================================================================\n\nreturn {\n    'nvim-neo-tree/neo-tree.nvim',\n    -- Use latest stable version (all versions)\n    version = '*',\n    \n    -- Required dependencies\n    dependencies = {\n        -- Utility library for plugin development in Neovim\n        'nvim-lua/plenary.nvim',\n        -- Web dev icons for file type icons in the tree\n        'nvim-tree/nvim-web-devicons',\n        -- NUI: UI components library for building Neovim UIs\n        'MunifTanjim/nui.nvim',\n    },\n    \n    -- Don't lazy load - load immediately on startup\n    -- Having the file tree available immediately is important for browsing the project\n    lazy = false,\n    \n    -- Keybindings to open/toggle neo-tree\n    keys = {\n        {\n            '\\\\',  -- Backslash as the toggle key\n            ':Neotree reveal<CR>',  -- Command to open neo-tree and reveal current file\n            desc = 'NeoTree reveal',\n            silent = true,  -- Don't echo the command\n        },\n    },\n    \n    -- Configuration options\n    opts = {\n        -- Configure the filesystem source (file tree view)\n        filesystem = {\n            window = {\n                -- Custom keybindings within the neo-tree window\n                mappings = {\n                    -- Pressing \\ in the tree closes the window (toggles it)\n                    ['\\\\'] = 'close_window',\n                },\n            },\n        },\n    },\n}
+--   - Browse file system with an expanding tree view
+--   - Create, rename, delete files and directories
+--   - Git status indicators (modified, added, ignored, etc.)
+--   - Quick preview of files
+--   - Toggle hidden files
+--   - Fuzzy search within tree
+--   - Customizable appearance and behavior
+--   - Multiple sources (filesystem, buffers, git status)
+--
+-- Keybindings:
+--   \         : Toggle neo-tree file browser
+--   (in tree) : various navigation and file operations
+--
+-- Repo: https://github.com/nvim-neo-tree/neo-tree.nvim
+-- ============================================================================
+
+return {
+    'nvim-neo-tree/neo-tree.nvim',
+    -- Use latest stable version (all versions)
+    version = '*',
+
+    -- Required dependencies
+    dependencies = {
+        -- Utility library for plugin development in Neovim
+        'nvim-lua/plenary.nvim',
+        -- Web dev icons for file type icons in the tree
+        'nvim-tree/nvim-web-devicons',
+        -- NUI: UI components library for building Neovim UIs
+        'MunifTanjim/nui.nvim',
+    },
+
+    -- Don't lazy load - load immediately on startup
+    -- Having the file tree available immediately is important for browsing the project
+    lazy = false,
+
+    -- Keybindings to open/toggle neo-tree
+    keys = {
+        {
+            '\\',                  -- Backslash as the toggle key
+            ':Neotree reveal<CR>', -- Command to open neo-tree and reveal current file
+            desc = 'NeoTree reveal',
+            silent = true,         -- Don't echo the command
+        },
+    },
+
+    -- Configuration options
+    opts = {
+        -- Configure the filesystem source (file tree view)
+        filesystem = {
+            window = {
+                -- Custom keybindings within the neo-tree window
+                mappings = {
+                    -- Pressing \ in the tree closes the window (toggles it)
+                    ['\\'] = 'close_window',
+                },
+            },
+        },
+    },
+}

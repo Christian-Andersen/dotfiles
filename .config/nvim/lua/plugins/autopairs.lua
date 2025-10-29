@@ -2,7 +2,7 @@
 -- AUTOPAIRS PLUGIN
 -- ============================================================================
 -- nvim-autopairs: Automatically pair brackets, parentheses, quotes, and more
--- 
+--
 -- Features:
 --   - Auto-closes matching pairs: (), [], {}, '', "", ``
 --   - Handles smart indentation when inserting pairs

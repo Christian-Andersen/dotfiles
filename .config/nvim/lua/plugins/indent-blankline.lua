@@ -2,7 +2,7 @@
 -- INDENT-BLANKLINE PLUGIN
 -- ============================================================================
 -- indent-blankline.nvim: Display indentation guides as vertical lines
--- 
+--
 -- Features:
 --   - Shows vertical lines for each indentation level
 --   - Helps visualize code structure and nesting
