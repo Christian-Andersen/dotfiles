@@ -10,20 +10,18 @@
 -- Return a table containing all plugin specifications
 -- lazy.nvim will process each table and handle installation, loading, and configuration
 return {
--- ============================================================================
--- PLUGIN SPECIFICATIONS
--- ============================================================================
--- Each require() loads a plugin specification file from the plugins/ directory
--- ============================================================================
+    -- ============================================================================
+    -- PLUGIN SPECIFICATIONS
+    -- ============================================================================
+    -- Each require() loads a plugin specification file from the plugins/ directory
+    -- ============================================================================
 
--- Autopairs plugin: automatically close brackets, parentheses, and quotes
+    -- Autopairs plugin: automatically close brackets, parentheses, and quotes
     require('plugins.autopairs'),
     -- Blink completion menu: fast and feature-rich completion framework
     require('plugins.blink-cmp'),
     -- Conform: code formatter supporting multiple languages and formatters
     require('plugins.conform'),
-    -- DAP: Debug Adapter Protocol for debugging support
-    require('plugins.dap'),
     -- Git signs: shows git changes (additions, modifications, deletions) in the gutter
     require('plugins.gitsigns'),
     -- Guess indent: automatically detects indentation settings (tabs/spaces, width)
