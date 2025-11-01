@@ -42,22 +42,6 @@ return {
         -- Don't show error notifications if formatting fails
         notify_on_error = false,
 
-        -- Auto-format on save (can be disabled for specific filetypes)
-        format_on_save = function(bufnr)
-            -- Disable auto-format for C and C++ files
-            -- (they often have specific formatting requirements)
-            local disable_filetypes = { c = true, cpp = true }
-            if disable_filetypes[vim.bo[bufnr].filetype] then
-                return nil -- Don't format for these filetypes
-            else
-                -- For other filetypes, format with these settings:
-                return {
-                    timeout_ms = 500,        -- Wait max 500ms for formatter to complete
-                    lsp_format = 'fallback', -- Use LSP formatter if no formatter is configured
-                }
-            end
-        end,
-
         -- Define which formatters to use for each filetype
         formatters_by_ft = {
             -- Use stylua (Lua formatter) for Lua files
