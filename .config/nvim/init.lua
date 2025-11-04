@@ -10,8 +10,8 @@
 -- The leader key is used as a prefix for custom keybindings (e.g., <leader>f for format)
 -- See `:help mapleader`
 -- NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
@@ -37,7 +37,7 @@ vim.o.number = true
 -- - Scroll to navigate
 -- - Drag to select
 -- - Resize split windows
-vim.o.mouse = 'a'
+vim.o.mouse = "a"
 
 -- Don't show the mode indicator (e.g., "-- INSERT --")
 -- The current mode is already shown in the status line by the mini.statusline plugin
@@ -51,7 +51,7 @@ vim.o.showmode = false
 -- Remove this option if you want your OS clipboard to remain independent
 -- See `:help 'clipboard'`
 vim.schedule(function()
-    vim.o.clipboard = 'unnamedplus'
+	vim.o.clipboard = "unnamedplus"
 end)
 
 -- Enable break indent
@@ -79,7 +79,7 @@ vim.o.smartcase = true
 -- - Git changes (added, modified, deleted lines)
 -- - Breakpoints (for debugging)
 -- Setting to 'yes' reserves space even when there are no signs
-vim.o.signcolumn = 'yes'
+vim.o.signcolumn = "yes"
 
 -- Decrease update time (in milliseconds)
 -- Affects how quickly plugins respond to text changes
@@ -115,12 +115,12 @@ vim.o.list = true
 --   tab = '» '    : displays tabs as '» ' (double-width for clarity)
 --   trail = '·'   : shows trailing whitespace as middle dots
 --   nbsp = '␣'    : indicates non-breaking spaces
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 -- Preview substitutions live as you type
 -- When using the substitute command (e.g., :%s/old/new/), shows a preview in a split window
 -- Allows you to see the changes before confirming with Enter
-vim.o.inccommand = 'split'
+vim.o.inccommand = "split"
 
 -- Highlight the entire line where the cursor is located
 -- Makes it easier to see where you are in the file at a glance
@@ -150,19 +150,19 @@ vim.o.confirm = true
 -- When you search with `/pattern`, Neovim highlights all matches
 -- This binding clears those highlights for a cleaner view
 -- See `:help hlsearch`
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Open diagnostic quickfix list
 -- <leader>q : displays all diagnostics (errors, warnings, info) in a quickfix window
 -- Useful for reviewing all issues in the buffer at once
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
 -- Exit terminal mode with a more intuitive key combination
 -- By default, you need to press <C-\><C-n> to exit terminal mode, which is hard to discover
 -- This mapping allows <Esc><Esc> instead - much more intuitive
 -- NOTE: This may not work in all terminal emulators or within tmux
 -- If it doesn't work for you, use the default <C-\><C-n> or adjust the mapping
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
@@ -174,10 +174,10 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 -- Use Ctrl+hjkl to easily move between split windows
 -- This is more intuitive than the default Ctrl+w,hjkl
 -- See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -198,12 +198,12 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- is temporarily highlighted, providing visual feedback that the copy was successful
 -- Try it with `yap` in normal mode to select and copy a paragraph
 -- See `:help vim.hl.on_yank()`
-vim.api.nvim_create_autocmd('TextYankPost', {
-    desc = 'Highlight when yanking (copying) text',
-    group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
-    callback = function()
-        vim.hl.on_yank()
-    end,
+vim.api.nvim_create_autocmd("TextYankPost", {
+	desc = "Highlight when yanking (copying) text",
+	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+	callback = function()
+		vim.hl.on_yank()
+	end,
 })
 
 -- ============================================================================
@@ -218,17 +218,17 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- ============================================================================
 
 -- Build the path to lazy.nvim in the data directory
-local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 -- Install lazy.nvim if not already installed
 if not vim.uv.fs_stat(lazypath) then
-    -- Clone lazy.nvim from GitHub
-    local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
-    -- Use git clone with blob:none filter for faster cloning
-    local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
-    if vim.v.shell_error ~= 0 then
-        error('Error cloning lazy.nvim:\n' .. out)
-    end
+	-- Clone lazy.nvim from GitHub
+	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+	-- Use git clone with blob:none filter for faster cloning
+	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+	if vim.v.shell_error ~= 0 then
+		error("Error cloning lazy.nvim:\n" .. out)
+	end
 end
 
 -- Add lazy.nvim to the runtime path so Neovim can find it
@@ -249,27 +249,27 @@ rtp:prepend(lazypath)
 --   ?               - Show help when the Lazy UI is open
 --
 -- The second argument to setup() contains configuration for lazy.nvim itself
-require('lazy').setup(require('plugins'), {
-    ui = {
-        -- Configure icons for the lazy.nvim UI
-        -- If you have a Nerd Font installed, use empty table {} to use default Nerd Font icons
-        -- Otherwise, use Unicode emoji icons for better visual feedback in the UI
-        icons = vim.g.have_nerd_font and {} or {
-            cmd = '⌘', -- Icon for commands
-            config = '🛠', -- Icon for configuration
-            event = '📅', -- Icon for events that trigger lazy loading
-            ft = '📂', -- Icon for filetype-based loading
-            init = '⚙', -- Icon for init hooks
-            keys = '🗝', -- Icon for key mappings
-            plugin = '🔌', -- Icon for plugins
-            runtime = '💻', -- Icon for runtime code
-            require = '🌙', -- Icon for require dependencies
-            source = '📄', -- Icon for source files
-            start = '🚀', -- Icon for plugins that start immediately
-            task = '📌', -- Icon for tasks
-            lazy = '💤 ', -- Icon for lazy loading indicator
-        },
-    },
+require("lazy").setup(require("plugins"), {
+	ui = {
+		-- Configure icons for the lazy.nvim UI
+		-- If you have a Nerd Font installed, use empty table {} to use default Nerd Font icons
+		-- Otherwise, use Unicode emoji icons for better visual feedback in the UI
+		icons = vim.g.have_nerd_font and {} or {
+			cmd = "⌘", -- Icon for commands
+			config = "🛠", -- Icon for configuration
+			event = "📅", -- Icon for events that trigger lazy loading
+			ft = "📂", -- Icon for filetype-based loading
+			init = "⚙", -- Icon for init hooks
+			keys = "🗝", -- Icon for key mappings
+			plugin = "🔌", -- Icon for plugins
+			runtime = "💻", -- Icon for runtime code
+			require = "🌙", -- Icon for require dependencies
+			source = "📄", -- Icon for source files
+			start = "🚀", -- Icon for plugins that start immediately
+			task = "📌", -- Icon for tasks
+			lazy = "💤 ", -- Icon for lazy loading indicator
+		},
+	},
 })
 
 -- ============================================================================
@@ -278,8 +278,8 @@ require('lazy').setup(require('plugins'), {
 -- The line below is a vim modeline that sets editor options for this specific file
 -- It tells Vim to use 2-space indentation and expand tabs to spaces
 -- See `:help modeline` for more information about modelines
-vim.opt.tabstop = 2      -- Tab width for display
-vim.opt.softtabstop = 2  -- Spaces for soft tabs
-vim.opt.shiftwidth = 2   -- Spaces for auto-indentation
+vim.opt.tabstop = 2 -- Tab width for display
+vim.opt.softtabstop = 2 -- Spaces for soft tabs
+vim.opt.shiftwidth = 2 -- Spaces for auto-indentation
 vim.opt.expandtab = true -- Expand tabs to spaces
 -- vim: ts=2 sts=2 sw=2 et

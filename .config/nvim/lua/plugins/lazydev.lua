@@ -20,22 +20,22 @@
 -- ============================================================================
 
 return {
-    'folke/lazydev.nvim',
-    -- Load only for Lua files (.lua extension)
-    -- This keeps startup time fast by not loading in other file types
-    ft = 'lua',
-    -- Configuration options
-    opts = {
-        -- Additional libraries to load for Neovim API completion
-        -- Libraries provide type definitions and documentation
-        library = {
-            -- Load the Luv (Libuv bindings) library for vim.uv completions
-            -- Luv provides async I/O, filesystem, and system operations
-            -- This allows completions for vim.uv.* functions
-            {
-                path = '${3rd}/luv/library', -- Path to the Luv library stubs
-                words = { 'vim%.uv' }        -- Which words should trigger this library
-            },
-        },
-    },
+	"folke/lazydev.nvim",
+	-- Load only for Lua files (.lua extension)
+	-- This keeps startup time fast by not loading in other file types
+	ft = "lua",
+	-- Configuration options
+	opts = {
+		-- Additional libraries to load for Neovim API completion
+		-- Libraries provide type definitions and documentation
+		library = {
+			-- Load the Luv (Libuv bindings) library for vim.uv completions
+			-- Luv provides async I/O, filesystem, and system operations
+			-- This allows completions for vim.uv.* functions
+			{
+				path = "${3rd}/luv/library", -- Path to the Luv library stubs
+				words = { "vim%.uv" }, -- Which words should trigger this library
+			},
+		},
+	},
 }
