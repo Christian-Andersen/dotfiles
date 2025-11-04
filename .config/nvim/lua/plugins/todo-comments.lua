@@ -24,15 +24,15 @@
 -- ============================================================================
 
 return {
-    'folke/todo-comments.nvim',
-    -- Load on VimEnter (before opening any file)
-    event = 'VimEnter',
-    -- Required dependency: plenary for utility functions
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    -- Configuration options
-    opts = {
-        -- Don't show signs (symbols) in the gutter
-        -- The comments will still be highlighted, just without gutter markers
-        signs = false
-    }
+	"folke/todo-comments.nvim",
+	-- Load on VimEnter (before opening any file)
+	event = "VimEnter",
+	-- Required dependency: plenary for utility functions
+	dependencies = { "nvim-lua/plenary.nvim" },
+	-- Configuration options
+	opts = {
+		-- Don't show signs (symbols) in the gutter
+		-- The comments will still be highlighted, just without gutter markers
+		signs = false,
+	},
 }

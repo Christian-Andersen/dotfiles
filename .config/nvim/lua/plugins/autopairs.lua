@@ -14,13 +14,13 @@
 -- ============================================================================
 
 return {
-    -- The main plugin specification
-    'windwp/nvim-autopairs',
-    -- Load the plugin when entering insert mode
-    -- This is efficient because autopairs is only needed when typing
-    event = 'InsertEnter',
-    -- opts = {}: Use default configuration
-    -- Autopairs works out of the box with sensible defaults
-    -- Advanced users can customize behavior here (e.g., disable for specific filetypes)
-    opts = {},
+	-- The main plugin specification
+	"windwp/nvim-autopairs",
+	-- Load the plugin when entering insert mode
+	-- This is efficient because autopairs is only needed when typing
+	event = "InsertEnter",
+	-- opts = {}: Use default configuration
+	-- Autopairs works out of the box with sensible defaults
+	-- Advanced users can customize behavior here (e.g., disable for specific filetypes)
+	opts = {},
 }

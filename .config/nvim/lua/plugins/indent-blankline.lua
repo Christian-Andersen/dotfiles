@@ -20,12 +20,12 @@
 -- ============================================================================
 
 return {
-    'lukas-reineke/indent-blankline.nvim',
-    -- Specify the main module name (for proper require() loading)
-    -- This tells lazy.nvim to use 'ibl' instead of the plugin name
-    main = 'ibl',
-    -- opts = {}: Use default configuration
-    -- The plugin works great with sensible defaults - no customization needed
-    -- You can add custom options here if desired (e.g., colors, enabled filetypes)
-    opts = {},
+	"lukas-reineke/indent-blankline.nvim",
+	-- Specify the main module name (for proper require() loading)
+	-- This tells lazy.nvim to use 'ibl' instead of the plugin name
+	main = "ibl",
+	-- opts = {}: Use default configuration
+	-- The plugin works great with sensible defaults - no customization needed
+	-- You can add custom options here if desired (e.g., colors, enabled filetypes)
+	opts = {},
 }
