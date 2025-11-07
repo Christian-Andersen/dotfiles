@@ -166,7 +166,6 @@ return {
 			["bash-language-server"] = {},
 			["clangd"] = {},
 			["json-lsp"] = {},
-			["pyright"] = {},
 			["typescript-language-server"] = {},
 			["docker-language-server"] = {},
 			["dotenv-linter"] = {},
