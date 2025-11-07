@@ -163,11 +163,34 @@ return {
 		-- ===== LANGUAGE SERVER CONFIGURATIONS =====
 		-- Define which language servers to use and their settings
 		local servers = {
-			-- Ruff: Fast Python linter (for style checking)
-			ruff = {}, -- Empty config = use defaults
-
-			-- Ty: Modern Python language server (type checking and analysis)
-			ty = {
+			["bash-language-server"] = {},
+			["clangd"] = {},
+			["json-lsp"] = {},
+			["pyright"] = {},
+			["typescript-language-server"] = {},
+			["docker-language-server"] = {},
+			["dotenv-linter"] = {},
+			["yamlls"] = {},
+			["tombi"] = {},
+			["eslint_d"] = {},
+			["cssls"] = {},
+			["emmet-ls"] = {},
+			["prettierd"] = {},
+			["stylua"] = {},
+			["clang-format"] = {},
+			["shfmt"] = {},
+			["markdownlint"] = {},
+			["sql-formatter"] = {},
+			["fish-lsp"] = {},
+			["azure-pipelines-language-server"] = {},
+			["ruff"] = {
+				init_options = {
+					settings = {
+						lineLength = 120,
+					},
+				},
+			},
+			["ty"] = {
 				cmd = { "ty", "server" }, -- Command to start the server
 				filetypes = { "python" }, -- Only load for Python files
 				root_markers = { "pyproject.toml", "uv.lock", ".git" }, -- Find project root by these files
@@ -179,13 +202,10 @@ return {
 					},
 				},
 			},
-
-			-- Lua LS: Language server for Lua
-			lua_ls = {
+			["lua-language-server"] = {
 				settings = {
 					Lua = {
-						-- Use snippet completion (show function signatures, insert params)
-						completion = { callSnippet = "Replace" },
+						completion = { callSnippet = "Replace" }, -- Use snippet completion (show function signatures, insert params)
 					},
 				},
 			},
