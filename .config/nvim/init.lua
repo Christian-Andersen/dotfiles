@@ -14,7 +14,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- ============================================================================
 -- [[ EDITOR OPTIONS ]]
@@ -24,6 +24,9 @@ vim.g.have_nerd_font = false
 -- NOTE: Most options are configured here using vim.o, which sets global options.
 -- Use vim.opt for options that work with tables.
 -- ============================================================================
+
+-- Make W also write command because of accidently holding shift
+vim.api.nvim_create_user_command("W", "w", { desc = 'Alias for :w' })
 
 -- Make line numbers default (shows absolute line numbers on the left)
 vim.o.number = true
