@@ -1,0 +1,12 @@
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+	"COM812",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
