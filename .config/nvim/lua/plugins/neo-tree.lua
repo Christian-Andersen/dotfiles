@@ -51,6 +51,17 @@ return {
 
 	-- Configuration options
 	opts = {
+		-- Event handlers to close Neo-tree after a file is opened
+		event_handlers = {
+			{
+				event = "file_opened",
+				handler = function(file_path)
+					--auto close
+					require("neo-tree.command").execute({ action = "close" })
+				end,
+			},
+		},
+
 		-- Configure the filesystem source (file tree view)
 		filesystem = {
 			window = {
