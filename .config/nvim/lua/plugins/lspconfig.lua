@@ -163,11 +163,11 @@ return {
 		-- ===== LANGUAGE SERVER CONFIGURATIONS =====
 		-- Define which language servers to use and their settings
 		local servers = {
-			["bash-language-server"] = {},
+			["bashls"] = {},
 			["clangd"] = {},
 			["json-lsp"] = {},
 			["typescript-language-server"] = {},
-			["docker-language-server"] = {},
+			["dockerls"] = {},
 			["dotenv-linter"] = {},
 			["yamlls"] = {},
 			["tombi"] = {},
