@@ -182,6 +182,7 @@ return {
 			["sql-formatter"] = {},
 			["fish-lsp"] = {},
 			["azure-pipelines-language-server"] = {},
+			["just-lsp"] = {},
 			["ruff"] = {
 				init_options = {
 					settings = {
