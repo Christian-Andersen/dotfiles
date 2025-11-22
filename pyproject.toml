@@ -3,6 +3,7 @@
 line-length = 120
 
 [tool.ruff.lint]
+logger-objects = ["loguru.logger"]
 select = ["ALL"]
 ignore = [
 	"COM812", # missing-trailing-comma
