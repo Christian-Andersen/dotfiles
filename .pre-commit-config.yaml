@@ -8,6 +8,14 @@ repos:
       - id: check-merge-conflict
       - id: check-added-large-files
       - id: detect-private-key
+  - repo: https://github.com/srstevenson/nb-clean
+    rev: 4.0.1
+    hooks:
+      - id: nb-clean
+        args:
+          - --preserve-cell-metadata
+          - --preserve-execution-counts
+          - --preserve-notebook-metadat
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.14.5
     hooks:
