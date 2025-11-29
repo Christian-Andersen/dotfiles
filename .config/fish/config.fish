@@ -34,6 +34,14 @@ function check_commands --description 'Check that all the commands I need are in
     end
 end
 
+function ? --description 'Search Google with a query'
+    open "https://www.google.com/search?q="(string escape --style=url "$argv")
+end
+
+function ?? --description 'Search Google AI with a query'
+    open "https://www.google.com/search?udm=50&q="(string escape --style=url "$argv")
+end
+
 function f --description "Fuzzy find files and directories (including hidden, respecting .gitignore) to cd or open"
     set -l search_locations
     if test (count $argv) -gt 0
