@@ -8,11 +8,15 @@ set -gx EDITOR nvim
 set -gx VISUAL nvim
 set -gx UV_MANAGED_PYTHON true
 
-fish_add_path --global --move ~/.local/bin
-fish_add_path --global --move ~/.cargo/bin
+# Add paths only if they exist to keep PATH clean
+if test -d ~/.local/bin
+    fish_add_path --global --move ~/.local/bin
+end
+if test -d ~/.cargo/bin
+    fish_add_path --global --move ~/.cargo/bin
+end
 
 # --- Homebrew (Conditional) ---
-# This block only runs if Homebrew is found at its standard Linux path.
 if test -f /home/linuxbrew/.linuxbrew/bin/brew
     /home/linuxbrew/.linuxbrew/bin/brew shellenv | source
 end
@@ -25,8 +29,19 @@ function c --description 'Change to ~/c and list contents'
     builtin cd ~/c && eza --long --header --group --git
 end
 
-function f --description "Fuzzy find files and directories system-wide to cd or open"
-    set -l source_cmd 'fd -a --full-path --one-file-system . /'
+function f --description "Fuzzy find files and directories (including hidden, respecting .gitignore) to cd or open"
+    set -l search_locations
+    if test (count $argv) -gt 0
+        set search_locations $argv
+    else
+        set search_locations .
+    end
+    set -l base_flags 'fd -a --full-path --one-file-system --exclude .git/ --exclude /proc --exclude /sys --exclude /dev -H .'
+    set -l escaped_paths
+    for loc in $search_locations
+        set escaped_paths $escaped_paths (string escape $loc)
+    end
+    set -l source_cmd "$base_flags $escaped_paths"
     set -l selected_path (eval $source_cmd | fzf)
     if test -n "$selected_path"
         if test -d "$selected_path"
@@ -34,7 +49,7 @@ function f --description "Fuzzy find files and directories system-wide to cd or 
             cd "$selected_path"
         else if test -f "$selected_path"
             echo "Opening file $selected_path with xdg-open"
-            xdg-open "$selected_path" &
+            nohup xdg-open "$selected_path" > /dev/null 2>&1 &
         else
             echo "Selection is neither a directory nor a file: $selected_path"
         end
@@ -50,9 +65,9 @@ function h --description "Fuzzy search through history and execute"
     end
 end
 
-function m --description 'Make directory and change to it'
+function m --description 'Make directory (recursive) and change to it'
     set target $argv[1]
-	mkdir $target && builtin cd $target
+    mkdir -p $target && builtin cd $target
 end
 
 function t --description 'Create and cd into a temp directory'
@@ -66,17 +81,25 @@ function t --description 'Create and cd into a temp directory'
     end
 end
 
-function u --description 'Update system packages (pacman, apt, brew)'
+function u --description 'Update system packages (pacman, apt, brew, uv)'
     if command -v pacman >/dev/null
+        echo "--- Updating Pacman ---"
         sudo pacman -Syu --noconfirm
     else if command -v apt >/dev/null
+        echo "--- Updating Apt ---"
         sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y
     end
     if command -v brew >/dev/null
+        echo "--- Updating Homebrew ---"
         brew update && brew upgrade && brew cleanup
     end
     if command -v uv >/dev/null
+        echo "--- Updating UV Tools ---"
         uv tool upgrade --all
+    end
+    if command -v cargo >/dev/null
+        echo "--- Updating Global Rust Packages ---"
+        cargo install-update --all
     end
 end
 
@@ -121,8 +144,8 @@ if status is-interactive
     abbr -a ltree 'eza --tree --long --header --group --git --total-size --sort=size'
     abbr -a n nvim
     abbr -a o xdg-open
-    abbr -a p pre-commit
     abbr -a p 'uv run --'
+    abbr -a pc pre-commit
     abbr -a q exit
     abbr -a r 'ruff check --fix . ; ruff format .'
     abbr -a s 'git fetch --all && git status'
