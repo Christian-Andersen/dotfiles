@@ -41,17 +41,22 @@ function f --description "Fuzzy find files and directories (including hidden, re
     for loc in $search_locations
         set escaped_paths $escaped_paths (string escape $loc)
     end
-    set -l source_cmd "$base_flags $escaped_paths"
-    set -l selected_path (eval $source_cmd | fzf)
+    set -l selected_path (eval $base_flags $escaped_paths | fzf)
     if test -n "$selected_path"
         if test -d "$selected_path"
             echo "Changing directory to $selected_path"
             cd "$selected_path"
         else if test -f "$selected_path"
-            echo "Opening file $selected_path with xdg-open"
-            nohup xdg-open "$selected_path" > /dev/null 2>&1 &
+            if test -w "$selected_path"
+                echo "Opening file $selected_path with nvim"
+                nvim "$selected_path"
+            else
+                echo "Opening file $selected_path with sudo nvim (Read-Only/Insufficient Permissions)"
+                sudo nvim "$selected_path"
+            end
         else
-            echo "Selection is neither a directory nor a file: $selected_path"
+            echo "Opening selection $selected_path with xdg-open"
+            nohup xdg-open "$selected_path" >/dev/null 2>&1 &
         end
     end
 end
