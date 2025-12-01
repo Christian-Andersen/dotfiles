@@ -26,7 +26,7 @@ end
 # ==============================================================================
 
 function check_commands --description 'Check that all the commands I need are installed'
-    set commands_to_check nvim eza fd fzf bat cargo uv uvx zoxide starship lazygit git ruff ty prek just btop xdg-open xclip zellij tldr docker wget curl aria2c ssh scp fastfetch rg dos2unix npm openssl dust tokei hyperfine
+    set commands_to_check nvim eza fd fzf bat cargo uv uvx zoxide starship lazygit git ruff ty prek just btop xdg-open xclip zellij tldr docker wget curl aria2c ssh scp fastfetch rg dos2unix npm openssl dust tokei hyperfine tv
     for cmd in $commands_to_check
         if not type -q $cmd
             echo "**✗ FAILURE**: Command '$cmd' NOT found in your \$PATH."
@@ -115,6 +115,8 @@ function u --description 'Update system packages (pacman, apt, brew, uv)'
     if command -v uv >/dev/null
         echo "--- Updating UV Tools ---"
         uv tool upgrade --all
+        uv generate-shell-completion fish > ~/.config/fish/completions/uv.fish
+        uvx --generate-shell-completion fish > ~/.config/fish/completions/uvx.fish
     end
     if command -v cargo >/dev/null
         echo "--- Updating Global Rust Packages ---"
@@ -178,8 +180,6 @@ if status is-interactive
 
     # --- Shell Tools & Completions ---
     # Sourced directly, assuming these commands are always present.
-    uv generate-shell-completion fish | source
-    uvx --generate-shell-completion fish | source
     zoxide init fish --cmd cd | source
     starship init fish | source
 end
