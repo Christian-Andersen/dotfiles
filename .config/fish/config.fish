@@ -34,10 +34,6 @@ function check_commands --description 'Check that all the commands I need are in
     end
 end
 
-function c --description 'Change to ~/c and list contents'
-    builtin cd ~/c && eza --long --header --group --git
-end
-
 function f --description "Fuzzy find files and directories (including hidden, respecting .gitignore) to cd or open"
     set -l search_locations
     if test (count $argv) -gt 0
@@ -142,6 +138,7 @@ if status is-interactive
     # --- Single Letter Abbreviations ---
     abbr -a a '. .venv/bin/activate.fish'
     abbr -a b 'cd -'
+    abbr -a c 'cd ~/c && eza --long --header --group'
     abbr -a d 'CUDA_VISIBLE_DEVICES='
     abbr -a d0 'CUDA_VISIBLE_DEVICES=0'
     abbr -a d1 'CUDA_VISIBLE_DEVICES=1'
