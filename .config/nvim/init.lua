@@ -587,7 +587,6 @@ require('lazy').setup({
       local servers = {
         ruff = {},
         ty = {},
-	basedpyright = {},
         prettierd = {},
         html = {},
         ts_ls = {},
