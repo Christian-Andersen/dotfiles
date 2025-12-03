@@ -31,7 +31,11 @@ return {
 				-- Don't use italic for comments (less common preference)
 				-- Set to italic = true to enable italicized comments
 				comments = { italic = false },
-			},
+			},			
+			on_colors = function(colors)
+				colors.black = "#000000"
+				colors.bg = "#000000"
+			end,
 		})
 
 		-- Set the active colorscheme to tokyonight-night (dark mode)
