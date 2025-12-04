@@ -9,6 +9,7 @@ ignore = [
 	"COM812", # missing-trailing-comma
 	"T20", # flake8-print
 	"ERA", # eradicate
+	"D", # docstrings
 ]
 
 [tool.ruff.lint.pydocstyle]
