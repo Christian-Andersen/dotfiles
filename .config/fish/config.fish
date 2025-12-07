@@ -7,8 +7,7 @@
 set -gx EDITOR nvim
 set -gx VISUAL nvim
 set -gx UV_MANAGED_PYTHON true
-# set -gx DE generic
-# set -gx BROWSER /mnt/c/Windows/explorer.exe
+set -gx DE generic
 
 # Add paths only if they exist to keep PATH clean
 if test -d ~/.local/bin
