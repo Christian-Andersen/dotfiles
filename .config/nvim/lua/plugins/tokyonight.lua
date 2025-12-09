@@ -1,14 +1,7 @@
-return {
-    'folke/tokyonight.nvim',
-    priority = 1000,
-    config = function()
-        ---@diagnostic disable-next-line: missing-fields
-        require('tokyonight').setup {
-            styles = {
-                comments = { italic = false },
-            },
-        }
-
-        vim.cmd.colorscheme 'tokyonight-night'
-    end,
-}
+-- ============================================================================
+-- TOKYONIGHT COLORSCHEME
+-- ============================================================================
+-- tokyonight.nvim: Beautiful and modern colorscheme inspired by Tokyo Night
+-- 
+-- Features:
+--   - Three color variants: night (dark), storm (darker), moon (mid)\n--   - Beautiful syntax highlighting\n--   - Works well with Terminal UI plugins (neo-tree, telescope, etc.)\n--   - Customizable appearance and contrast\n--   - Carefully curated colors for better readability\n--\n-- Variants:\n--   - tokyonight-night: Default dark variant (recommended)\n--   - tokyonight-storm: Even darker variant\n--   - tokyonight-moon: Mid-tone variant\n--\n-- Repo: https://github.com/folke/tokyonight.nvim\n-- ============================================================================\n\nreturn {\n    'folke/tokyonight.nvim',\n    -- High priority: ensure this loads before other plugins\n    -- Colorscheme should be loaded early to apply colors correctly\n    priority = 1000,\n    config = function()\n        -- Configure tokyonight before setting it as colorscheme\n        require('tokyonight').setup {\n            -- Style configuration\n            styles = {\n                -- Don't use italic for comments (less common preference)\n                -- Set to italic = true to enable italicized comments\n                comments = { italic = false },\n            },\n        }\n\n        -- Set the active colorscheme to tokyonight-night (dark mode)\n        -- Other options: 'tokyonight-storm' or 'tokyonight-moon'\n        vim.cmd.colorscheme 'tokyonight-night'\n    end,\n}\n

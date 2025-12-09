@@ -1,6 +1,15 @@
-return {
-    'folke/todo-comments.nvim',
-    event = 'VimEnter',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    opts = { signs = false }
-}
+-- ============================================================================
+-- TODO COMMENTS PLUGIN
+-- ============================================================================
+-- todo-comments.nvim: Highlights and searches for todo/fixme/hack comments
+-- 
+-- Features:
+--   - Highlights TODO, FIXME, HACK, WARN, NOTE, PERF, TEST comments
+--   - Search all todo comments in project with :TodoTelescope
+--   - Shows counts of todo items
+--   - Customizable comment keywords and colors
+--   - Works with all file types
+--   - Helps find incomplete work in large codebases
+--
+-- Default keywords (customizable):
+--   - TODO: Task to be done\n--   - FIXME: Bug or issue to fix\n--   - HACK: Workaround or temporary solution\n--   - WARN: Warning message\n--   - NOTE: Important note\n--   - PERF: Performance improvement idea\n--   - TEST: Test to be written\n--\n-- Repo: https://github.com/folke/todo-comments.nvim\n-- ============================================================================\n\nreturn {\n    'folke/todo-comments.nvim',\n    -- Load on VimEnter (before opening any file)\n    event = 'VimEnter',\n    -- Required dependency: plenary for utility functions\n    dependencies = { 'nvim-lua/plenary.nvim' },\n    -- Configuration options\n    opts = { \n        -- Don't show signs (symbols) in the gutter\n        -- The comments will still be highlighted, just without gutter markers\n        signs = false \n    }\n}\n

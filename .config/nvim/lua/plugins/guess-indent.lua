@@ -1,2 +1,22 @@
--- Detect tabstop and shiftwidth automatically
+-- ============================================================================
+-- GUESS-INDENT PLUGIN
+-- ============================================================================
+-- guess-indent.nvim: Automatically detects indentation settings of a file
+-- 
+-- Features:
+--   - Auto-detects if the file uses tabs or spaces
+--   - Detects indentation width (2 spaces, 4 spaces, tabs, etc.)
+--   - Sets shiftwidth, tabstop, and expandtab accordingly
+--   - Works per-buffer (different files can have different settings)
+--   - No configuration needed - works out of the box
+--
+-- This is especially useful when working with multiple projects that have
+-- different indentation conventions. Instead of manually adjusting your
+-- settings each time you open a file, guess-indent does it automatically.
+--
+-- Repo: https://github.com/NMAC427/guess-indent.nvim
+-- ============================================================================
+
+-- Minimal plugin spec: just the plugin name as a string
+-- This tells lazy.nvim to load the plugin with default settings
 return 'NMAC427/guess-indent.nvim'

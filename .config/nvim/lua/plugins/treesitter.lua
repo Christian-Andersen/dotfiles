@@ -1,29 +1,6 @@
-return {
-    'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
-    main = 'nvim-treesitter.configs',
-    opts = {
-        ensure_installed = {
-            'bash',
-            'c',
-            'diff',
-            'html',
-            'lua',
-            'luadoc',
-            'markdown',
-            'markdown_inline',
-            'query',
-            'vim',
-            'vimdoc',
-            'python',
-            'javascript',
-            'typescript',
-        },
-        auto_install = true,
-        highlight = {
-            enable = true,
-            additional_vim_regex_highlighting = { 'ruby' },
-        },
-        indent = { enable = true, disable = { 'ruby' } },
-    },
-}
+-- ============================================================================
+-- TREESITTER SYNTAX HIGHLIGHTING
+-- ============================================================================
+-- nvim-treesitter: Advanced syntax highlighting using Tree-sitter parser
+-- 
+-- Features:\n--   - Better syntax highlighting than regex-based highlighting\n--   - Supports 100+ languages with high accuracy\n--   - Smart indentation based on parse tree\n--   - Code navigation and text objects\n--   - Incremental parsing for fast updates\n--   - Auto-install language parsers\n--\n-- How it works:\n--   - Tree-sitter parses files into an Abstract Syntax Tree (AST)\n--   - Syntax is then applied based on the parsed structure, not regex patterns\n--   - Results in more accurate and consistent highlighting\n--\n-- Configuration:\n--   - ensure_installed: Languages to automatically download and install\n--   - auto_install: Automatically install parsers for new file types\n--   - highlight: Enable syntax highlighting\n--   - indent: Enable smart auto-indentation\n--\n-- Repo: https://github.com/nvim-treesitter/nvim-treesitter\n-- ============================================================================\n\nreturn {\n    'nvim-treesitter/nvim-treesitter',\n    -- Build treesitter parsers after updating\n    -- :TSUpdate is a command provided by this plugin\n    build = ':TSUpdate',\n    -- Use 'nvim-treesitter.configs' as the main module\n    main = 'nvim-treesitter.configs',\n    opts = {\n        -- List of languages whose parsers to ensure are installed\n        -- These parsers will be auto-downloaded if missing\n        ensure_installed = {\n            'bash',               -- Shell scripting\n            'c',                  -- C programming\n            'diff',               -- Diff format (for patches)\n            'html',               -- HTML markup\n            'json',               -- JSON data format\n            'lua',                -- Lua (for Neovim config)\n            'luadoc',             -- Lua documentation comments\n            'markdown',           -- Markdown text formatting\n            'markdown_inline',    -- Inline markdown formatting\n            'query',              -- Tree-sitter query language\n            'sql',                -- SQL database queries\n            'vim',                -- Vim scripting\n            'vimdoc',             -- Vim documentation format\n            'python',             -- Python programming\n            'javascript',         -- JavaScript programming\n            'typescript',         -- TypeScript programming\n        },\n        -- Auto-install parsers when opening a file of unknown type\n        -- Automatically fetches and installs the parser for that language\n        auto_install = true,\n        -- Enable syntax highlighting\n        highlight = {\n            -- Enable treesitter-based highlighting\n            enable = true,\n            -- Use additional Vim regex highlighting for specific languages\n            -- Ruby has better regex highlighting, so disable treesitter for it\n            additional_vim_regex_highlighting = { 'ruby' },\n        },\n        -- Enable smart auto-indentation based on parse tree\n        indent = { \n            enable = true,\n            -- Disable indentation for ruby (use default Vim indentation instead)\n            disable = { 'ruby' } \n        },\n    },\n}\n
