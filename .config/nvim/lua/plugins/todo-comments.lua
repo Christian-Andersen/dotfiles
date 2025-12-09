@@ -2,7 +2,7 @@
 -- TODO COMMENTS PLUGIN
 -- ============================================================================
 -- todo-comments.nvim: Highlights and searches for todo/fixme/hack comments
--- 
+--
 -- Features:
 --   - Highlights TODO, FIXME, HACK, WARN, NOTE, PERF, TEST comments
 --   - Search all todo comments in project with :TodoTelescope
@@ -12,4 +12,27 @@
 --   - Helps find incomplete work in large codebases
 --
 -- Default keywords (customizable):
---   - TODO: Task to be done\n--   - FIXME: Bug or issue to fix\n--   - HACK: Workaround or temporary solution\n--   - WARN: Warning message\n--   - NOTE: Important note\n--   - PERF: Performance improvement idea\n--   - TEST: Test to be written\n--\n-- Repo: https://github.com/folke/todo-comments.nvim\n-- ============================================================================\n\nreturn {\n    'folke/todo-comments.nvim',\n    -- Load on VimEnter (before opening any file)\n    event = 'VimEnter',\n    -- Required dependency: plenary for utility functions\n    dependencies = { 'nvim-lua/plenary.nvim' },\n    -- Configuration options\n    opts = { \n        -- Don't show signs (symbols) in the gutter\n        -- The comments will still be highlighted, just without gutter markers\n        signs = false \n    }\n}\n
+--   - TODO: Task to be done
+--   - FIXME: Bug or issue to fix
+--   - HACK: Workaround or temporary solution
+--   - WARN: Warning message
+--   - NOTE: Important note
+--   - PERF: Performance improvement idea
+--   - TEST: Test to be written
+--
+-- Repo: https://github.com/folke/todo-comments.nvim
+-- ============================================================================
+
+return {
+    'folke/todo-comments.nvim',
+    -- Load on VimEnter (before opening any file)
+    event = 'VimEnter',
+    -- Required dependency: plenary for utility functions
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    -- Configuration options
+    opts = {
+        -- Don't show signs (symbols) in the gutter
+        -- The comments will still be highlighted, just without gutter markers
+        signs = false
+    }
+}

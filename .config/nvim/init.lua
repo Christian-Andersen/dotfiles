@@ -255,19 +255,19 @@ require('lazy').setup(require('plugins'), {
         -- If you have a Nerd Font installed, use empty table {} to use default Nerd Font icons
         -- Otherwise, use Unicode emoji icons for better visual feedback in the UI
         icons = vim.g.have_nerd_font and {} or {
-            cmd = '⌘',       -- Icon for commands
-            config = '🛠',    -- Icon for configuration
-            event = '📅',     -- Icon for events that trigger lazy loading
-            ft = '📂',        -- Icon for filetype-based loading
-            init = '⚙',      -- Icon for init hooks
-            keys = '🗝',      -- Icon for key mappings
-            plugin = '🔌',    -- Icon for plugins
-            runtime = '💻',   -- Icon for runtime code
-            require = '🌙',   -- Icon for require dependencies
-            source = '📄',    -- Icon for source files
-            start = '🚀',     -- Icon for plugins that start immediately
-            task = '📌',      -- Icon for tasks
-            lazy = '💤 ',     -- Icon for lazy loading indicator
+            cmd = '⌘', -- Icon for commands
+            config = '🛠', -- Icon for configuration
+            event = '📅', -- Icon for events that trigger lazy loading
+            ft = '📂', -- Icon for filetype-based loading
+            init = '⚙', -- Icon for init hooks
+            keys = '🗝', -- Icon for key mappings
+            plugin = '🔌', -- Icon for plugins
+            runtime = '💻', -- Icon for runtime code
+            require = '🌙', -- Icon for require dependencies
+            source = '📄', -- Icon for source files
+            start = '🚀', -- Icon for plugins that start immediately
+            task = '📌', -- Icon for tasks
+            lazy = '💤 ', -- Icon for lazy loading indicator
         },
     },
 })
@@ -278,8 +278,8 @@ require('lazy').setup(require('plugins'), {
 -- The line below is a vim modeline that sets editor options for this specific file
 -- It tells Vim to use 2-space indentation and expand tabs to spaces
 -- See `:help modeline` for more information about modelines
-vim.opt.tabstop = 2        -- Tab width for display
-vim.opt.softtabstop = 2    -- Spaces for soft tabs
-vim.opt.shiftwidth = 2     -- Spaces for auto-indentation
-vim.opt.expandtab = true   -- Expand tabs to spaces
+vim.opt.tabstop = 2      -- Tab width for display
+vim.opt.softtabstop = 2  -- Spaces for soft tabs
+vim.opt.shiftwidth = 2   -- Spaces for auto-indentation
+vim.opt.expandtab = true -- Expand tabs to spaces
 -- vim: ts=2 sts=2 sw=2 et

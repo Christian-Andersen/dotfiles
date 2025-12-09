@@ -2,7 +2,7 @@
 -- GUESS-INDENT PLUGIN
 -- ============================================================================
 -- guess-indent.nvim: Automatically detects indentation settings of a file
--- 
+--
 -- Features:
 --   - Auto-detects if the file uses tabs or spaces
 --   - Detects indentation width (2 spaces, 4 spaces, tabs, etc.)

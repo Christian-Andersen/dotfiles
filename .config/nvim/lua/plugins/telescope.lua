@@ -2,7 +2,7 @@
 -- TELESCOPE FUZZY FINDER
 -- ============================================================================
 -- telescope.nvim: Highly extensible fuzzy finder for Neovim
--- 
+--
 -- Features:
 --   - Find files quickly with fuzzy matching
 --   - Search text across entire project (live grep)
@@ -35,7 +35,7 @@ return {
     'nvim-telescope/telescope.nvim',
     -- Load on VimEnter (before opening any file)
     event = 'VimEnter',
-    
+
     -- Dependencies
     dependencies = {
         -- Plenary: Utility library used by telescope
@@ -53,9 +53,9 @@ return {
         -- UI select extension: use telescope for vim.ui.select()
         { 'nvim-telescope/telescope-ui-select.nvim' },
         -- Web dev icons for file type icons
-        { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+        { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
     },
-    
+
     -- Configuration function
     config = function()
         -- Configure telescope
@@ -64,22 +64,22 @@ return {
                 -- UI select extension: shows telescope interface for vim.ui.select()
                 -- Used for plugin configuration and other UI selections
                 ['ui-select'] = {
-                    require('telescope.themes').get_dropdown(),  -- Use dropdown theme
+                    require('telescope.themes').get_dropdown(), -- Use dropdown theme
                 },
             },
         }
 
         -- Safely load extensions (if not available, just skip them)
         -- This prevents errors if a dependency isn't installed
-        pcall(require('telescope').load_extension, 'fzf')          -- Native fzf extension
-        pcall(require('telescope').load_extension, 'ui-select')    -- UI select extension
+        pcall(require('telescope').load_extension, 'fzf')       -- Native fzf extension
+        pcall(require('telescope').load_extension, 'ui-select') -- UI select extension
 
         -- Load telescope builtin functions
         local builtin = require 'telescope.builtin'
-        
+
         -- Set up keybindings for various telescope pickers
         -- Each keymap opens a different fuzzy finder view
-        
+
         -- Search help tags - Find Neovim help topics
         vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
         -- Search keymaps - Find all your configured keybindings
@@ -105,8 +105,8 @@ return {
         -- Useful for navigating large files
         vim.keymap.set('n', '<leader>/', function()
             builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-                winblend = 10,        -- Make the background slightly transparent
-                previewer = false,    -- Don't show file preview in buffer search
+                winblend = 10,     -- Make the background slightly transparent
+                previewer = false, -- Don't show file preview in buffer search
             })
         end, { desc = '[/] Fuzzily search in current buffer' })
 
@@ -121,7 +121,7 @@ return {
         -- Search Neovim config files - Find files in Neovim config directory
         -- Useful for quickly navigating and editing your config
         vim.keymap.set('n', '<leader>sn', function()
-            builtin.find_files { cwd = vim.fn.stdpath 'config' }  -- Search in ~/.config/nvim/
+            builtin.find_files { cwd = vim.fn.stdpath 'config' } -- Search in ~/.config/nvim/
         end, { desc = '[S]earch [N]eovim files' })
     end,
 }
