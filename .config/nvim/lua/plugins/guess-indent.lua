@@ -19,4 +19,4 @@
 
 -- Minimal plugin spec: just the plugin name as a string
 -- This tells lazy.nvim to load the plugin with default settings
-return 'NMAC427/guess-indent.nvim'
+return "NMAC427/guess-indent.nvim"
