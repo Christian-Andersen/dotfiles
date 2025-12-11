@@ -149,7 +149,7 @@ if status is-interactive
 
     # --- Single Letter Abbreviations ---
     abbr -a a '. .venv/bin/activate.fish'
-    abbr -a c 'cd ~/c && eza --long --header --group'
+    abbr -a c 'clear && cd ~/c && eza --long --header --group --git --sort=date'
     abbr -a d 'CUDA_VISIBLE_DEVICES='
     abbr -a d0 'CUDA_VISIBLE_DEVICES=0'
     abbr -a d1 'CUDA_VISIBLE_DEVICES=1'
@@ -172,7 +172,7 @@ if status is-interactive
     abbr -a s 'git fetch --all && git status'
     abbr -a x chmod +x
     abbr -a y 'xclip -selection clipboard'
-    abbr -a z 'zellij attach --create main'
+    abbr -a z 'clear && zellij attach --create main'
 
     # Global aliases for help
     abbr -a --position anywhere -- --help '--help | bat -plhelp'
