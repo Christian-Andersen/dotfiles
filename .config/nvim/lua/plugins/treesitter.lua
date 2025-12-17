@@ -27,11 +27,12 @@
 
 return {
 	"nvim-treesitter/nvim-treesitter",
+	lazy = false,
 	-- Build treesitter parsers after updating
 	-- :TSUpdate is a command provided by this plugin
 	build = ":TSUpdate",
 	-- Use 'nvim-treesitter.configs' as the main module
-	main = "nvim-treesitter.configs",
+	-- main = "nvim-treesitter.configs",
 	opts = {
 		-- List of languages whose parsers to ensure are installed
 		-- These parsers will be auto-downloaded if missing
