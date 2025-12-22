@@ -16,6 +16,9 @@ end
 if test -d ~/.cargo/bin
     fish_add_path --global --move ~/.cargo/bin
 end
+if test -d ~/.npm-global/bin
+    fish_add_path --global --move ~/.npm-global/bin
+end
 
 # --- Homebrew (Conditional) ---
 if test -f /home/linuxbrew/.linuxbrew/bin/brew
