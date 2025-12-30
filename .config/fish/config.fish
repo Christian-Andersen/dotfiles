@@ -179,7 +179,6 @@ if status is-interactive
 
     # Global aliases for help
     abbr -a --position anywhere -- --help '--help | bat -plhelp'
-    abbr -a --position anywhere -- -h '-h | bat -plhelp'
 
     # --- Shell Tools & Completions ---
     # Sourced directly, assuming these commands are always present.
