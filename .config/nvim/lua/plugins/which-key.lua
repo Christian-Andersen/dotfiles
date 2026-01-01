@@ -68,6 +68,8 @@ return {
 		-- Define key group labels for better organization
 		-- This groups related commands under descriptive headings
 		spec = {
+			-- Group all <leader>a commands under the [A]dd category (Harpoon)
+			{ "<leader>a", group = "Harpoon [A]dd" },
 			-- Group all <leader>s commands under the [S]earch category
 			{ "<leader>s", group = "[S]earch" },
 			-- Group all <leader>t commands under the [T]oggle category

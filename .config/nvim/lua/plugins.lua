@@ -38,6 +38,8 @@ return {
 	require("plugins.mini"),
 	-- Neo-tree: file tree browser for navigating the project structure
 	require("plugins.neo-tree"),
+	-- Harpoon: navigate between marked files with ease
+	require("plugins.harpoon"),
 	-- Telescope: fuzzy finder for files, commands, text search, and more
 	require("plugins.telescope"),
 	-- Todo comments: highlights and searches todo/fixme/hack/warn comments
