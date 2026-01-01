@@ -26,7 +26,7 @@ end
 # ==============================================================================
 
 function check_commands --description 'Check that all the commands I need are installed'
-    set commands_to_check nvim eza fd fzf bat cargo uv uvx zoxide starship lazygit git pre-commit ruff just btop xdg-open xclip zellij tldr docker wget curl aria2c ssh scp fastfetch rg dos2unix npm openssl
+    set commands_to_check nvim eza fd fzf bat cargo uv uvx zoxide starship lazygit git ruff just btop xdg-open xclip zellij tldr docker wget curl aria2c ssh scp fastfetch rg dos2unix npm openssl
     for cmd in $commands_to_check
         if not type -q $cmd
             echo "**✗ FAILURE**: Command '$cmd' NOT found in your \$PATH."
@@ -157,7 +157,6 @@ if status is-interactive
     abbr -a n nvim
     abbr -a o xdg-open
     abbr -a p 'uv run --'
-    abbr -a pc pre-commit
     abbr -a q exit
     abbr -a r 'ruff check --fix . ; ruff format .'
     abbr -a s 'git fetch --all && git status'
