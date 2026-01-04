@@ -183,6 +183,7 @@ return {
 			["fish-lsp"] = {},
 			["azure-pipelines-language-server"] = {},
 			["just-lsp"] = {},
+			["rust-analyzer"] = {},
 			["ruff"] = {
 				init_options = {
 					settings = {
