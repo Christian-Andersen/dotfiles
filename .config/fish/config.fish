@@ -90,48 +90,48 @@ end
 function u --description 'Update system packages (pacman, apt, brew, uv, cargo, npm)'
     sudo --validate
     if command -v paru >/dev/null
-        echo "--- Updating Paru (Arch) ---"
+        echo (set_color -o cyan)"--- Updating Paru (Arch) ---"(set_color normal)
         paru -Syu --noconfirm
     else if command -v yay >/dev/null
-        echo "--- Updating Yay (Arch) ---"
+        echo (set_color -o cyan)"--- Updating Yay (Arch) ---"(set_color normal)
         yay -Syu --noconfirm
     else if command -v pacman >/dev/null
-        echo "--- Updating Pacman ---"
+        echo (set_color -o cyan)"--- Updating Pacman ---"(set_color normal)
         sudo pacman -Syu --noconfirm
     else if command -v nala >/dev/null
-        echo "--- Updating Nala ---"
+        echo (set_color -o cyan)"--- Updating Nala ---"(set_color normal)
         sudo nala upgrade -y
     else if command -v apt >/dev/null
-        echo "--- Updating Apt ---"
+        echo (set_color -o cyan)"--- Updating Apt ---"(set_color normal)
         sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y
     end
 
     if command -v brew >/dev/null
-        echo "--- Updating Homebrew ---"
+        echo (set_color -o cyan)"--- Updating Homebrew ---"(set_color normal)
         brew update && brew upgrade && brew cleanup
     end
 
     if command -v uv >/dev/null
-        echo "--- Updating UV Tools ---"
+        echo (set_color -o cyan)"--- Updating UV Tools ---"(set_color normal)
         uv tool upgrade --all
         uv generate-shell-completion fish >~/.config/fish/completions/uv.fish
         uvx --generate-shell-completion fish >~/.config/fish/completions/uvx.fish
     end
 
     if command -v rustup >/dev/null
-        echo "--- Updating Rustup ---"
+        echo (set_color -o cyan)"--- Updating Rustup ---"(set_color normal)
         rustup update
     end
 
     if command -v cargo >/dev/null
         if command -v cargo-install-update >/dev/null
-            echo "--- Updating Global Rust Packages ---"
+            echo (set_color -o cyan)"--- Updating Global Rust Packages ---"(set_color normal)
             cargo install-update --all
         end
     end
 
     if command -v npm >/dev/null
-        echo "--- Updating NPM Global Packages ---"
+        echo (set_color -o cyan)"--- Updating NPM Global Packages ---"(set_color normal)
         npm update -g --no-fund
     end
 end
