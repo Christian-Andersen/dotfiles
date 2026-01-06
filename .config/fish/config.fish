@@ -100,7 +100,7 @@ function u --description 'Update system packages (pacman, apt, brew, uv, cargo, 
         sudo pacman -Syu --noconfirm
     else if command -v nala >/dev/null
         echo (set_color -o cyan)"--- Updating Nala ---"(set_color normal)
-        sudo nala upgrade -y
+        sudo nala full-upgrade -y
     else if command -v apt >/dev/null
         echo (set_color -o cyan)"--- Updating Apt ---"(set_color normal)
         sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y
