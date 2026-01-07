@@ -2,12 +2,23 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
+      - id: no-commit-to-branch
+        args: [--branch, main, --branch, master]
+      - id: mixed-line-ending
+        args: [--fix=no]
       - id: check-yaml
-      - id: check-toml
-      - id: check-json
-      - id: check-merge-conflict
       - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-json
+      - id: check-toml
+      - id: check-xml
+      - id: check-symlinks
+      - id: check-merge-conflict
       - id: detect-private-key
+      - id: check-executables-have-shebangs
+      - id: fix-byte-order-marker # makes changes
+      # - id: trailing-whitespace # makes changes
+      # - id: end-of-file-fixer # makes changes
   - repo: https://github.com/srstevenson/nb-clean
     rev: 4.0.1
     hooks:
