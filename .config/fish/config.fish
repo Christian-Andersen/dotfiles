@@ -148,7 +148,7 @@ if status is-interactive
     abbr -a g lazygit
     abbr -a i 'uv run --with ipython -- ipython -i'
     abbr -a j just
-    abbr -a k kill -9 (jobs -p)
+    abbr -a k 'kill -9 (jobs -p)'
     abbr -a l 'eza --long --header --group --git'
     abbr -a ls eza
     abbr -a la 'eza --all --long --header --group --git'
