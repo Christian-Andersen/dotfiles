@@ -178,7 +178,6 @@ return {
 			["stylua"] = {},
 			["clang-format"] = {},
 			["shfmt"] = {},
-			["markdownlint"] = {},
 			["sql-formatter"] = {},
 			["fish-lsp"] = {},
 			["azure-pipelines-language-server"] = {},
