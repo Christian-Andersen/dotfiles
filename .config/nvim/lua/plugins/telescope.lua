@@ -67,6 +67,19 @@ return {
 					require("telescope.themes").get_dropdown(), -- Use dropdown theme
 				},
 			},
+			-- Enable live preview for the colorscheme picker
+			pickers = {
+				colorscheme = {
+					enable_preview = true,
+					previewer = false,
+					layout_strategy = "flex", -- Use flex layout for precise positioning
+					layout_config = {
+						width = 0.3,  -- Make it narrow (30% of screen width)
+						height = 0.8, -- Use 80% of screen height
+						anchor = "ne", -- Position it in the North-East (top-right) corner
+					},
+				},
+			},
 		})
 
 		-- Safely load extensions (if not available, just skip them)
@@ -100,6 +113,7 @@ return {
 		vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
 		-- Find buffers - Switch between open buffers
 		vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+
 
 		-- Search within current buffer - Fuzzy search text in the active buffer
 		-- Useful for navigating large files
