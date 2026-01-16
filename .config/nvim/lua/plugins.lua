@@ -44,8 +44,8 @@ return {
 	require("plugins.telescope"),
 	-- Todo comments: highlights and searches todo/fixme/hack/warn comments
 	require("plugins.todo-comments"),
-	-- Tokyo Night: beautiful and modern colorscheme with multiple variants
-	require("plugins.tokyonight"),
+	-- Themes: tokyonight, catppuccin, etc.
+	require("plugins.themes"),
 	-- Treesitter: provides better syntax highlighting and code navigation
 	require("plugins.treesitter"),
 	-- Which-key: shows available keybindings when you start typing a key sequence
