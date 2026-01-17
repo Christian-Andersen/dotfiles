@@ -294,3 +294,7 @@ vim.opt.softtabstop = 2 -- Spaces for soft tabs
 vim.opt.shiftwidth = 2 -- Spaces for auto-indentation
 vim.opt.expandtab = true -- Expand tabs to spaces
 -- vim: ts=2 sts=2 sw=2 et
+
+vim.api.nvim_create_user_command("Pycheck", function()
+	require("utils").pycheck()
+end, {})
