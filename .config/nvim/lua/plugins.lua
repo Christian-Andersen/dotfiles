@@ -48,4 +48,6 @@ return {
 	require("plugins.treesitter"),
 	-- Which-key: shows available keybindings when you start typing a key sequence
 	require("plugins.which-key"),
+	-- Debug: Debug Adapter Protocol (DAP) setup
+	require("plugins.debug"),
 }
