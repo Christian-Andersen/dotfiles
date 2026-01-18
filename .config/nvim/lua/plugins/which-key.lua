@@ -74,6 +74,8 @@ return {
 			{ "<leader>s", group = "[S]earch" },
 			-- Group all <leader>t commands under the [T]oggle category
 			{ "<leader>t", group = "[T]oggle" },
+			-- Group all <leader>d commands under the [D]ebug category
+			{ "<leader>d", group = "[D]ebug" },
 			-- Group all <leader>h commands under the Git [H]unk category (works in normal and visual modes)
 			{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
 		},
