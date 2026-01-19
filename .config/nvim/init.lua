@@ -282,8 +282,16 @@ require("lazy").setup(require("plugins"), {
 })
 
 -- Set default colorscheme after all plugins are loaded
-vim.cmd.colorscheme("wildcharm")
-vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
+-- We check for the NVIM_THEME environment variable to allow per-machine themes
+-- If not set, we fall back to 'wildcharm'
+local theme = vim.env.NVIM_THEME or "wildcharm"
+-- Safely try to load the theme, falling back to default if it fails
+if not pcall(vim.cmd.colorscheme, theme) then
+	vim.notify("Failed to load theme: " .. theme .. ". Falling back to wildcharm.", vim.log.levels.WARN)
+end
+
+-- Force background to black for transparent terminals or OLED screens
+-- vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
 
 -- ============================================================================
 -- The line below is a vim modeline that sets editor options for this specific file

@@ -50,4 +50,6 @@ return {
 	require("plugins.which-key"),
 	-- Debug: Debug Adapter Protocol (DAP) setup
 	require("plugins.debug"),
+	-- Themes: Collection of popular color schemes
+	require("plugins.themes"),
 }
