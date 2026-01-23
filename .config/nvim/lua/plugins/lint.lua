@@ -39,7 +39,7 @@ return {
 			-- - Proper heading hierarchy
 			-- - Code block formatting
 			-- - Link and image syntax
-			markdown = { "markdownlint" },
+			-- markdown = { "markdownlint" },
 		}
 		-- You can add more filetypes here, e.g.:
 		-- python = { 'pylint', 'flake8' },
