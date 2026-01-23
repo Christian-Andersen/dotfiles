@@ -160,7 +160,7 @@ keybinds clear-defaults=true {
         bind "Alt k" { MoveFocus "Up"; }
         bind "Alt x" { CloseFocus; }
         bind "Alt f" { ToggleFocusFullscreen; }
-        bind "Alt n" { NewPane ; }
+        bind "Alt n" { NewPane "right"; }
         bind "Alt b" { NewPane "down"; }
         bind "Alt w" { NewTab; }
         bind "Alt q" { GoToPreviousTab; }
