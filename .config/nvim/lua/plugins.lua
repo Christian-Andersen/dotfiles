@@ -48,4 +48,6 @@ return {
 	require("plugins.treesitter"),
 	-- Which-key: shows available keybindings when you start typing a key sequence
 	require("plugins.which-key"),
+	-- hardtime.nvim: shows when you have done an inefficient movement
+	require("plugins.hardtime"),
 }
