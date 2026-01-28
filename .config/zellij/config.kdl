@@ -17,7 +17,6 @@ keybinds clear-defaults=true {
         // bind "Alt c" { Copy; }
     }
     resize {
-        bind "Alt n" { SwitchToMode "Normal"; }
         bind "h" "Left" { Resize "Increase Left"; }
         bind "j" "Down" { Resize "Increase Down"; }
         bind "k" "Up" { Resize "Increase Up"; }
