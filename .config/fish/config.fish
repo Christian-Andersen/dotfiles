@@ -43,10 +43,18 @@ function ?? --description 'Search Google AI with a query'
     xdg-open "https://www.google.com/search?udm=50&q="(string escape --style=url "$argv")
 end
 
-function f --description "TODO"
-end
+function b
+    if test -z "$argv[1]"
+        echo "Usage: fhistory <filename>"
+        return 1
+    end
 
-function h --description "TODO"
+    # 1. Get all commit hashes that modified this file
+    git log --pretty=format:"%h %ad %s" --date=short -- "$argv[1]" | \
+    sk --ansi --reverse --no-sort \
+       --header "History of $argv[1] (Enter to view file at this state)" \
+       --preview "git show {1}:\"$argv[1]\" | bat --color=always --style=numbers" \
+       --bind "enter:execute(git show {1}:\"$argv[1]\" | bat --paging=always)"
 end
 
 function m --description 'Make directory (recursive) and change to it'
@@ -130,7 +138,6 @@ if status is-interactive
 
     # --- Single Letter Abbreviations ---
     abbr -a a '. .venv/bin/activate.fish'
-    abbr -a b 'cd -'
     abbr -a c 'cd ~/c && eza --long --header --group'
     abbr -a d 'CUDA_VISIBLE_DEVICES='
     abbr -a d0 'CUDA_VISIBLE_DEVICES=0'
@@ -138,6 +145,7 @@ if status is-interactive
     abbr -a d2 'CUDA_VISIBLE_DEVICES=2'
     abbr -a e explorer.exe .
     abbr -a g lazygit
+    abbr -a h 'git log --oneline --color=always | sk --ansi --preview "git show --color=always {1}"'
     abbr -a i 'uv run --with ipython -- ipython -i'
     abbr -a j just
     abbr -a k 'kill -9 (jobs -p)'
