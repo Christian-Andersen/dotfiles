@@ -16,6 +16,9 @@ vim.g.maplocalleader = " "
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
+-- Set global terminal scrollback to 100,000 lines
+vim.opt.scrollback = 100000
+
 -- ============================================================================
 -- [[ EDITOR OPTIONS ]]
 -- ============================================================================

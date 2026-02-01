@@ -27,7 +27,7 @@ end
 # ==============================================================================
 
 function check_commands --description 'Check that all the commands I need are installed'
-    set commands_to_check nvim eza fd fzf bat cargo uv uvx zoxide starship lazygit git ruff ty prek just btop xdg-open xclip zellij tldr docker wget curl aria2c ssh scp fastfetch rg dos2unix npm openssl dust tokei hyperfine tv
+    set commands_to_check nvim eza fd fzf bat cargo uv uvx zoxide starship lazygit git ruff ty prek just btop xdg-open xclip zellij tldr docker wget curl aria2c ssh scp fastfetch rg dos2unix npm openssl dust tokei hyperfine
     for cmd in $commands_to_check
         if not type -q $cmd
             echo "**✗ FAILURE**: Command '$cmd' NOT found in your \$PATH."
@@ -44,17 +44,28 @@ function ?? --description 'Search Google AI with a query'
 end
 
 function b
+    set tmp (mktemp -t "yazi-cwd.XXXXXX")
+    command yazi $argv --cwd-file="$tmp"
+    if read -z cwd <"$tmp"; and [ "$cwd" != "$PWD" ]; and test -d "$cwd"
+        builtin cd -- "$cwd"
+    end
+    rm -f -- "$tmp"
+end
+
+function h
     if test -z "$argv[1]"
-        echo "Usage: fhistory <filename>"
+        echo "Usage: h <filename>"
         return 1
     end
-
-    # 1. Get all commit hashes that modified this file
-    git log --pretty=format:"%h %ad %s" --date=short -- "$argv[1]" | \
-    sk --ansi --reverse --no-sort \
-       --header "History of $argv[1] (Enter to view file at this state)" \
-       --preview "git show {1}:\"$argv[1]\" | bat --color=always --style=numbers" \
-       --bind "enter:execute(git show {1}:\"$argv[1]\" | bat --paging=always)"
+    set -l ext (path extension "$argv[1]" | string trim -c '.')
+    if test -z "$ext"
+        set ext "txt"
+    end
+    git log --follow --pretty=format:"%h %ad %s" --date=short -- "$argv[1]" | \
+    fzf --ansi --reverse --no-sort \
+        --header "History of $argv[1] (Enter to print Commit Hash)" \
+        --preview "git show {1}:\"$argv[1]\" 2>/dev/null | bat --color=always --style=numbers --language=$ext" \
+        --bind "enter:become(echo {1})"
 end
 
 function m --description 'Make directory (recursive) and change to it'
@@ -89,8 +100,8 @@ function u --description 'Update system packages (pacman, apt, brew, uv)'
     if command -v uv >/dev/null
         echo "--- Updating UV Tools ---"
         uv tool upgrade --all
-        uv generate-shell-completion fish > ~/.config/fish/completions/uv.fish
-        uvx --generate-shell-completion fish > ~/.config/fish/completions/uvx.fish
+        uv generate-shell-completion fish >~/.config/fish/completions/uv.fish
+        uvx --generate-shell-completion fish >~/.config/fish/completions/uvx.fish
     end
     if command -v cargo >/dev/null
         echo "--- Updating Global Rust Packages ---"
@@ -144,8 +155,8 @@ if status is-interactive
     abbr -a d1 'CUDA_VISIBLE_DEVICES=1'
     abbr -a d2 'CUDA_VISIBLE_DEVICES=2'
     abbr -a e explorer.exe .
+    abbr -a f "fzf --preview 'fzf-preview.sh {}'"
     abbr -a g lazygit
-    abbr -a h 'git log --oneline --color=always | sk --ansi --preview "git show --color=always {1}"'
     abbr -a i 'uv run --with ipython -- ipython -i'
     abbr -a j just
     abbr -a k 'kill -9 (jobs -p)'
