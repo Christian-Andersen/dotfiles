@@ -16,37 +16,11 @@
 -- ============================================================================
 
 return {
-	{
-		"folke/tokyonight.nvim",
-		lazy = false, -- Load immediately so it can be used for startup
-		priority = 1000, -- Load before other plugins to ensure UI elements are colored correctly
-		opts = {},
-	},
-	{
-		"catppuccin/nvim",
-		name = "catppuccin",
-		priority = 1000,
-		opts = {},
-	},
-	{
-		"rebelot/kanagawa.nvim",
-		priority = 1000,
-		opts = {},
-	},
-	{
-		"rose-pine/neovim",
-		name = "rose-pine",
-		priority = 1000,
-		opts = {},
-	},
-	{
-		"sainnhe/gruvbox-material",
-		lazy = false,
-		priority = 1000,
-		config = function()
-			-- Optional configuration for Gruvbox Material
-			vim.g.gruvbox_material_background = "hard"
-			vim.g.gruvbox_material_better_performance = 1
-		end,
-	},
+	{ "folke/tokyonight.nvim" },
+	{ "catppuccin/nvim", name = "catppuccin" },
+	{ "rebelot/kanagawa.nvim" },
+	{ "rose-pine/neovim", name = "rose-pine" },
+	{ "sainnhe/gruvbox-material" },
+	{ "xeind/nightingale.nvim" },
+	{ "EdenEast/nightfox.nvim" },
 }
