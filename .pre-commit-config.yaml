@@ -6,8 +6,9 @@ repos:
         args: [--branch, main, --branch, master]
       - id: mixed-line-ending
         args: [--fix=no]
-      - id: check-yaml
       - id: check-added-large-files
+        exclude: (^|/)uv\.lock$
+      - id: check-yaml
       - id: check-case-conflict
       - id: check-json
       - id: check-toml
