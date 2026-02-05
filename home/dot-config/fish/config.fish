@@ -2,35 +2,41 @@
 # This configuration is designed to be portable across different Linux systems.
 
 # ==============================================================================
-# Environment Variables
+# Environment Variables & Paths
 # ==============================================================================
 set -gx EDITOR nvim
 set -gx VISUAL nvim
 set -gx UV_MANAGED_PYTHON true
 set -gx DE generic
 
-function fish_user_key_bindings
-    bind \e\r 'clear; commandline -f execute' # Alt+Enter
-end
-
 # Add paths only if they exist to keep PATH clean
-if test -d ~/.local/bin
-    fish_add_path --global --move ~/.local/bin
-end
-if test -d ~/.cargo/bin
-    fish_add_path --global --move ~/.cargo/bin
-end
-if test -d ~/.npm-global/bin
-    fish_add_path --global --move ~/.npm-global/bin
-end
-set -gx PNPM_HOME "$HOME/.local/share/pnpm"
-if test -d "$PNPM_HOME"
-    fish_add_path --global --move "$PNPM_HOME"
+set -l extra_paths \
+    ~/.local/bin \
+    ~/.cargo/bin \
+    ~/.npm-global/bin \
+    ~/.bun/bin \
+    ~/.deno/bin \
+    "$HOME/.local/share/pnpm"
+
+for p in $extra_paths
+    if test -d $p
+        fish_add_path --global --move $p
+        # Set PNPM_HOME specifically if that directory is found
+        if string match -q "*pnpm" $p
+            set -gx PNPM_HOME $p
+        end
+    end
 end
 
-# --- Homebrew (Conditional) ---
 if test -f /home/linuxbrew/.linuxbrew/bin/brew
     /home/linuxbrew/.linuxbrew/bin/brew shellenv | source
+end
+
+# ==============================================================================
+# Key Bindings
+# ==============================================================================
+function fish_user_key_bindings
+    bind \e\r 'clear; commandline -f execute' # Alt+Enter
 end
 
 # ==============================================================================
@@ -38,7 +44,7 @@ end
 # ==============================================================================
 
 function check_commands --description 'Check that all the commands I need are installed'
-    set commands_to_check nvim eza fd fzf bat cargo uv uvx zoxide starship lazygit git ruff ty prek just btop xdg-open xclip zellij tldr docker wget curl aria2c ssh scp fastfetch rg dos2unix npm openssl dust tokei hyperfine yazi 7z jq resvg xsel chafa ddgr stylua gcc ninja stow
+    set -l commands_to_check nvim eza fd fzf bat cargo uv uvx zoxide starship lazygit git ruff ty prek just btop xdg-open xclip zellij tldr docker wget curl aria2c ssh scp fastfetch rg dos2unix npm openssl dust tokei hyperfine yazi 7z jq resvg xsel chafa ddgr stylua gcc ninja stow
     for cmd in $commands_to_check
         if not type -q $cmd
             echo "**✗ FAILURE**: Command '$cmd' NOT found in your \$PATH."
@@ -95,7 +101,7 @@ function t --description 'Create and cd into a temp directory'
     end
 end
 
-function u --description 'Update system packages (pacman, apt, brew, uv, cargo, npm)'
+function u --description 'Update system packages and global dev tools'
     sudo --validate
     if command -v paru >/dev/null
         echo (set_color -o cyan)"--- Updating Paru (Arch) ---"(set_color normal)
@@ -113,29 +119,18 @@ function u --description 'Update system packages (pacman, apt, brew, uv, cargo, 
         echo (set_color -o cyan)"--- Updating Apt ---"(set_color normal)
         sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y
     end
-
-    if command -v brew >/dev/null
-        echo (set_color -o cyan)"--- Updating Homebrew ---"(set_color normal)
-        brew update && brew upgrade && brew cleanup
-    end
-
-    if command -v uv >/dev/null
-        echo (set_color -o cyan)"--- Updating UV Tools ---"(set_color normal)
-        uv tool upgrade --all
-        uv generate-shell-completion fish >~/.config/fish/completions/uv.fish
-        uvx --generate-shell-completion fish >~/.config/fish/completions/uvx.fish
-    end
-
-    if command -v cargo >/dev/null
-        if command -v cargo-install-update >/dev/null
-            echo (set_color -o cyan)"--- Updating Global Rust Packages ---"(set_color normal)
-            cargo install-update --all
+    set -l tools \
+        "brew:brew update && brew upgrade && brew cleanup" \
+        "uv:uv tool upgrade --all && uv generate-shell-completion fish > ~/.config/fish/completions/uv.fish && uvx --generate-shell-completion fish > ~/.config/fish/completions/uvx.fish" \
+        "cargo:command -v cargo-install-update >/dev/null && cargo install-update --all" \
+        "pnpm:pnpm update -g" \
+        "npm:npm update -g --no-fund"
+    for tool in $tools
+        set -l spec (string split -m 1 ":" $tool)
+        if command -v $spec[1] >/dev/null
+            echo (set_color -o cyan)"--- Updating $spec[1] Packages ---"(set_color normal)
+            eval $spec[2]
         end
-    end
-
-    if command -v npm >/dev/null
-        echo (set_color -o cyan)"--- Updating NPM Global Packages ---"(set_color normal)
-        npm update -g --no-fund
     end
 end
 
