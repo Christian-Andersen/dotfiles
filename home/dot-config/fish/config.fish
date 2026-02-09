@@ -108,7 +108,7 @@ function u --description 'Parallel update with grouped output'
     if command -v paru >/dev/null; set -a jobs "SYS" "paru -Syu --noconfirm"
     else if command -v yay >/dev/null; set -a jobs "SYS" "yay -Syu --noconfirm"
     else if command -v pacman >/dev/null; set -a jobs "SYS" "sudo pacman -Syu --noconfirm"
-    else if command -v apt >/dev/null; set -a jobs "SYS" "sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
+    else if command -v apt >/dev/null; set -a jobs "SYS" "sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y"
     end
     # Dev Tools (only if they exist)
     command -v brew >/dev/null; and set -a jobs "BREW" "brew update && brew upgrade && brew cleanup"
