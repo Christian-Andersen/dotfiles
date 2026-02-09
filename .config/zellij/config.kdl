@@ -1,7 +1,7 @@
 // If you'd like to override the default keybindings completely, be sure to change "keybinds" to "keybinds clear-defaults=true"
 keybinds clear-defaults=true {
     shared_except "locked" {
-        bind "Alt k" {
+        bind "Alt d" {
             Run "ddgr" {
                 floating true
                 close_on_exit true
@@ -153,6 +153,10 @@ keybinds clear-defaults=true {
         }
     }
     shared {
+        bind "Alt h" { MoveFocusOrTab "Left"; }
+        bind "Alt l" { MoveFocusOrTab "Right"; }
+        bind "Alt j" { MoveFocus "Down"; }
+        bind "Alt k" { MoveFocus "Up"; }
         bind "Alt x" { CloseFocus; }
         bind "Alt f" { ToggleFocusFullscreen; }
         bind "Alt n" { NewPane ; }
