@@ -35,6 +35,15 @@ return {
 			mode = "", -- Works in normal, insert, visual modes
 			desc = "[F]ormat buffer",
 		},
+		{
+			"<C-s>",
+			function()
+				require("conform").format({ lsp_format = "fallback" })
+				vim.cmd("w")
+			end,
+			mode = { "n", "i", "x" },
+			desc = "Format and Save",
+		},
 	},
 
 	-- Configuration options
