@@ -153,6 +153,7 @@ keybinds clear-defaults=true {
         }
     }
     shared {
+        bind "Alt z" { Detach; }
         bind "Alt h" { MoveFocusOrTab "Left"; }
         bind "Alt l" { MoveFocusOrTab "Right"; }
         bind "Alt j" { MoveFocus "Down"; }
