@@ -127,7 +127,7 @@ function u --description 'Update system packages (pacman, apt, brew, uv, cargo, 
 
     if command -v npm >/dev/null
         echo "--- Updating NPM Global Packages ---"
-        npm update -g
+        npm update -g --no-fund
     end
 end
 
