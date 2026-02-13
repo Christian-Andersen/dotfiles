@@ -26,8 +26,8 @@ return {
 	require("plugins.gitsigns"),
 	-- Guess indent: automatically detects indentation settings (tabs/spaces, width)
 	require("plugins.guess-indent"),
-	-- Indent blankline: displays indentation guides as vertical lines
-	require("plugins.indent-blankline"),
+	-- Indent blankline: displays indentation guides as vertical lines (Replaced by snacks.indent)
+	-- require("plugins.indent-blankline"),
 	-- LazyDev: provides LSP support for Neovim API documentation in Lua files
 	require("plugins.lazydev"),
 	-- Lint: runs linters on files to check for code style and potential issues
@@ -36,12 +36,12 @@ return {
 	require("plugins.lspconfig"),
 	-- Mini: collection of minimal, independent, and composable plugins (ai, surround, statusline)
 	require("plugins.mini"),
-	-- Neo-tree: file tree browser for navigating the project structure
-	require("plugins.neo-tree"),
+	-- Neo-tree: file tree browser for navigating the project structure (Replaced by snacks.explorer)
+	-- require("plugins.neo-tree"),
 	-- Harpoon: navigate between marked files with ease
 	require("plugins.harpoon"),
-	-- Telescope: fuzzy finder for files, commands, text search, and more
-	require("plugins.telescope"),
+	-- Telescope: fuzzy finder for files, commands, text search, and more (Replaced by snacks.picker)
+	-- require("plugins.telescope"),
 	-- Todo comments: highlights and searches todo/fixme/hack/warn comments
 	require("plugins.todo-comments"),
 	-- Treesitter: provides better syntax highlighting and code navigation
@@ -54,4 +54,6 @@ return {
 	require("plugins.themes"),
 	-- Grug-far: Project-wide search and replace
 	require("plugins.grug-far"),
+	-- Snacks: High-quality QoL plugins for Neovim (picker, explorer, dashboard, etc.)
+	require("plugins.snacks"),
 }
