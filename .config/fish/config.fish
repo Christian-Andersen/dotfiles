@@ -87,28 +87,47 @@ function t --description 'Create and cd into a temp directory'
     end
 end
 
-function u --description 'Update system packages (pacman, apt, brew, uv)'
+function u --description 'Update system packages (pacman, apt, brew, uv, cargo, npm)'
     sudo --validate
-    if command -v pacman >/dev/null
+    if command -v paru >/dev/null
+        echo "--- Updating Paru (Arch) ---"
+        paru -Syu
+    else if command -v yay >/dev/null
+        echo "--- Updating Yay (Arch) ---"
+        yay -Syu
+    else if command -v pacman >/dev/null
         echo "--- Updating Pacman ---"
         sudo pacman -Syu --noconfirm
+    else if command -v nala >/dev/null
+        echo "--- Updating Nala ---"
+        sudo nala upgrade -y
     else if command -v apt >/dev/null
         echo "--- Updating Apt ---"
         sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y
     end
+
     if command -v brew >/dev/null
         echo "--- Updating Homebrew ---"
         brew update && brew upgrade && brew cleanup
     end
+
     if command -v uv >/dev/null
         echo "--- Updating UV Tools ---"
         uv tool upgrade --all
         uv generate-shell-completion fish >~/.config/fish/completions/uv.fish
         uvx --generate-shell-completion fish >~/.config/fish/completions/uvx.fish
     end
+
     if command -v cargo >/dev/null
-        echo "--- Updating Global Rust Packages ---"
-        cargo install-update --all
+        if command -v cargo-install-update >/dev/null
+            echo "--- Updating Global Rust Packages ---"
+            cargo install-update --all
+        end
+    end
+
+    if command -v npm >/dev/null
+        echo "--- Updating NPM Global Packages ---"
+        npm update -g
     end
 end
 
