@@ -91,10 +91,10 @@ function u --description 'Update system packages (pacman, apt, brew, uv, cargo, 
     sudo --validate
     if command -v paru >/dev/null
         echo "--- Updating Paru (Arch) ---"
-        paru -Syu
+        paru -Syu --noconfirm
     else if command -v yay >/dev/null
         echo "--- Updating Yay (Arch) ---"
-        yay -Syu
+        yay -Syu --noconfirm
     else if command -v pacman >/dev/null
         echo "--- Updating Pacman ---"
         sudo pacman -Syu --noconfirm
