@@ -52,9 +52,9 @@ return {
 				end
 
 				-- Code Actions: Show available refactorings and fixes (works in normal and visual mode)
-				map("gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
+				map("gra", vim.lsp.buf.code_action, "[g]oto code [a]ction", { "n", "x" })
 				-- Declaration: Jump to where this symbol is declared
-				map("grD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+				map("grD", vim.lsp.buf.declaration, "[g]oto [D]eclaration")
 
 				-- Helper function to check if a language server supports a capability
 				local function client_supports_method(client, method, bufnr)
