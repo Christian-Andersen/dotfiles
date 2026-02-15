@@ -118,9 +118,10 @@ function u --description 'Update system packages (pacman, apt, brew, uv, cargo, 
         uvx --generate-shell-completion fish >~/.config/fish/completions/uvx.fish
     end
 
-    if command -v rustup &> /dev/null; then
+    if command -v rustup >/dev/null
+        echo "--- Updating Rustup ---"
         rustup update
-    fi
+    end
 
     if command -v cargo >/dev/null
         if command -v cargo-install-update >/dev/null
