@@ -161,7 +161,7 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 -- Open diagnostic quickfix list
 -- <leader>q : displays all diagnostics (errors, warnings, info) in a quickfix window
 -- Useful for reviewing all issues in the buffer at once
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [q]uickfix list" })
 
 -- Exit terminal mode with a more intuitive key combination
 -- By default, you need to press <C-\><C-n> to exit terminal mode, which is hard to discover
@@ -186,7 +186,7 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower win
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
 -- Go to last buffer (alternate file)
-vim.keymap.set("n", "<leader>b", "<C-^>", { desc = "Go to last [B]uffer" })
+vim.keymap.set("n", "<leader>b", "<C-^>", { desc = "Go to last [b]uffer" })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
