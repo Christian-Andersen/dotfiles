@@ -176,7 +176,7 @@ if status is-interactive
 
     # --- Single Letter Abbreviations ---
     abbr -a a '. .venv/bin/activate.fish'
-    abbr -a c 'clear && cd ~/c && eza --long --header --group --git --sort=date'
+    abbr -a c 'clear && cd ~/c && eza --long --header --group --git --git-repos --sort=date'
     abbr -a d 'CUDA_VISIBLE_DEVICES='
     abbr -a d0 'CUDA_VISIBLE_DEVICES=0'
     abbr -a d1 'CUDA_VISIBLE_DEVICES=1'
