@@ -53,6 +53,15 @@ return {
 			"python", -- Python programming
 			"javascript", -- JavaScript programming
 			"typescript", -- TypeScript programming
+			"regex", -- Required for Snacks.picker
+			"latex", -- Required for math expressions/docs
+			"css", -- Required for image/doc rendering
+			"scss", -- Extra styling support
+			"svelte", -- Component support
+			"tsx", -- React/TypeScript support
+			"vue", -- Vue support
+			"norg", -- Neorg support
+			"typst", -- Typst typesetting support
 		},
 		-- Auto-install parsers when opening a file of unknown type
 		-- Automatically fetches and installs the parser for that language
