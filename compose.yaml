@@ -1,0 +1,50 @@
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: vllm
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - ./hf_models:/hf_models
+    command: >
+      --model /hf_models/Qwen/Qwen3.5-0.8B
+      --quantization bitsandbytes
+      --max-model-len auto
+    ports:
+      - "8000:8000"
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    depends_on:
+      - vllm
+    volumes:
+      - open-webui_data:/app/backend/data
+      - ./code:/data/code:ro # Maps your code for indexing
+    environment:
+      - OPENAI_API_BASE_URL=http://vllm:8000/v1
+      - OPENAI_API_KEY=not-needed
+      - ENABLE_RAG_WEB_SEARCH=false
+    ports:
+      - "3000:8080"
+  aider:
+    image: paulgauthier/aider-full:latest
+    container_name: aider
+    stdin_open: true # Required for interactive terminal
+    tty: true # Required for interactive terminal
+    depends_on:
+      - vllm
+    volumes:
+      - ./code:/app # Current project root
+      - ~/.gitconfig:/root/.gitconfig:ro # Pass git identity for commits
+    environment:
+      - OPENAI_API_BASE=http://vllm:8000/v1
+      - AIDER_MODEL=openai/your-model-name-here # Matches vLLM model name
+    command: tail -f /dev/null
+
+volumes:
+  open-webui_data:
