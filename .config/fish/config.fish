@@ -118,11 +118,6 @@ function u --description 'Update system packages (pacman, apt, brew, uv, cargo, 
         uvx --generate-shell-completion fish >~/.config/fish/completions/uvx.fish
     end
 
-    if command -v rustup >/dev/null
-        echo (set_color -o cyan)"--- Updating Rustup ---"(set_color normal)
-        rustup update
-    end
-
     if command -v cargo >/dev/null
         if command -v cargo-install-update >/dev/null
             echo (set_color -o cyan)"--- Updating Global Rust Packages ---"(set_color normal)
