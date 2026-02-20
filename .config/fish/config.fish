@@ -180,7 +180,7 @@ if status is-interactive
     abbr -a f "fzf --preview 'fzf-preview.sh {}'"
     abbr -a g lazygit
     abbr -a i 'uv run --with ipython -- ipython -i'
-    abbr -a j just
+    abbr -a j 'clear; just'
     abbr -a k 'kill -9 (jobs -p)'
     abbr -a l 'eza --long --header --group --git'
     abbr -a ls eza
