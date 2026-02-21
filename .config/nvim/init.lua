@@ -281,6 +281,9 @@ require("lazy").setup(require("plugins"), {
 	},
 })
 
+-- Set default colorscheme after all plugins are loaded
+vim.cmd.colorscheme("tokyonight-night")
+
 -- ============================================================================
 -- [[ MODELINE ]]
 -- ============================================================================
