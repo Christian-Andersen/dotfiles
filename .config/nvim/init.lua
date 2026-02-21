@@ -29,7 +29,7 @@ vim.opt.scrollback = 100000
 -- ============================================================================
 
 -- Make W also write command because of accidently holding shift
-vim.api.nvim_create_user_command("W", "w", { desc = 'Alias for :w' })
+vim.api.nvim_create_user_command("W", "w", { desc = "Alias for :w" })
 
 -- Make line numbers default (shows absolute line numbers on the left)
 vim.o.number = true
@@ -282,10 +282,9 @@ require("lazy").setup(require("plugins"), {
 })
 
 -- Set default colorscheme after all plugins are loaded
-vim.cmd.colorscheme("tokyonight-night")
+vim.cmd.colorscheme("wildcharm")
+vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
 
--- ============================================================================
--- [[ MODELINE ]]
 -- ============================================================================
 -- The line below is a vim modeline that sets editor options for this specific file
 -- It tells Vim to use 2-space indentation and expand tabs to spaces
