@@ -12,18 +12,10 @@ set -gx DE generic
 # Add paths only if they exist to keep PATH clean
 set -l extra_paths \
     ~/.local/bin \
-    ~/.cargo/bin \
-    ~/.npm-global/bin \
-    ~/.bun/bin \
-    "$HOME/.local/share/pnpm"
+    ~/.cargo/bin
 
 for p in $extra_paths
     if test -d $p
-        fish_add_path --global --move $p
-        # Set PNPM_HOME specifically if that directory is found
-        if string match -q "*pnpm" $p
-            set -gx PNPM_HOME $p
-        end
     end
 end
 
@@ -113,9 +105,6 @@ function u --description 'Parallel update with grouped output'
     # Dev Tools (only if they exist)
     command -v brew >/dev/null; and set -a jobs "BREW" "brew update && brew upgrade && brew cleanup"
     command -v uv >/dev/null; and set -a jobs "UV" "uv tool upgrade --all && uv generate-shell-completion fish > ~/.config/fish/completions/uv.fish"
-    command -v pnpm >/dev/null; and set -a jobs "PNPM" "pnpm update -g"
-    command -v bun >/dev/null; and set -a jobs "BUN" "bun update -g"
-    command -v npm >/dev/null; and set -a jobs "NPM" "npm update -g --no-fund"
     command -v cargo-install-update >/dev/null; and set -a jobs "RUST" "cargo install-update --all"
     # 2. Execute
     set -l job_count (math (count $jobs) / 2)
