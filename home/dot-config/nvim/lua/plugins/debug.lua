@@ -17,72 +17,72 @@
 -- ============================================================================
 
 return {
-  {
-    "mfussenegger/nvim-dap",
-    dependencies = {
-      -- UI for DAP
-      "igorlfs/nvim-dap-view",
-      -- Python debugging support
-      "mfussenegger/nvim-dap-python",
-      -- Mason integration
-      "jay-babu/mason-nvim-dap.nvim",
-    },
-    config = function()
-      local dap = require("dap")
-      local dap_view = require("dap-view")
+	{
+		"mfussenegger/nvim-dap",
+		dependencies = {
+			-- UI for DAP
+			"igorlfs/nvim-dap-view",
+			-- Python debugging support
+			"mfussenegger/nvim-dap-python",
+			-- Mason integration
+			"jay-babu/mason-nvim-dap.nvim",
+		},
+		config = function()
+			local dap = require("dap")
+			local dap_view = require("dap-view")
 
-      -- Mason Setup
-      -- Ensures debugpy is installed
-      require("mason-nvim-dap").setup({
-        ensure_installed = { "python" },
-        handlers = {},
-      })
+			-- Mason Setup
+			-- Ensures debugpy is installed
+			require("mason-nvim-dap").setup({
+				ensure_installed = { "python" },
+				handlers = {},
+			})
 
-      -- DAP View Setup
-      -- Simple, clean UI for debugging
-      dap_view.setup()
+			-- DAP View Setup
+			-- Simple, clean UI for debugging
+			dap_view.setup()
 
-      -- Python Setup
-      -- Update the path to point to the mason installed debugpy
-      -- This path is standard for Mason on Linux
-      local mason_path = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
-      require("dap-python").setup(mason_path)
+			-- Python Setup
+			-- Update the path to point to the mason installed debugpy
+			-- This path is standard for Mason on Linux
+			local mason_path = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
+			require("dap-python").setup(mason_path)
 
-      -- Keymaps
-      -- F5: Start debugging or continue
-      vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
-      -- F10: Step Over
-      vim.keymap.set("n", "<F10>", dap.step_over, { desc = "Debug: Step Over" })
-      -- F11: Step Into
-      vim.keymap.set("n", "<F11>", dap.step_into, { desc = "Debug: Step Into" })
-      -- F12: Step Out
-      vim.keymap.set("n", "<F12>", dap.step_out, { desc = "Debug: Step Out" })
-      -- Leader+db: Toggle Breakpoint
-      vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
-      -- Leader+dB: Set Conditional Breakpoint
-      vim.keymap.set("n", "<leader>dB", function()
-        dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
-      end, { desc = "Debug: Set Conditional Breakpoint" })
-      -- Leader+dv: Toggle Debug View manually
-      vim.keymap.set("n", "<leader>dv", dap_view.toggle, { desc = "Debug: Toggle View" })
-      -- Leader+dx: Terminate Debug Session
-      vim.keymap.set("n", "<leader>dx", dap.terminate, { desc = "Debug: Terminate/Exit" })
+			-- Keymaps
+			-- F5: Start debugging or continue
+			vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
+			-- F10: Step Over
+			vim.keymap.set("n", "<F10>", dap.step_over, { desc = "Debug: Step Over" })
+			-- F11: Step Into
+			vim.keymap.set("n", "<F11>", dap.step_into, { desc = "Debug: Step Into" })
+			-- F12: Step Out
+			vim.keymap.set("n", "<F12>", dap.step_out, { desc = "Debug: Step Out" })
+			-- Leader+db: Toggle Breakpoint
+			vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
+			-- Leader+dB: Set Conditional Breakpoint
+			vim.keymap.set("n", "<leader>dB", function()
+				dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+			end, { desc = "Debug: Set Conditional Breakpoint" })
+			-- Leader+dv: Toggle Debug View manually
+			vim.keymap.set("n", "<leader>dv", dap_view.toggle, { desc = "Debug: Toggle View" })
+			-- Leader+dx: Terminate Debug Session
+			vim.keymap.set("n", "<leader>dx", dap.terminate, { desc = "Debug: Terminate/Exit" })
 
-      -- Automation: Open View on Start
-      dap.listeners.after.event_initialized["dap_view_config"] = function()
-        dap_view.open()
-      end
+			-- Automation: Open View on Start
+			dap.listeners.after.event_initialized["dap_view_config"] = function()
+				dap_view.open()
+			end
 
-      -- Automation: Break on Uncaught Exceptions
-      -- This satisfies the "auto-debug on error" requirement.
-      -- When the debugger is running, if an exception is uncaught, it will pause.
-      dap.listeners.after.event_initialized["dap_exception_config"] = function()
-        dap.set_exception_breakpoints({ "uncaught" })
-      end
+			-- Automation: Break on Uncaught Exceptions
+			-- This satisfies the "auto-debug on error" requirement.
+			-- When the debugger is running, if an exception is uncaught, it will pause.
+			dap.listeners.after.event_initialized["dap_exception_config"] = function()
+				dap.set_exception_breakpoints({ "uncaught" })
+			end
 
-      -- Aesthetics: Custom Icons
-      vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", numhl = "" })
-      vim.fn.sign_define("DapStopped", { text = "▶️", texthl = "", linehl = "", numhl = "" })
-    end,
-  },
+			-- Aesthetics: Custom Icons
+			vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", numhl = "" })
+			vim.fn.sign_define("DapStopped", { text = "▶️", texthl = "", linehl = "", numhl = "" })
+		end,
+	},
 }

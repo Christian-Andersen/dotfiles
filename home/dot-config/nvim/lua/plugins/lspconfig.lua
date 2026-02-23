@@ -79,16 +79,14 @@ return {
 			-- Only underline errors (not warnings or info)
 			underline = { severity = vim.diagnostic.severity.ERROR },
 			-- Configure the signs (symbols) shown in the gutter for diagnostics
-			signs = vim.g.have_nerd_font
-					and {
-						text = {
-							[vim.diagnostic.severity.ERROR] = "󰅚 ", -- Red X for errors
-							[vim.diagnostic.severity.WARN] = "󰀪 ", -- Yellow warning for warnings
-							[vim.diagnostic.severity.INFO] = "󰋽 ", -- Blue info for info
-							[vim.diagnostic.severity.HINT] = "󰌶 ", -- Purple hint for hints
-						},
-					}
-				or {}, -- Empty table if no Nerd Font (uses default symbols)
+			signs = vim.g.have_nerd_font and {
+				text = {
+					[vim.diagnostic.severity.ERROR] = "󰅚 ", -- Red X for errors
+					[vim.diagnostic.severity.WARN] = "󰀪 ", -- Yellow warning for warnings
+					[vim.diagnostic.severity.INFO] = "󰋽 ", -- Blue info for info
+					[vim.diagnostic.severity.HINT] = "󰌶 ", -- Purple hint for hints
+				},
+			} or {}, -- Empty table if no Nerd Font (uses default symbols)
 			-- Virtual text: Shows diagnostic messages inline (at the end of the line)
 			virtual_text = {
 				source = "if_many", -- Show source only when there are multiple diagnostics
@@ -101,24 +99,16 @@ return {
 		local servers = {
 			["bashls"] = {},
 			["clangd"] = {},
-			["json-lsp"] = {},
-			["typescript-language-server"] = {},
+			["jsonls"] = {},
+			["ts_ls"] = {},
 			["dockerls"] = {},
-			["dotenv-linter"] = {},
 			["yamlls"] = {},
-			["tombi"] = {},
-			["eslint_d"] = {},
 			["cssls"] = {},
-			["emmet-ls"] = {},
-			["prettierd"] = {},
-			["stylua"] = {},
-			["clang-format"] = {},
-			["shfmt"] = {},
-			["sql-formatter"] = {},
-			["fish-lsp"] = {},
-			["azure-pipelines-language-server"] = {},
-			["just-lsp"] = {},
-			["rust-analyzer"] = {},
+			["emmet_ls"] = {},
+			["fish_lsp"] = {},
+			["azure_pipelines_ls"] = {},
+			["just"] = {},
+			["rust_analyzer"] = {},
 			["ruff"] = {
 				init_options = {
 					settings = {
@@ -138,7 +128,7 @@ return {
 					},
 				},
 			},
-			["lua-language-server"] = {
+			["lua_ls"] = {
 				settings = {
 					Lua = {
 						completion = { callSnippet = "Replace" }, -- Use snippet completion (show function signatures, insert params)
@@ -148,10 +138,39 @@ return {
 		}
 
 		-- ===== AUTO-INSTALL LANGUAGE SERVERS AND TOOLS =====
-		-- Collect all server names that need to be installed
-		local ensure_installed = vim.tbl_keys(servers or {})
-		-- Also ensure stylua (Lua formatter) is installed
-		vim.list_extend(ensure_installed, { "stylua" })
+		-- Define a mapping between LSP names and Mason package names where they differ
+		local lsp_to_mason = {
+			rust_analyzer = "rust-analyzer",
+			lua_ls = "lua-language-server",
+			ts_ls = "typescript-language-server",
+			jsonls = "json-lsp",
+			bashls = "bash-language-server",
+			dockerls = "dockerfile-language-server",
+			yamlls = "yaml-language-server",
+			cssls = "css-lsp",
+			emmet_ls = "emmet-ls",
+			fish_lsp = "fish-lsp",
+			azure_pipelines_ls = "azure-pipelines-language-server",
+			just = "just-lsp",
+		}
+
+		-- Collect all server names that need to be installed, mapping to Mason names
+		local ensure_installed = {}
+		for name, _ in pairs(servers) do
+			table.insert(ensure_installed, lsp_to_mason[name] or name)
+		end
+
+		-- Also ensure other tools (formatters, linters) are installed
+		vim.list_extend(ensure_installed, {
+			"stylua",
+			"shfmt",
+			"prettierd",
+			"eslint_d",
+			"clang-format",
+			"sql-formatter",
+			"dotenv-linter",
+			"shellcheck",
+		})
 		-- Tell Mason to auto-install all the tools
 		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 

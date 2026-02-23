@@ -31,15 +31,13 @@ return {
 		local lint = require("lint")
 
 		-- Define which linters to use for each filetype
-		-- Map: filetype -> list of linter names
-		-- Multiple linters can be used per filetype (they'll all run)
 		lint.linters_by_ft = {
-			-- Use markdownlint for Markdown files
-			-- Checks for style issues like:
-			-- - Proper heading hierarchy
-			-- - Code block formatting
-			-- - Link and image syntax
-			-- markdown = { "markdownlint" },
+			javascript = { "eslint_d" },
+			typescript = { "eslint_d" },
+			javascriptreact = { "eslint_d" },
+			typescriptreact = { "eslint_d" },
+			sh = { "shellcheck" }, -- Mason installed it for bashls, let's use it
+			env = { "dotenv" }, -- 'dotenv-linter' package often provides 'dotenv' linter
 		}
 		-- You can add more filetypes here, e.g.:
 		-- python = { 'pylint', 'flake8' },
