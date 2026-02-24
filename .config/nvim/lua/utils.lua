@@ -59,4 +59,55 @@ function M.pycheck()
 	vim.cmd("cc 1")
 end
 
+function M.random_dark_theme()
+	local schemes = vim.fn.getcompletion("", "color")
+
+	local skip = {
+		"zellner",
+		"tokyonight-day",
+		"shine",
+		"rose-pine-dawn",
+		"peachpuff",
+		"morning",
+		"miniwinter",
+		"minisummer",
+		"minispring",
+		"minischeme",
+		"minicyan",
+		"miniautumn",
+		"lunaperche",
+		"kanagawa-lotus",
+		"delek",
+		"default",
+		"catppuccin-latte",
+	}
+
+	local candidates = {}
+	for _, s in ipairs(schemes) do
+		local should_skip = false
+		for _, name in ipairs(skip) do
+			if s == name then
+				should_skip = true
+				break
+			end
+		end
+
+		if not should_skip then
+			table.insert(candidates, s)
+		end
+	end
+
+	if #candidates == 0 then
+		return
+	end
+
+	math.randomseed(os.clock() * 1000000)
+	local theme = candidates[math.random(#candidates)]
+
+	local ok, err = pcall(vim.cmd.colorscheme, theme)
+	if not ok then
+		vim.notify("Error loading " .. theme .. ": " .. err, vim.log.levels.ERROR)
+	end
+end
+
 return M
