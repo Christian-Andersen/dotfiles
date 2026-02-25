@@ -170,11 +170,12 @@ if status is-interactive
     abbr -a la 'eza --all --long --header --group --git'
     abbr -a lsize 'eza --all --long --header --group --git --total-size --sort=size'
     abbr -a ltree 'eza --tree --long --header --group --git --total-size --sort=size'
-    abbr -a n nvim
+    abbr -a n 'ss -tulpn'
     abbr -a p 'uv run --'
     abbr -a q exit
     abbr -a r 'ruff check --fix . ; ruff format .'
     abbr -a s 'git fetch --all && git status'
+    abbr -a vi nvim
     abbr -a x chmod +x
     abbr -a y 'xclip -selection clipboard'
     abbr -a z 'clear && zellij attach --create main'
