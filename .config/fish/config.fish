@@ -9,6 +9,10 @@ set -gx VISUAL nvim
 set -gx UV_MANAGED_PYTHON true
 set -gx DE generic
 
+function fish_user_key_bindings
+    bind \e\r 'clear; commandline -f execute' # Alt+Enter
+end
+
 # Add paths only if they exist to keep PATH clean
 if test -d ~/.local/bin
     fish_add_path --global --move ~/.local/bin
