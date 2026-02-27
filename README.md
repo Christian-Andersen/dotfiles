@@ -20,6 +20,6 @@ git clone https://github.com/Christian-Andersen/dotfiles.git
 
 ## Stow
 ```sh
-(cd ~/dotfiles && stow --dotfiles .)
+(cd ~/dotfiles && stow --dotfiles home)
 ```
 
