@@ -52,4 +52,6 @@ return {
 	require("plugins.debug"),
 	-- Themes: Collection of popular color schemes
 	require("plugins.themes"),
+	-- Grug-far: Project-wide search and replace
+	require("plugins.grug-far"),
 }
