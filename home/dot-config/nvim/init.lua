@@ -13,6 +13,14 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+vim.cmd([[
+augroup env_filetype
+    autocmd!
+    autocmd BufNewFile,BufRead .env* setf env
+    autocmd BufNewFile,BufRead .env.* setf env
+augroup END
+]])
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
