@@ -68,7 +68,7 @@ return {
 		-- Define key group labels for better organization
 		-- This groups related commands under descriptive headings
 		spec = {
-			-- Group all <leader>a commands under the [A]dd category (Harpoon)
+			-- Group all <leader>a commands under the Harpoon category
 			{ "<leader>a", group = "Harpoon [A]dd" },
 			-- Group all <leader>s commands under the [S]earch category
 			{ "<leader>s", group = "[S]earch" },
@@ -78,6 +78,23 @@ return {
 			{ "<leader>d", group = "[D]ebug" },
 			-- Group all <leader>h commands under the Git [H]unk category (works in normal and visual modes)
 			{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+			-- Standalone leader keys
+			{ "<leader>f", desc = "[F]ormat" },
+			{ "<leader>q", desc = "[Q]uickfix" },
+			{ "<leader>b", desc = "[B]uffer" },
+			-- LSP and navigation prefixes
+			{ "g", group = "[G]oto / LSP" },
+			{ "gr", group = "[R]ename / Ref" },
+			-- Harpoon number selection
+			{ "<leader>1", hidden = true },
+			{ "<leader>2", hidden = true },
+			{ "<leader>3", hidden = true },
+			{ "<leader>4", hidden = true },
+			{ "<leader>5", hidden = true },
+			{ "<leader>6", hidden = true },
+			{ "<leader>7", hidden = true },
+			{ "<leader>8", hidden = true },
+			{ "<leader>9", hidden = true },
 		},
 	},
 }
