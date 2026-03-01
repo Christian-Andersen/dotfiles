@@ -108,7 +108,6 @@ function u --description 'Parallel update with grouped output'
     if command -v paru >/dev/null; set -a jobs "SYS" "paru -Syu --noconfirm"
     else if command -v yay >/dev/null; set -a jobs "SYS" "yay -Syu --noconfirm"
     else if command -v pacman >/dev/null; set -a jobs "SYS" "sudo pacman -Syu --noconfirm"
-    else if command -v nala >/dev/null; set -a jobs "SYS" "sudo nala full-upgrade -y"
     else if command -v apt >/dev/null; set -a jobs "SYS" "sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
     end
     # Dev Tools (only if they exist)
