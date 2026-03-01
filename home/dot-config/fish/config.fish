@@ -15,7 +15,6 @@ set -l extra_paths \
     ~/.cargo/bin \
     ~/.npm-global/bin \
     ~/.bun/bin \
-    ~/.deno/bin \
     "$HOME/.local/share/pnpm"
 
 for p in $extra_paths
@@ -44,7 +43,7 @@ end
 # ==============================================================================
 
 function check_commands --description 'Check that all the commands I need are installed'
-    set -l commands_to_check nvim eza fd fzf bat cargo uv uvx zoxide starship lazygit git ruff ty prek just btop xdg-open xclip zellij tldr docker wget curl aria2c ssh scp fastfetch rg dos2unix npm openssl dust tokei hyperfine yazi 7z jq resvg xsel chafa ddgr stylua gcc ninja stow
+    set -l commands_to_check nvim eza fd fzf bat cargo uv uvx zoxide starship lazygit git ruff ty prek just btop xdg-open xclip zellij tldr docker wget curl aria2c ssh scp fastfetch rg dos2unix npm openssl dust tokei hyperfine yazi 7z jq resvg xsel chafa ddgr stylua gcc ninja stow parallel
     for cmd in $commands_to_check
         if not type -q $cmd
             echo "**✗ FAILURE**: Command '$cmd' NOT found in your \$PATH."
@@ -101,37 +100,31 @@ function t --description 'Create and cd into a temp directory'
     end
 end
 
-function u --description 'Update system packages and global dev tools'
-    sudo --validate
-    if command -v paru >/dev/null
-        echo (set_color -o cyan)"--- Updating Paru (Arch) ---"(set_color normal)
-        paru -Syu --noconfirm
-    else if command -v yay >/dev/null
-        echo (set_color -o cyan)"--- Updating Yay (Arch) ---"(set_color normal)
-        yay -Syu --noconfirm
-    else if command -v pacman >/dev/null
-        echo (set_color -o cyan)"--- Updating Pacman ---"(set_color normal)
-        sudo pacman -Syu --noconfirm
-    else if command -v nala >/dev/null
-        echo (set_color -o cyan)"--- Updating Nala ---"(set_color normal)
-        sudo nala full-upgrade -y
-    else if command -v apt >/dev/null
-        echo (set_color -o cyan)"--- Updating Apt ---"(set_color normal)
-        sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y
+function u --description 'Parallel update with grouped output'
+    sudo --validate; or return 1
+    # 1. Build the list of commands to run (Tag + Command pairs)
+    set -l jobs
+    # System (choose one)
+    if command -v paru >/dev/null; set -a jobs "SYS" "paru -Syu --noconfirm"
+    else if command -v yay >/dev/null; set -a jobs "SYS" "yay -Syu --noconfirm"
+    else if command -v pacman >/dev/null; set -a jobs "SYS" "sudo pacman -Syu --noconfirm"
+    else if command -v nala >/dev/null; set -a jobs "SYS" "sudo nala full-upgrade -y"
+    else if command -v apt >/dev/null; set -a jobs "SYS" "sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
     end
-    set -l tools \
-        "brew:brew update && brew upgrade && brew cleanup" \
-        "uv:uv tool upgrade --all && uv generate-shell-completion fish > ~/.config/fish/completions/uv.fish && uvx --generate-shell-completion fish > ~/.config/fish/completions/uvx.fish" \
-        "cargo:command -v cargo-install-update >/dev/null && cargo install-update --all" \
-        "pnpm:pnpm update -g" \
-        "npm:npm update -g --no-fund"
-    for tool in $tools
-        set -l spec (string split -m 1 ":" $tool)
-        if command -v $spec[1] >/dev/null
-            echo (set_color -o cyan)"--- Updating $spec[1] Packages ---"(set_color normal)
-            eval $spec[2]
-        end
+    # Dev Tools (only if they exist)
+    command -v brew >/dev/null; and set -a jobs "BREW" "brew update && brew upgrade && brew cleanup"
+    command -v uv >/dev/null; and set -a jobs "UV" "uv tool upgrade --all && uv generate-shell-completion fish > ~/.config/fish/completions/uv.fish"
+    command -v pnpm >/dev/null; and set -a jobs "PNPM" "pnpm update -g"
+    command -v bun >/dev/null; and set -a jobs "BUN" "bun update -g"
+    command -v npm >/dev/null; and set -a jobs "NPM" "npm update -g --no-fund"
+    command -v cargo-install-update >/dev/null; and set -a jobs "RUST" "cargo install-update --all"
+    # 2. Execute
+    set -l job_count (math (count $jobs) / 2)
+    if test $job_count -gt 0
+        echo (set_color yellow)"Running $job_count updates in parallel..."(set_color normal)
+        printf "%s\n" $jobs | parallel -N2 --tagstring (set_color -o cyan)"[{1}]"(set_color normal) --line-buffer fish -c "{2}"
     end
+    echo (set_color -o green)"All tools are up to date."(set_color normal)
 end
 
 function o --description 'List a directory or open a file'
