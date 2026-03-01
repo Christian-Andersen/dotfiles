@@ -23,6 +23,10 @@ end
 if test -d ~/.npm-global/bin
     fish_add_path --global --move ~/.npm-global/bin
 end
+set -gx PNPM_HOME "$HOME/.local/share/pnpm"
+if test -d "$PNPM_HOME"
+    fish_add_path --global --move "$PNPM_HOME"
+end
 
 # --- Homebrew (Conditional) ---
 if test -f /home/linuxbrew/.linuxbrew/bin/brew
