@@ -56,6 +56,4 @@ return {
 	require("plugins.grug-far"),
 	-- Snacks: High-quality QoL plugins for Neovim (picker, explorer, dashboard, etc.)
 	require("plugins.snacks"),
-	-- Opencode: AI assistant integration
-	require("plugins.opencode"),
 }
