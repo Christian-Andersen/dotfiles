@@ -2,8 +2,7 @@
 -- NEOVIM CONFIGURATION
 -- ============================================================================
 -- This is the main initialization file for Neovim.
--- It contains core settings, keybindings, and configuration options.
--- Plugin configurations are managed separately in lua/plugins/
+-- It contains core settings, keybindings, and plugin configuration.
 -- ============================================================================
 
 -- Set <space> as the leader key
@@ -13,13 +12,12 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-vim.cmd([[
-augroup env_filetype
-    autocmd!
-    autocmd BufNewFile,BufRead .env* setf env
-    autocmd BufNewFile,BufRead .env.* setf env
-augroup END
-]])
+vim.filetype.add({
+	pattern = {
+		[".env.*"] = "env",
+		[".env"] = "env",
+	},
+})
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
@@ -37,7 +35,12 @@ vim.opt.scrollback = 100000
 -- ============================================================================
 
 -- Make W also write command because of accidently holding shift
-vim.api.nvim_create_user_command("W", "w", { desc = "Alias for :w" })
+vim.api.nvim_create_user_command("W", "write <args>", {
+	bang = true,
+	nargs = "*",
+	complete = "file",
+	desc = "Alias for :w",
+})
 
 -- Make line numbers default (shows absolute line numbers on the left)
 vim.o.number = true
@@ -54,7 +57,6 @@ vim.o.relativenumber = true
 vim.o.mouse = "a"
 
 -- Don't show the mode indicator (e.g., "-- INSERT --")
--- The current mode is already shown in the status line by the mini.statusline plugin
 vim.o.showmode = false
 
 -- Sync clipboard between OS and Neovim
@@ -294,84 +296,411 @@ vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter" }, {
 })
 
 -- ============================================================================
--- [[ PLUGIN MANAGER: lazy.nvim ]]
--- ============================================================================
--- Install and configure lazy.nvim, the plugin manager for this configuration
--- lazy.nvim provides:
--- - Lazy loading of plugins (load only when needed)
--- - Automatic plugin installation and updates
--- - Fast startup times
--- For more info, see `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim
+-- [[ PLUGINS (vim.pack — Neovim 0.12 built-in) ]]
 -- ============================================================================
 
--- Build the path to lazy.nvim in the data directory
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+-- Build hooks via PackChanged events
+vim.api.nvim_create_autocmd("PackChanged", {
+	callback = function(ev)
+		if ev.data.spec.name == "nvim-treesitter" and ev.data.kind == "update" then
+			if not ev.data.active then
+				vim.cmd.packadd("nvim-treesitter")
+			end
+			vim.cmd("TSUpdate")
+		end
+	end,
+})
 
--- Install lazy.nvim if not already installed
-if not vim.uv.fs_stat(lazypath) then
-	-- Clone lazy.nvim from GitHub
-	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-	-- Use git clone with blob:none filter for faster cloning
-	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-	if vim.v.shell_error ~= 0 then
-		error("Error cloning lazy.nvim:\n" .. out)
+-- Register and load all plugins
+vim.pack.add({
+	-- Core
+	"https://github.com/folke/snacks.nvim",
+	"https://github.com/nvim-treesitter/nvim-treesitter",
+	"https://github.com/neovim/nvim-lspconfig", -- required by mason-lspconfig
+	"https://github.com/lewis6991/gitsigns.nvim",
+	"https://github.com/folke/which-key.nvim",
+	"https://github.com/folke/lazydev.nvim",
+	-- Completion
+	"https://github.com/saghen/blink.cmp",
+	-- Formatting & Linting
+	"https://github.com/stevearc/conform.nvim",
+	"https://github.com/mfussenegger/nvim-lint",
+	-- Debug
+	"https://github.com/mfussenegger/nvim-dap",
+	"https://github.com/igorlfs/nvim-dap-view",
+	"https://github.com/mfussenegger/nvim-dap-python",
+	"https://github.com/jay-babu/mason-nvim-dap.nvim",
+	-- LSP management
+	"https://github.com/mason-org/mason.nvim",
+	"https://github.com/mason-org/mason-lspconfig.nvim",
+	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+	-- Misc
+	"https://github.com/windwp/nvim-autopairs",
+	"https://github.com/nvim-lua/plenary.nvim",
+	-- Themes
+	"https://github.com/folke/tokyonight.nvim",
+	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
+	"https://github.com/rebelot/kanagawa.nvim",
+	{ src = "https://github.com/rose-pine/neovim", name = "rose-pine" },
+	"https://github.com/sainnhe/gruvbox-material",
+	"https://github.com/xeind/nightingale.nvim",
+	"https://github.com/EdenEast/nightfox.nvim",
+})
+
+-- Snacks
+require("snacks").setup({
+	bigfile = { enabled = true },
+	dashboard = {
+		enabled = true,
+		sections = {
+			{ section = "header" },
+			{ section = "keys", gap = 1, padding = 1 },
+		},
+	},
+	explorer = { enabled = true },
+	indent = { enabled = true },
+	input = { enabled = true },
+	picker = { enabled = true },
+	notifier = { enabled = true },
+	quickfile = { enabled = true },
+	scope = { enabled = true },
+	scroll = { enabled = true },
+	statuscolumn = { enabled = true },
+	words = { enabled = true },
+	git = { enabled = true },
+	gitbrowse = { enabled = true },
+	lazygit = { enabled = true },
+	image = { enabled = true },
+	toggle = { enabled = true },
+})
+-- Snacks debug helpers
+vim.schedule(function()
+	_G.dd = function(...)
+		Snacks.debug.inspect(...)
 	end
+	_G.bt = function()
+		Snacks.debug.backtrace()
+	end
+	vim.print = _G.dd
+end)
+-- Snacks keymaps
+local snacks_keys = {
+	{ "<leader><space>", function() Snacks.picker.buffers() end, desc = "Buffers [ ]" },
+	{ "<leader>sf", function() Snacks.picker.files() end, desc = "Search [f]iles" },
+	{ "<leader>sg", function() Snacks.picker.grep() end, desc = "Search by [g]rep" },
+	{ "<leader>:", function() Snacks.picker.command_history() end, desc = "Command history [:]" },
+	{ "<leader>n", function() Snacks.notifier.show_history() end, desc = "[n]otification history" },
+	{ "<leader>e", function() Snacks.explorer() end, desc = "File [e]xplorer" },
+	{ "<leader>st", function() Snacks.picker.todo_comments() end, desc = "Search [t]odo comments" },
+	{ "<leader>sT", function() Snacks.picker.todo_comments({ keywords = { "TODO", "FIXME", "FIX" } }) end, desc = "Search [T]odo/Fixme" },
+	{ "<leader>sh", function() Snacks.picker.help() end, desc = "Search [h]elp" },
+	{ "<leader>sk", function() Snacks.picker.keymaps() end, desc = "Search [k]eymaps" },
+	{ "<leader>ss", function() Snacks.picker.pickers() end, desc = "Search [s]elect (pickers)" },
+	{ "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Search current [w]ord", mode = { "n", "x" } },
+	{ "<leader>sd", function() Snacks.picker.diagnostics() end, desc = "Search [d]iagnostics" },
+	{ "<leader>sr", function() Snacks.picker.resume() end, desc = "Search [r]esume" },
+	{ "<leader>s.", function() Snacks.picker.recent() end, desc = "Search recent files [.]"},
+	{ "<leader>/", function() Snacks.picker.lines() end, desc = "Search buffer [/] lines" },
+	{ "<leader>s/", function() Snacks.picker.grep_buffers() end, desc = "Search open buffers [/]" },
+	{ "<leader>sn", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Search [n]eovim files" },
+	{ "\\", function() Snacks.explorer() end, desc = "Toggle explorer [\\]" },
+	{ "<leader>gb", function() Snacks.git.blame_line() end, desc = "Git [b]lame line" },
+	{ "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git [B]rowse" },
+	{ "<leader>gg", function() Snacks.lazygit() end, desc = "Lazy[g]it" },
+	{ "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit [l]og (CWD)" },
+	{ "<leader>gf", function() Snacks.lazygit.log_file() end, desc = "Lazygit current [f]ile history" },
+	{ "gd", function() Snacks.picker.lsp_definitions() end, desc = "[g]oto [d]efinition" },
+	{ "gD", function() Snacks.picker.lsp_declarations() end, desc = "[g]oto [D]eclaration" },
+	{ "gr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "[g]oto [r]eferences" },
+	{ "gI", function() Snacks.picker.lsp_implementations() end, desc = "[g]oto [I]mplementation" },
+	{ "gy", function() Snacks.picker.lsp_type_definitions() end, desc = "[g]oto t[y]pe definition" },
+	{ "<leader>sl", function() Snacks.picker.lsp_symbols() end, desc = "LSP [s]ymbols" },
+	{ "<leader>sL", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP workspace [S]ymbols" },
+	{ "<leader>th", function() Snacks.toggle.inlay_hints():toggle() end, desc = "[t]oggle inlay [h]ints" },
+	{ "<leader>ts", function() Snacks.toggle.option("spell", { name = "Spelling" }):toggle() end, desc = "[t]oggle [s]pelling" },
+	{ "<leader>tw", function() Snacks.toggle.option("wrap", { name = "Wrap" }):toggle() end, desc = "[t]oggle [w]rap" },
+	{ "<leader>tr", function() Snacks.toggle.option("relativenumber", { name = "Relative Number" }):toggle() end, desc = "[t]oggle [r]elative number" },
+	{ "<leader>td", function() Snacks.toggle.diagnostics():toggle() end, desc = "[t]oggle [d]iagnostics" },
+	{ "<leader>tl", function() Snacks.toggle.line_number():toggle() end, desc = "[t]oggle [l]ine number" },
+	{ "<leader>tc", function() Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):toggle() end, desc = "[t]oggle [c]onceal" },
+	{ "<leader>z", function() Snacks.zen() end, desc = "Toggle [z]en mode" },
+	{ "<leader>Z", function() Snacks.zen.zoom() end, desc = "Toggle [Z]oom" },
+	{ "<leader>.", function() Snacks.scratch() end, desc = "Toggle scratch buffer [.]"},
+	{ "<leader>S", function() Snacks.scratch.select() end, desc = "[S]elect scratch buffer" },
+	{ "<leader>bd", function() Snacks.bufdelete() end, desc = "[b]uffer [d]elete" },
+	{ "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename file [R]" },
+	{ "<c-/>", function() Snacks.terminal() end, desc = "Toggle terminal [/]" },
+	{ "]]", function() Snacks.words.jump(vim.v.count1) end, desc = "Next reference []]", mode = { "n", "t" } },
+	{ "[[", function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev reference [[[]", mode = { "n", "t" } },
+}
+for _, key in ipairs(snacks_keys) do
+	local mode = key.mode or "n"
+	vim.keymap.set(mode, key[1], key[2], { desc = key.desc, nowait = key.nowait })
 end
 
--- Add lazy.nvim to the runtime path so Neovim can find it
-local rtp = vim.opt.rtp
-rtp:prepend(lazypath)
+-- Treesitter (v1.0+: no more nvim-treesitter.configs, highlight/indent are automatic)
+require("nvim-treesitter").setup({})
 
--- ============================================================================
--- [[ INITIALIZE PLUGINS ]]
--- ============================================================================
--- Load and configure all plugins from lua/plugins/
--- Each file in lua/plugins/ returns a plugin specification that lazy.nvim uses
---
--- USEFUL COMMANDS:
---   :Lazy           - Open the lazy.nvim UI to manage plugins
---   :Lazy update    - Update all plugins to their latest versions
---   :Lazy check     - Check for plugin updates without installing
---   :Lazy log       - View recent plugin updates
---   ?               - Show help when the Lazy UI is open
---
--- The second argument to setup() contains configuration for lazy.nvim itself
-require("lazy").setup(require("plugins"), {
-	ui = {
-		-- Configure icons for the lazy.nvim UI
-		-- If you have a Nerd Font installed, use empty table {} to use default Nerd Font icons
-		-- Otherwise, use Unicode emoji icons for better visual feedback in the UI
-		icons = vim.g.have_nerd_font and {} or {
-			cmd = "⌘", -- Icon for commands
-			config = "🛠", -- Icon for configuration
-			event = "📅", -- Icon for events that trigger lazy loading
-			ft = "📂", -- Icon for filetype-based loading
-			init = "⚙", -- Icon for init hooks
-			keys = "🗝", -- Icon for key mappings
-			plugin = "🔌", -- Icon for plugins
-			runtime = "💻", -- Icon for runtime code
-			require = "🌙", -- Icon for require dependencies
-			source = "📄", -- Icon for source files
-			start = "🚀", -- Icon for plugins that start immediately
-			task = "📌", -- Icon for tasks
-			lazy = "💤 ", -- Icon for lazy loading indicator
+-- Blink.cmp
+require("blink.cmp").setup({
+	keymap = { preset = "default" },
+	appearance = { nerd_font_variant = "mono" },
+	completion = { documentation = { auto_show = false, auto_show_delay_ms = 500 } },
+	sources = {
+		default = { "lsp", "path", "snippets", "lazydev" },
+		providers = {
+			lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
 		},
+	},
+	fuzzy = { implementation = "lua" },
+	signature = { enabled = true },
+})
+
+-- Conform (formatting)
+require("conform").setup({
+	notify_on_error = false,
+	formatters_by_ft = {
+		lua = { "stylua" },
+		javascript = { "prettierd" },
+		typescript = { "prettierd" },
+		javascriptreact = { "prettierd" },
+		typescriptreact = { "prettierd" },
+		json = { "prettierd" },
+		css = { "prettierd" },
+		scss = { "prettierd" },
+		html = { "prettierd" },
+		sh = { "shfmt" },
+		bash = { "shfmt" },
+		c = { "clang-format" },
+		cpp = { "clang-format" },
+		sql = { "sql-formatter" },
+	},
+})
+vim.keymap.set({ "n", "v" }, "<leader>f", function()
+	require("conform").format({ async = true, lsp_format = "fallback" })
+end, { desc = "[F]ormat buffer" })
+vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()
+	require("conform").format({ lsp_format = "fallback" })
+	vim.cmd("w")
+end, { desc = "Format and Save" })
+
+-- Lint
+require("lint").linters_by_ft = {
+	javascript = { "eslint_d" },
+	typescript = { "eslint_d" },
+	javascriptreact = { "eslint_d" },
+	typescriptreact = { "eslint_d" },
+	sh = { "shellcheck" },
+	env = { "dotenv_linter" },
+}
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+	group = vim.api.nvim_create_augroup("lint", { clear = true }),
+	callback = function()
+		if vim.bo.modifiable then
+			require("lint").try_lint()
+		end
+	end,
+})
+
+-- Gitsigns
+require("gitsigns").setup({
+	signs = {
+		add = { text = "+" },
+		change = { text = "~" },
+		delete = { text = "_" },
+		topdelete = { text = "‾" },
+		changedelete = { text = "~" },
+	},
+	on_attach = function(bufnr)
+		local gitsigns = require("gitsigns")
+		local function map(mode, l, r, opts)
+			opts = opts or {}
+			opts.buffer = bufnr
+			vim.keymap.set(mode, l, r, opts)
+		end
+		map("n", "]c", function()
+			if vim.wo.diff then
+				vim.cmd.normal({ "]c", bang = true })
+			else
+				gitsigns.nav_hunk("next")
+			end
+		end, { desc = "Jump to next git [c]hange" })
+		map("n", "[c", function()
+			if vim.wo.diff then
+				vim.cmd.normal({ "[c", bang = true })
+			else
+				gitsigns.nav_hunk("prev")
+			end
+		end, { desc = "Jump to previous git [c]hange" })
+		map("v", "<leader>hs", function()
+			gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+		end, { desc = "git [s]tage hunk" })
+		map("v", "<leader>hr", function()
+			gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+		end, { desc = "git [r]eset hunk" })
+		map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "git [s]tage hunk" })
+		map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "git [r]eset hunk" })
+		map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "git [S]tage buffer" })
+		map("n", "<leader>hu", gitsigns.stage_hunk, { desc = "git [u]ndo stage hunk" })
+		map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "git [R]eset buffer" })
+		map("n", "<leader>hp", gitsigns.preview_hunk, { desc = "git [p]review hunk" })
+		map("n", "<leader>hb", gitsigns.blame_line, { desc = "git [b]lame line" })
+		map("n", "<leader>hd", gitsigns.diffthis, { desc = "git [d]iff against index" })
+		map("n", "<leader>hD", function()
+			gitsigns.diffthis("@")
+		end, { desc = "git [D]iff against last commit" })
+		map("n", "<leader>tb", gitsigns.toggle_current_line_blame, { desc = "[T]oggle git show [b]lame line" })
+		map("n", "<leader>tD", gitsigns.preview_hunk_inline, { desc = "[T]oggle git show [D]eleted" })
+	end,
+})
+
+-- Which-key
+require("which-key").setup({
+	delay = 0,
+	icons = {
+		mappings = vim.g.have_nerd_font,
+		keys = vim.g.have_nerd_font and {} or {
+			Up = "<Up> ", Down = "<Down> ", Left = "<Left> ", Right = "<Right> ",
+			C = "<C-…> ", M = "<M-…> ", D = "<D-…> ", S = "<S-…> ",
+			CR = "<CR> ", Esc = "<Esc> ",
+			ScrollWheelDown = "<ScrollWheelDown> ", ScrollWheelUp = "<ScrollWheelUp> ",
+			NL = "<NL> ", BS = "<BS> ", Space = "<Space> ", Tab = "<Tab> ",
+			F1 = "<F1>", F2 = "<F2>", F3 = "<F3>", F4 = "<F4>",
+			F5 = "<F5>", F6 = "<F6>", F7 = "<F7>", F8 = "<F8>",
+			F9 = "<F9>", F10 = "<F10>", F11 = "<F11>", F12 = "<F12>",
+		},
+	},
+	spec = {
+		{ "<leader>s", group = "[s]earch" },
+		{ "<leader>t", group = "[t]oggle" },
+		{ "<leader>d", group = "[d]ebug" },
+		{ "<leader>h", group = "Git [h]unk", mode = { "n", "v" } },
+		{ "<leader>g", group = "[g]it" },
+		{ "<leader>f", desc = "[f]ormat" },
+		{ "<leader>q", desc = "[q]uickfix" },
+		{ "<leader>b", desc = "[b]uffer" },
+		{ "g", group = "[g]oto / LSP" },
+		{ "gr", group = "[r]ename / Ref" },
 	},
 })
 
--- Set default colorscheme after all plugins are loaded
--- We check for the NVIM_THEME environment variable to allow per-machine themes
--- If not set, we fall back to 'wildcharm'
-local theme = vim.env.NVIM_THEME or "wildcharm"
-if theme == "random" then
-	require("utils").random_dark_theme()
-else
-	-- Safely try to load the theme, falling back to default if it fails
-	if not pcall(vim.cmd.colorscheme, theme) then
-		vim.notify("Failed to load theme: " .. theme .. ". Falling back to wildcharm.", vim.log.levels.WARN)
-	end
+-- LazyDev
+require("lazydev").setup({
+	library = {
+		{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+	},
+})
+
+-- Autopairs
+require("nvim-autopairs").setup({})
+
+-- LSP Configuration
+require("mason").setup({})
+require("mason-lspconfig").setup({})
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
+	callback = function(event)
+		local map = function(keys, func, desc, mode)
+			mode = mode or "n"
+			vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+		end
+		map("gra", vim.lsp.buf.code_action, "[g]oto code [a]ction", { "n", "x" })
+		map("grD", vim.lsp.buf.declaration, "[g]oto [D]eclaration")
+	end,
+})
+vim.diagnostic.config({
+	severity_sort = true,
+	float = { border = "rounded", source = "if_many" },
+	underline = { severity = vim.diagnostic.severity.ERROR },
+	signs = vim.g.have_nerd_font and {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "󰅚 ",
+			[vim.diagnostic.severity.WARN] = "󰀪 ",
+			[vim.diagnostic.severity.INFO] = "󰋽 ",
+			[vim.diagnostic.severity.HINT] = "󰌶 ",
+		},
+	} or {},
+	virtual_text = { source = "if_many", spacing = 2 },
+})
+local servers = {
+	["bashls"] = {},
+	["clangd"] = {},
+	["jsonls"] = {},
+	["ts_ls"] = {},
+	["dockerls"] = {},
+	["yamlls"] = {},
+	["cssls"] = {},
+	["emmet_ls"] = {},
+	["fish_lsp"] = {},
+	["azure_pipelines_ls"] = {},
+	["just"] = {},
+	["rust_analyzer"] = {},
+	["ruff"] = { init_options = { settings = { lineLength = 120 } } },
+	["ty"] = {
+		cmd = { "ty", "server" },
+		filetypes = { "python" },
+		root_markers = { "pyproject.toml", "uv.lock", ".git" },
+		settings = { ty = { experimental = { rename = true } } },
+	},
+	["lua_ls"] = { settings = { Lua = { completion = { callSnippet = "Replace" } } } },
+}
+local lsp_to_mason = {
+	rust_analyzer = "rust-analyzer",
+	lua_ls = "lua-language-server",
+	ts_ls = "typescript-language-server",
+	jsonls = "json-lsp",
+	bashls = "bash-language-server",
+	dockerls = "dockerfile-language-server",
+	yamlls = "yaml-language-server",
+	cssls = "css-lsp",
+	emmet_ls = "emmet-ls",
+	fish_lsp = "fish-lsp",
+	azure_pipelines_ls = "azure-pipelines-language-server",
+	just = "just-lsp",
+}
+local ensure_installed = {}
+for name, _ in pairs(servers) do
+	table.insert(ensure_installed, lsp_to_mason[name] or name)
 end
--- vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
+vim.list_extend(ensure_installed, { "stylua", "shfmt", "prettierd", "eslint_d", "clang-format", "sql-formatter", "dotenv-linter", "shellcheck" })
+require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+for name, config in pairs(servers) do
+	config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+	vim.lsp.config[name] = config
+	vim.lsp.enable(name)
+end
+
+-- Debug (DAP)
+require("mason-nvim-dap").setup({ ensure_installed = { "python" }, handlers = {} })
+require("dap-view").setup()
+local mason_path = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
+require("dap-python").setup(mason_path)
+local dap = require("dap")
+local dap_view = require("dap-view")
+vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
+vim.keymap.set("n", "<F10>", dap.step_over, { desc = "Debug: Step Over" })
+vim.keymap.set("n", "<F11>", dap.step_into, { desc = "Debug: Step Into" })
+vim.keymap.set("n", "<F12>", dap.step_out, { desc = "Debug: Step Out" })
+vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
+vim.keymap.set("n", "<leader>dB", function()
+	dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+end, { desc = "Debug: Set Conditional Breakpoint" })
+vim.keymap.set("n", "<leader>dv", dap_view.toggle, { desc = "Debug: Toggle View" })
+vim.keymap.set("n", "<leader>dx", dap.terminate, { desc = "Debug: Terminate/Exit" })
+dap.listeners.after.event_initialized["dap_view_config"] = function()
+	dap_view.open()
+end
+dap.listeners.after.event_initialized["dap_exception_config"] = function()
+	dap.set_exception_breakpoints({ "uncaught" })
+end
+vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", numhl = "" })
+vim.fn.sign_define("DapStopped", { text = "▶️", texthl = "", linehl = "", numhl = "" })
+
+-- Theme
+local theme = vim.env.NVIM_THEME or "wildcharm"
+if not pcall(vim.cmd.colorscheme, theme) then
+	vim.notify("Failed to load theme: " .. theme .. ". Falling back to wildcharm.", vim.log.levels.WARN)
+end
 
 -- ============================================================================
 -- The line below is a vim modeline that sets editor options for this specific file
@@ -382,7 +711,3 @@ vim.opt.softtabstop = 2 -- Spaces for soft tabs
 vim.opt.shiftwidth = 2 -- Spaces for auto-indentation
 vim.opt.expandtab = true -- Expand tabs to spaces
 -- vim: ts=2 sts=2 sw=2 et
-
-vim.api.nvim_create_user_command("Pycheck", function()
-	require("utils").pycheck()
-end, {})
