@@ -336,6 +336,7 @@ vim.pack.add({
 	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
 	-- Misc
 	"https://github.com/windwp/nvim-autopairs",
+	"https://github.com/folke/todo-comments.nvim",
 	"https://github.com/nvim-lua/plenary.nvim",
 	-- Themes
 	"https://github.com/folke/tokyonight.nvim",
@@ -385,53 +386,337 @@ vim.schedule(function()
 end)
 -- Snacks keymaps
 local snacks_keys = {
-	{ "<leader><space>", function() Snacks.picker.buffers() end, desc = "Buffers [ ]" },
-	{ "<leader>sf", function() Snacks.picker.files() end, desc = "Search [f]iles" },
-	{ "<leader>sg", function() Snacks.picker.grep() end, desc = "Search by [g]rep" },
-	{ "<leader>:", function() Snacks.picker.command_history() end, desc = "Command history [:]" },
-	{ "<leader>n", function() Snacks.notifier.show_history() end, desc = "[n]otification history" },
-	{ "<leader>e", function() Snacks.explorer() end, desc = "File [e]xplorer" },
-	{ "<leader>st", function() Snacks.picker.todo_comments() end, desc = "Search [t]odo comments" },
-	{ "<leader>sT", function() Snacks.picker.todo_comments({ keywords = { "TODO", "FIXME", "FIX" } }) end, desc = "Search [T]odo/Fixme" },
-	{ "<leader>sh", function() Snacks.picker.help() end, desc = "Search [h]elp" },
-	{ "<leader>sk", function() Snacks.picker.keymaps() end, desc = "Search [k]eymaps" },
-	{ "<leader>ss", function() Snacks.picker.pickers() end, desc = "Search [s]elect (pickers)" },
-	{ "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Search current [w]ord", mode = { "n", "x" } },
-	{ "<leader>sd", function() Snacks.picker.diagnostics() end, desc = "Search [d]iagnostics" },
-	{ "<leader>sr", function() Snacks.picker.resume() end, desc = "Search [r]esume" },
-	{ "<leader>s.", function() Snacks.picker.recent() end, desc = "Search recent files [.]"},
-	{ "<leader>/", function() Snacks.picker.lines() end, desc = "Search buffer [/] lines" },
-	{ "<leader>s/", function() Snacks.picker.grep_buffers() end, desc = "Search open buffers [/]" },
-	{ "<leader>sn", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Search [n]eovim files" },
-	{ "\\", function() Snacks.explorer() end, desc = "Toggle explorer [\\]" },
-	{ "<leader>gb", function() Snacks.git.blame_line() end, desc = "Git [b]lame line" },
-	{ "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git [B]rowse" },
-	{ "<leader>gg", function() Snacks.lazygit() end, desc = "Lazy[g]it" },
-	{ "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit [l]og (CWD)" },
-	{ "<leader>gf", function() Snacks.lazygit.log_file() end, desc = "Lazygit current [f]ile history" },
-	{ "gd", function() Snacks.picker.lsp_definitions() end, desc = "Go to [d]efinition" },
-	{ "gD", function() Snacks.picker.lsp_declarations() end, desc = "Go to [D]eclaration" },
-	{ "gr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "Go to [r]eferences" },
-	{ "gI", function() Snacks.picker.lsp_implementations() end, desc = "Go to [I]mplementation" },
-	{ "gy", function() Snacks.picker.lsp_type_definitions() end, desc = "Go to t[y]pe definition" },
-	{ "<leader>sl", function() Snacks.picker.lsp_symbols() end, desc = "LSP [s]ymbols" },
-	{ "<leader>sL", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP workspace [S]ymbols" },
-	{ "<leader>th", function() Snacks.toggle.inlay_hints():toggle() end, desc = "Toggle inlay [h]ints" },
-	{ "<leader>ts", function() Snacks.toggle.option("spell", { name = "Spelling" }):toggle() end, desc = "Toggle [s]pelling" },
-	{ "<leader>tw", function() Snacks.toggle.option("wrap", { name = "Wrap" }):toggle() end, desc = "Toggle [w]rap" },
-	{ "<leader>tr", function() Snacks.toggle.option("relativenumber", { name = "Relative Number" }):toggle() end, desc = "Toggle [r]elative number" },
-	{ "<leader>td", function() Snacks.toggle.diagnostics():toggle() end, desc = "Toggle [d]iagnostics" },
-	{ "<leader>tl", function() Snacks.toggle.line_number():toggle() end, desc = "Toggle [l]ine number" },
-	{ "<leader>tc", function() Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):toggle() end, desc = "Toggle [c]onceal" },
-	{ "<leader>z", function() Snacks.zen() end, desc = "Toggle [z]en mode" },
-	{ "<leader>Z", function() Snacks.zen.zoom() end, desc = "Toggle [Z]oom" },
-	{ "<leader>.", function() Snacks.scratch() end, desc = "Toggle scratch buffer [.]"},
-	{ "<leader>S", function() Snacks.scratch.select() end, desc = "[S]elect scratch buffer" },
-	{ "<leader>bd", function() Snacks.bufdelete() end, desc = "[b]uffer [d]elete" },
-	{ "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename file [R]" },
-	{ "<c-/>", function() Snacks.terminal() end, desc = "Toggle terminal [/]" },
-	{ "]]", function() Snacks.words.jump(vim.v.count1) end, desc = "Next reference []]", mode = { "n", "t" } },
-	{ "[[", function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev reference [[[]", mode = { "n", "t" } },
+	{
+		"<leader><space>",
+		function()
+			Snacks.picker.buffers()
+		end,
+		desc = "Buffers [ ]",
+	},
+	{
+		"<leader>sf",
+		function()
+			Snacks.picker.files()
+		end,
+		desc = "Search [f]iles",
+	},
+	{
+		"<leader>sg",
+		function()
+			Snacks.picker.grep()
+		end,
+		desc = "Search by [g]rep",
+	},
+	{
+		"<leader>:",
+		function()
+			Snacks.picker.command_history()
+		end,
+		desc = "Command history [:]",
+	},
+	{
+		"<leader>n",
+		function()
+			Snacks.notifier.show_history()
+		end,
+		desc = "[n]otification history",
+	},
+	{
+		"<leader>e",
+		function()
+			Snacks.explorer()
+		end,
+		desc = "File [e]xplorer",
+	},
+	{
+		"<leader>st",
+		"<cmd>TodoQuickFix<CR>",
+		desc = "Search [t]odo comments",
+	},
+	{
+		"<leader>sT",
+		"<cmd>TodoQuickFix keywords=TODO,FIX,FIXME<CR>",
+		desc = "Search [T]odo/Fixme",
+	},
+	{
+		"<leader>sh",
+		function()
+			Snacks.picker.help()
+		end,
+		desc = "Search [h]elp",
+	},
+	{
+		"<leader>sk",
+		function()
+			Snacks.picker.keymaps()
+		end,
+		desc = "Search [k]eymaps",
+	},
+	{
+		"<leader>ss",
+		function()
+			Snacks.picker.pickers()
+		end,
+		desc = "Search [s]elect (pickers)",
+	},
+	{
+		"<leader>sw",
+		function()
+			Snacks.picker.grep_word()
+		end,
+		desc = "Search current [w]ord",
+		mode = { "n", "x" },
+	},
+	{
+		"<leader>sd",
+		function()
+			Snacks.picker.diagnostics()
+		end,
+		desc = "Search [d]iagnostics",
+	},
+	{
+		"<leader>sr",
+		function()
+			Snacks.picker.resume()
+		end,
+		desc = "Search [r]esume",
+	},
+	{
+		"<leader>s.",
+		function()
+			Snacks.picker.recent()
+		end,
+		desc = "Search recent files [.]",
+	},
+	{
+		"<leader>/",
+		function()
+			Snacks.picker.lines()
+		end,
+		desc = "Search buffer [/] lines",
+	},
+	{
+		"<leader>s/",
+		function()
+			Snacks.picker.grep_buffers()
+		end,
+		desc = "Search open buffers [/]",
+	},
+	{
+		"<leader>sn",
+		function()
+			Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
+		end,
+		desc = "Search [n]eovim files",
+	},
+	{
+		"\\",
+		function()
+			Snacks.explorer()
+		end,
+		desc = "Toggle explorer [\\]",
+	},
+	{
+		"<leader>gb",
+		function()
+			Snacks.git.blame_line()
+		end,
+		desc = "Git [b]lame line",
+	},
+	{
+		"<leader>gB",
+		function()
+			Snacks.gitbrowse()
+		end,
+		desc = "Git [B]rowse",
+	},
+	{
+		"<leader>gg",
+		function()
+			Snacks.lazygit()
+		end,
+		desc = "Lazy[g]it",
+	},
+	{
+		"<leader>gl",
+		function()
+			Snacks.lazygit.log()
+		end,
+		desc = "Lazygit [l]og (CWD)",
+	},
+	{
+		"<leader>gf",
+		function()
+			Snacks.lazygit.log_file()
+		end,
+		desc = "Lazygit current [f]ile history",
+	},
+	{
+		"gd",
+		function()
+			Snacks.picker.lsp_definitions()
+		end,
+		desc = "Go to [d]efinition",
+	},
+	{
+		"gD",
+		function()
+			Snacks.picker.lsp_declarations()
+		end,
+		desc = "Go to [D]eclaration",
+	},
+	{
+		"gr",
+		function()
+			Snacks.picker.lsp_references()
+		end,
+		nowait = true,
+		desc = "Go to [r]eferences",
+	},
+	{
+		"gI",
+		function()
+			Snacks.picker.lsp_implementations()
+		end,
+		desc = "Go to [I]mplementation",
+	},
+	{
+		"gy",
+		function()
+			Snacks.picker.lsp_type_definitions()
+		end,
+		desc = "Go to t[y]pe definition",
+	},
+	{
+		"<leader>sl",
+		function()
+			Snacks.picker.lsp_symbols()
+		end,
+		desc = "LSP [s]ymbols",
+	},
+	{
+		"<leader>sL",
+		function()
+			Snacks.picker.lsp_workspace_symbols()
+		end,
+		desc = "LSP workspace [S]ymbols",
+	},
+	{
+		"<leader>th",
+		function()
+			Snacks.toggle.inlay_hints():toggle()
+		end,
+		desc = "Toggle inlay [h]ints",
+	},
+	{
+		"<leader>ts",
+		function()
+			Snacks.toggle.option("spell", { name = "Spelling" }):toggle()
+		end,
+		desc = "Toggle [s]pelling",
+	},
+	{
+		"<leader>tw",
+		function()
+			Snacks.toggle.option("wrap", { name = "Wrap" }):toggle()
+		end,
+		desc = "Toggle [w]rap",
+	},
+	{
+		"<leader>tr",
+		function()
+			Snacks.toggle.option("relativenumber", { name = "Relative Number" }):toggle()
+		end,
+		desc = "Toggle [r]elative number",
+	},
+	{
+		"<leader>td",
+		function()
+			Snacks.toggle.diagnostics():toggle()
+		end,
+		desc = "Toggle [d]iagnostics",
+	},
+	{
+		"<leader>tl",
+		function()
+			Snacks.toggle.line_number():toggle()
+		end,
+		desc = "Toggle [l]ine number",
+	},
+	{
+		"<leader>tc",
+		function()
+			Snacks.toggle
+				.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
+				:toggle()
+		end,
+		desc = "Toggle [c]onceal",
+	},
+	{
+		"<leader>z",
+		function()
+			Snacks.zen()
+		end,
+		desc = "Toggle [z]en mode",
+	},
+	{
+		"<leader>Z",
+		function()
+			Snacks.zen.zoom()
+		end,
+		desc = "Toggle [Z]oom",
+	},
+	{
+		"<leader>.",
+		function()
+			Snacks.scratch()
+		end,
+		desc = "Toggle scratch buffer [.]",
+	},
+	{
+		"<leader>S",
+		function()
+			Snacks.scratch.select()
+		end,
+		desc = "[S]elect scratch buffer",
+	},
+	{
+		"<leader>bd",
+		function()
+			Snacks.bufdelete()
+		end,
+		desc = "[b]uffer [d]elete",
+	},
+	{
+		"<leader>cR",
+		function()
+			Snacks.rename.rename_file()
+		end,
+		desc = "Rename file [R]",
+	},
+	{
+		"<c-/>",
+		function()
+			Snacks.terminal()
+		end,
+		desc = "Toggle terminal [/]",
+	},
+	{
+		"]]",
+		function()
+			Snacks.words.jump(vim.v.count1)
+		end,
+		desc = "Next reference []]",
+		mode = { "n", "t" },
+	},
+	{
+		"[[",
+		function()
+			Snacks.words.jump(-vim.v.count1)
+		end,
+		desc = "Prev reference [[[]",
+		mode = { "n", "t" },
+	},
 }
 for _, key in ipairs(snacks_keys) do
 	local mode = key.mode or "n"
@@ -560,14 +845,34 @@ require("which-key").setup({
 	icons = {
 		mappings = vim.g.have_nerd_font,
 		keys = vim.g.have_nerd_font and {} or {
-			Up = "<Up> ", Down = "<Down> ", Left = "<Left> ", Right = "<Right> ",
-			C = "<C-…> ", M = "<M-…> ", D = "<D-…> ", S = "<S-…> ",
-			CR = "<CR> ", Esc = "<Esc> ",
-			ScrollWheelDown = "<ScrollWheelDown> ", ScrollWheelUp = "<ScrollWheelUp> ",
-			NL = "<NL> ", BS = "<BS> ", Space = "<Space> ", Tab = "<Tab> ",
-			F1 = "<F1>", F2 = "<F2>", F3 = "<F3>", F4 = "<F4>",
-			F5 = "<F5>", F6 = "<F6>", F7 = "<F7>", F8 = "<F8>",
-			F9 = "<F9>", F10 = "<F10>", F11 = "<F11>", F12 = "<F12>",
+			Up = "<Up> ",
+			Down = "<Down> ",
+			Left = "<Left> ",
+			Right = "<Right> ",
+			C = "<C-…> ",
+			M = "<M-…> ",
+			D = "<D-…> ",
+			S = "<S-…> ",
+			CR = "<CR> ",
+			Esc = "<Esc> ",
+			ScrollWheelDown = "<ScrollWheelDown> ",
+			ScrollWheelUp = "<ScrollWheelUp> ",
+			NL = "<NL> ",
+			BS = "<BS> ",
+			Space = "<Space> ",
+			Tab = "<Tab> ",
+			F1 = "<F1>",
+			F2 = "<F2>",
+			F3 = "<F3>",
+			F4 = "<F4>",
+			F5 = "<F5>",
+			F6 = "<F6>",
+			F7 = "<F7>",
+			F8 = "<F8>",
+			F9 = "<F9>",
+			F10 = "<F10>",
+			F11 = "<F11>",
+			F12 = "<F12>",
 		},
 	},
 	spec = {
@@ -592,6 +897,10 @@ require("lazydev").setup({
 
 -- Autopairs
 require("nvim-autopairs").setup({})
+
+-- Todo Comments
+vim.cmd.packadd("todo-comments.nvim")
+require("todo-comments").setup({})
 
 -- LSP Configuration
 require("mason").setup({})
@@ -661,7 +970,10 @@ local ensure_installed = {}
 for name, _ in pairs(servers) do
 	table.insert(ensure_installed, lsp_to_mason[name] or name)
 end
-vim.list_extend(ensure_installed, { "stylua", "shfmt", "prettierd", "eslint_d", "clang-format", "sql-formatter", "dotenv-linter", "shellcheck" })
+vim.list_extend(
+	ensure_installed,
+	{ "stylua", "shfmt", "prettierd", "eslint_d", "clang-format", "sql-formatter", "dotenv-linter", "shellcheck" }
+)
 require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 for name, config in pairs(servers) do
 	config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
@@ -670,7 +982,7 @@ for name, config in pairs(servers) do
 end
 
 -- Debug (DAP)
-require("mason-nvim-dap").setup({ ensure_installed = { "python" }, handlers = {} })
+require("mason-nvim-dap").setup({ ensure_installed = { "python" }, handlers = {}, automatic_installation = false })
 require("dap-view").setup()
 local mason_path = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
 require("dap-python").setup(mason_path)
