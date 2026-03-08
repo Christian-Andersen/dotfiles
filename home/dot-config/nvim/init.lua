@@ -357,7 +357,7 @@ require("snacks").setup({
 			{ section = "keys", gap = 1, padding = 1 },
 		},
 	},
-	explorer = { enabled = true },
+	explorer = { enabled = true, close_on_open = true },
 	indent = { enabled = true },
 	input = { enabled = true },
 	picker = { enabled = true },
