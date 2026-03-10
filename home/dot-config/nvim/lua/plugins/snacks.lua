@@ -32,13 +32,17 @@ return {
     git = { enabled = true },
     gitbrowse = { enabled = true },
     lazygit = { enabled = true },
+    -- NEW: Image support (terminal dependent)
+    image = { enabled = true },
+    -- NEW: Toggle system
+    toggle = { enabled = true },
   },
   keys = {
     -- Top Pickers & Explorer
-    { "<leader><space>", function() Snacks.picker.buffers() end, desc = "Find [b]uffers" },
+    { "<leader><space>", function() Snacks.picker.buffers() end, desc = "Buffers [ ]" },
     { "<leader>sf", function() Snacks.picker.files() end, desc = "Search [f]iles" },
     { "<leader>sg", function() Snacks.picker.grep() end, desc = "Search by [g]rep" },
-    { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command [:] history" },
+    { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command history [:]" },
     { "<leader>n", function() Snacks.notifier.show_history() end, desc = "[n]otification history" },
     { "<leader>e", function() Snacks.explorer() end, desc = "File [e]xplorer" },
     { "<leader>st", function() Snacks.picker.todo_comments() end, desc = "Search [t]odo comments" },
@@ -50,12 +54,12 @@ return {
     { "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Search current [w]ord", mode = { "n", "x" } },
     { "<leader>sd", function() Snacks.picker.diagnostics() end, desc = "Search [d]iagnostics" },
     { "<leader>sr", function() Snacks.picker.resume() end, desc = "Search [r]esume" },
-    { "<leader>s.", function() Snacks.picker.recent() end, desc = "Search recent files ([.])" },
+    { "<leader>s.", function() Snacks.picker.recent() end, desc = "Search recent files [.]" },
     { "<leader>/", function() Snacks.picker.lines() end, desc = "Search buffer [/] lines" },
-    { "<leader>s/", function() Snacks.picker.grep_buffers() end, desc = "Search open [b]uffers ([/])" },
+    { "<leader>s/", function() Snacks.picker.grep_buffers() end, desc = "Search open buffers [/]" },
     { "<leader>sn", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Search [n]eovim files" },
     -- Neo-tree replacement
-    { "\\", function() Snacks.explorer() end, desc = "Toggle explorer ([\\])" },
+    { "\\", function() Snacks.explorer() end, desc = "Toggle explorer [\\]" },
 
     -- Git
     { "<leader>gb", function() Snacks.git.blame_line() end, desc = "Git [b]lame line" },
@@ -73,16 +77,25 @@ return {
     { "<leader>ss", function() Snacks.picker.lsp_symbols() end, desc = "LSP [s]ymbols" },
     { "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP workspace [S]ymbols" },
 
+    -- Toggles
+    { "<leader>th", function() Snacks.toggle.inlay_hints():toggle() end, desc = "[t]oggle inlay [h]ints" },
+    { "<leader>ts", function() Snacks.toggle.option("spell", { name = "Spelling" }):toggle() end, desc = "[t]oggle [s]pelling" },
+    { "<leader>tw", function() Snacks.toggle.option("wrap", { name = "Wrap" }):toggle() end, desc = "[t]oggle [w]rap" },
+    { "<leader>tr", function() Snacks.toggle.option("relativenumber", { name = "Relative Number" }):toggle() end, desc = "[t]oggle [r]elative number" },
+    { "<leader>td", function() Snacks.toggle.diagnostics():toggle() end, desc = "[t]oggle [d]iagnostics" },
+    { "<leader>tl", function() Snacks.toggle.line_number():toggle() end, desc = "[t]oggle [l]ine number" },
+    { "<leader>tc", function() Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):toggle() end, desc = "[t]oggle [c]onceal" },
+
     -- Other
     { "<leader>z",  function() Snacks.zen() end, desc = "Toggle [z]en mode" },
     { "<leader>Z",  function() Snacks.zen.zoom() end, desc = "Toggle [Z]oom" },
-    { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle scratch buffer ([.])" },
+    { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle scratch buffer [.]" },
     { "<leader>S",  function() Snacks.scratch.select() end, desc = "[S]elect scratch buffer" },
     { "<leader>bd", function() Snacks.bufdelete() end, desc = "[b]uffer [d]elete" },
-    { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename file ([R])" },
-    { "<c-/>",      function() Snacks.terminal() end, desc = "Toggle terminal ([/])" },
-    { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference (]])", mode = { "n", "t" } },
-    { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference ([[)", mode = { "n", "t" } },
+    { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename file [R]" },
+    { "<c-/>",      function() Snacks.terminal() end, desc = "Toggle terminal [/]" },
+    { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next reference []]]", mode = { "n", "t" } },
+    { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev reference [[[]", mode = { "n", "t" } },
   },
   init = function()
     vim.api.nvim_create_autocmd("User", {
