@@ -69,22 +69,24 @@ return {
 		-- This groups related commands under descriptive headings
 		spec = {
 			-- Group all <leader>a commands under the Harpoon category
-			{ "<leader>a", group = "Harpoon [A]dd" },
-			-- Group all <leader>s commands under the [S]earch category
-			{ "<leader>s", group = "[S]earch" },
-			-- Group all <leader>t commands under the [T]oggle category
-			{ "<leader>t", group = "[T]oggle" },
-			-- Group all <leader>d commands under the [D]ebug category
-			{ "<leader>d", group = "[D]ebug" },
-			-- Group all <leader>h commands under the Git [H]unk category (works in normal and visual modes)
-			{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
-			-- Standalone leader keys
-			{ "<leader>f", desc = "[F]ormat" },
-			{ "<leader>q", desc = "[Q]uickfix" },
-			{ "<leader>b", desc = "[B]uffer" },
-			-- LSP and navigation prefixes
-			{ "g", group = "[G]oto / LSP" },
-			{ "gr", group = "[R]ename / Ref" },
+			{ "<leader>a", group = "Harpoon [a]dd" },
+			-- Group all <leader>s commands under the [s]earch category
+			{ "<leader>s", group = "[s]earch" },
+			-- Group all <leader>t commands under the [t]oggle category
+			{ "<leader>t", group = "[t]oggle" },
+			-- Group all <leader>d commands under the [d]ebug category
+			{ "<leader>d", group = "[d]ebug" },
+			-- Group all <leader>h commands under the Git [h]unk category (works in normal and visual modes)
+			{ "<leader>h", group = "Git [h]unk", mode = { "n", "v" } },
+			-- Group all <leader>g commands under the [g]it category
+			{ "<leader>g", group = "[g]it" },
+			-- Short descriptions for common operations
+			{ "<leader>f", desc = "[f]ormat" },
+			{ "<leader>q", desc = "[q]uickfix" },
+			{ "<leader>b", desc = "[b]uffer" },
+			-- Common LSP and navigation categories
+			{ "g", group = "[g]oto / LSP" },
+			{ "gr", group = "[r]ename / Ref" },
 			-- Harpoon number selection
 			{ "<leader>1", hidden = true },
 			{ "<leader>2", hidden = true },
