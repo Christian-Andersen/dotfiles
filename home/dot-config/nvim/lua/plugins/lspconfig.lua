@@ -36,8 +36,6 @@ return {
 		"mason-org/mason-lspconfig.nvim",
 		-- Mason Tool Installer: Auto-installs tools (formatters, linters, etc.)
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
-		-- Fidget: Shows LSP progress notifications during initialization
-		{ "j-hui/fidget.nvim", opts = {} },
 		-- Blink.cmp: Completion engine that integrates with LSP
 		"saghen/blink.cmp",
 	},
@@ -53,24 +51,10 @@ return {
 					vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 				end
 
-				-- Rename: Rename the symbol under cursor throughout the file
-				map("grn", vim.lsp.buf.rename, "[R]e[n]ame")
 				-- Code Actions: Show available refactorings and fixes (works in normal and visual mode)
 				map("gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
-				-- References: Find all places where this symbol is used
-				map("grr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-				-- Implementations: Find all implementations of this interface/abstract method
-				map("gri", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-				-- Definitions: Jump to where this symbol is defined
-				map("grd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
 				-- Declaration: Jump to where this symbol is declared
 				map("grD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-				-- Document Symbols: Show outline/symbols in current file (like ctags)
-				map("gO", require("telescope.builtin").lsp_document_symbols, "Open Document Symbols")
-				-- Workspace Symbols: Search for symbols across the entire workspace/project
-				map("gW", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
-				-- Type Definition: Jump to the type definition of the symbol under cursor
-				map("grt", require("telescope.builtin").lsp_type_definitions, "[G]oto [T]ype Definition")
 
 				-- Helper function to check if a language server supports a capability
 				local function client_supports_method(client, method, bufnr)
@@ -79,41 +63,6 @@ return {
 
 				-- Get the language server client for this buffer
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
-
-				-- ===== DOCUMENT HIGHLIGHTING =====
-				-- Highlight all references to the symbol under the cursor
-				if
-					client
-					and client_supports_method(
-						client,
-						vim.lsp.protocol.Methods.textDocument_documentHighlight,
-						event.buf
-					)
-				then
-					local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
-					-- Highlight when cursor is held (not moving)
-					vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-						buffer = event.buf,
-						group = highlight_augroup,
-						callback = vim.lsp.buf.document_highlight,
-					})
-
-					-- Clear highlighting when cursor moves
-					vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-						buffer = event.buf,
-						group = highlight_augroup,
-						callback = vim.lsp.buf.clear_references,
-					})
-
-					-- Clean up highlighting when LSP detaches
-					vim.api.nvim_create_autocmd("LspDetach", {
-						group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
-						callback = function(event2)
-							vim.lsp.buf.clear_references()
-							vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = event2.buf })
-						end,
-					})
-				end
 
 				-- ===== INLAY HINTS =====
 				-- Toggle inline type hints (if the language server supports them)
