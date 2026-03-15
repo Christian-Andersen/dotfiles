@@ -55,10 +55,23 @@ return {
 		formatters_by_ft = {
 			-- Use stylua (Lua formatter) for Lua files
 			lua = { "stylua" },
-			-- You can add more filetypes here, e.g.:
-			-- python = { 'black', 'isort' },
-			-- javascript = { 'prettier' },
-			-- json = { 'prettier' },
+			-- Use prettierd for web-related files
+			javascript = { "prettierd" },
+			typescript = { "prettierd" },
+			javascriptreact = { "prettierd" },
+			typescriptreact = { "prettierd" },
+			json = { "prettierd" },
+			css = { "prettierd" },
+			scss = { "prettierd" },
+			html = { "prettierd" },
+			-- Use shfmt for shell scripts
+			sh = { "shfmt" },
+			bash = { "shfmt" },
+			-- Use clang-format for C/C++
+			c = { "clang-format" },
+			cpp = { "clang-format" },
+			-- Use sql-formatter for SQL
+			sql = { "sql-formatter" },
 		},
 	},
 }
