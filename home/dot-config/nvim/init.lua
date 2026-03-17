@@ -298,10 +298,17 @@ require("snacks").setup({
 			{ section = "keys", gap = 1, padding = 1 },
 		},
 	},
-	explorer = { enabled = true, close_on_open = true },
+	explorer = { enabled = true },
 	indent = { enabled = true },
 	input = { enabled = true },
-	picker = { enabled = true },
+	picker = {
+		enabled = true,
+		sources = {
+			explorer = {
+				auto_close = true,
+			},
+		},
+	},
 	notifier = { enabled = true },
 	quickfile = { enabled = true },
 	scope = { enabled = true },
