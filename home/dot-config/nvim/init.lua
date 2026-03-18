@@ -180,12 +180,6 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagn
 -- If it doesn't work for you, use the default <C-\><C-n> or adjust the mapping
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
--- Zellij-like keybindings (only when not running inside Zellij)
-if not vim.env.ZELLIJ then
-	vim.keymap.set({ "n", "i", "t" }, "<M-n>", "<Cmd>vsplit | terminal<CR>", { desc = "New pane right" })
-	vim.keymap.set({ "n", "i", "t" }, "<M-b>", "<Cmd>split | terminal<CR>", { desc = "New pane down" })
-end
-
 -- Navigate between splits with Ctrl+h/j/k/l
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to lower window" })
@@ -274,7 +268,6 @@ vim.pack.add({
 	"https://github.com/mason-org/mason-lspconfig.nvim",
 	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
 	-- Misc
-	"https://github.com/willothy/flatten.nvim",
 	"https://github.com/windwp/nvim-autopairs",
 	"https://github.com/folke/todo-comments.nvim",
 	"https://github.com/nvim-lua/plenary.nvim",
@@ -840,12 +833,6 @@ require("lazydev").setup({
 	library = {
 		{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
 	},
-})
-
--- Flatten (avoid nested Neovim in :term)
-require("flatten").setup({
-	window = { open = "alternate" },
-	nest_if_no_args = false,
 })
 
 -- Autopairs
