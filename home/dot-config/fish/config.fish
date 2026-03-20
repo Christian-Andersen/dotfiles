@@ -15,8 +15,7 @@ set -l extra_paths \
     ~/.cargo/bin
 
 for p in $extra_paths
-    if test -d $p
-    end
+    test -d $p; and fish_add_path -g $p
 end
 
 if test -f /home/linuxbrew/.linuxbrew/bin/brew
