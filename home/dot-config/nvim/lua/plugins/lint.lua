@@ -36,8 +36,8 @@ return {
 			typescript = { "eslint_d" },
 			javascriptreact = { "eslint_d" },
 			typescriptreact = { "eslint_d" },
-			sh = { "shellcheck" }, -- Mason installed it for bashls, let's use it
-			env = { "dotenv" }, -- 'dotenv-linter' package often provides 'dotenv' linter
+			sh = { "shellcheck" },
+			env = { "dotenv_linter" },
 		}
 		-- You can add more filetypes here, e.g.:
 		-- python = { 'pylint', 'flake8' },
