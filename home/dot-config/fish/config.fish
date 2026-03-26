@@ -178,7 +178,7 @@ if status is-interactive
     abbr -a vi nvim
     abbr -a x chmod +x
     abbr -a y 'xclip -selection clipboard'
-    abbr -a z 'clear && zellij attach --create main'
+    abbr -a z 'clear && tmux new-session -A -s main'
 
     # Global aliases for help
     abbr -a --position anywhere -- --help '--help | bat -plhelp'
