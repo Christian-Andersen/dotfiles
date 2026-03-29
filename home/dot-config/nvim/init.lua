@@ -178,20 +178,84 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagn
 -- If it doesn't work for you, use the default <C-\><C-n> or adjust the mapping
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
+-- Zellij-like keybindings (only when not running inside Zellij)
+if not vim.env.ZELLIJ then
+	local opts = { noremap = true, silent = true }
+
+	-- Alt+h/l/j/k: MoveFocusOrTab/MoveFocus (like Zellij shared mode)
+	local function move_focus_or_tab_left()
+		local win = vim.fn.winnr()
+		vim.cmd("wincmd h")
+		if vim.fn.winnr() == win then
+			vim.cmd("tabprevious")
+		end
+	end
+	local function move_focus_or_tab_right()
+		local win = vim.fn.winnr()
+		vim.cmd("wincmd l")
+		if vim.fn.winnr() == win then
+			vim.cmd("tabnext")
+		end
+	end
+	vim.keymap.set({ "n", "i", "t" }, "<M-h>", move_focus_or_tab_left, opts)
+	vim.keymap.set({ "n", "i", "t" }, "<M-l>", move_focus_or_tab_right, opts)
+	vim.keymap.set({ "n", "i", "t" }, "<M-j>", "<C-w>j", opts)
+	vim.keymap.set({ "n", "i", "t" }, "<M-k>", "<C-w>k", opts)
+
+	-- Pane operations
+	vim.keymap.set({ "n", "i", "t" }, "<M-n>", "<Cmd>vsplit | terminal<CR>", { desc = "New pane right" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-b>", "<Cmd>split | terminal<CR>", { desc = "New pane down" })
+
+	-- Close pane or tab
+	local function close_pane_or_tab()
+		local current_tab = vim.api.nvim_get_current_tabpage()
+		local windows = vim.api.nvim_tabpage_list_wins(current_tab)
+		if #windows > 1 then
+			vim.cmd("close")
+		else
+			vim.cmd("tabclose")
+		end
+	end
+	vim.keymap.set({ "n", "i", "t" }, "<M-x>", close_pane_or_tab, { desc = "Close pane or tab" })
+
+	-- Fullscreen
+	local function toggle_fullscreen()
+		local layout = vim.fn.winlayout()
+		if layout[1] == "leaf" then
+			vim.cmd("wincmd |")
+			vim.cmd("wincmd _")
+		else
+			vim.cmd("wincmd =")
+		end
+	end
+	vim.keymap.set({ "n", "i", "t" }, "<M-f>", toggle_fullscreen, { desc = "Toggle fullscreen" })
+
+	-- Tab operations
+	vim.keymap.set({ "n", "i", "t" }, "<M-w>", "<Cmd>tabnew | terminal<CR>", { desc = "New tab" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-q>", "gT", { desc = "Previous tab" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-e>", "gt", { desc = "Next tab" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-1>", "1gt", { desc = "Go to tab 1" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-2>", "2gt", { desc = "Go to tab 2" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-3>", "3gt", { desc = "Go to tab 3" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-4>", "4gt", { desc = "Go to tab 4" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-5>", "5gt", { desc = "Go to tab 5" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-6>", "6gt", { desc = "Go to tab 6" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-7>", "7gt", { desc = "Go to tab 7" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-8>", "8gt", { desc = "Go to tab 8" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-9>", "9gt", { desc = "Go to tab 9" })
+
+	-- Resize (uppercase Alt)
+	vim.keymap.set({ "n", "i", "t" }, "<M-H>", "<Cmd>vertical resize -5<CR>", { desc = "Resize left" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-L>", "<Cmd>vertical resize +5<CR>", { desc = "Resize right" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-J>", "<Cmd>resize -5<CR>", { desc = "Resize down" })
+	vim.keymap.set({ "n", "i", "t" }, "<M-K>", "<Cmd>resize +5<CR>", { desc = "Resize up" })
+end
+
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 -- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 -- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
--- Window/Split navigation keybindings
--- Use Ctrl+hjkl to easily move between split windows
--- This is more intuitive than the default Ctrl+w,hjkl
--- See `:help wincmd` for a list of all window commands
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
 -- Go to last buffer (alternate file)
 vim.keymap.set("n", "<leader>b", "<C-^>", { desc = "Go to last [b]uffer" })
@@ -221,6 +285,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
 		vim.hl.on_yank()
 	end,
+})
+
+-- Auto-enter insert mode when opening a terminal
+vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter" }, {
+	pattern = "term://*",
+	command = "startinsert",
 })
 
 -- ============================================================================
