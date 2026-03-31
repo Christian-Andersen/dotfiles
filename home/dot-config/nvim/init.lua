@@ -186,6 +186,12 @@ if not vim.env.ZELLIJ then
 	vim.keymap.set({ "n", "i", "t" }, "<M-b>", "<Cmd>split | terminal<CR>", { desc = "New pane down" })
 end
 
+-- Navigate between splits with Ctrl+h/j/k/l
+vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
+vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to lower window" })
+vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to upper window" })
+vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
+
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
