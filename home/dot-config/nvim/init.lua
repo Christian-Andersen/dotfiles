@@ -268,6 +268,7 @@ vim.pack.add({
 	"https://github.com/mason-org/mason-lspconfig.nvim",
 	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
 	-- Misc
+	"https://github.com/willothy/flatten.nvim",
 	"https://github.com/windwp/nvim-autopairs",
 	"https://github.com/folke/todo-comments.nvim",
 	"https://github.com/nvim-lua/plenary.nvim",
@@ -826,6 +827,12 @@ require("lazydev").setup({
 	library = {
 		{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
 	},
+})
+
+-- Flatten (avoid nested Neovim in :term)
+require("flatten").setup({
+	window = { open = "alternate" },
+	nest_if_no_args = false,
 })
 
 -- Autopairs
