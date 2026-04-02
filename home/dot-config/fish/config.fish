@@ -80,7 +80,7 @@ function m --description 'Make directory (recursive) and change to it'
 end
 
 function t --description 'Create and cd into a temp directory'
-    set -l tmp_dir (mktemp -d -t 'tmp.XXXXXX')
+    set -l tmp_dir (mktemp -d -t 'tmp-XXXXXX')
     if test -n "$tmp_dir"
         echo "Created and changing to: $tmp_dir"
         cd "$tmp_dir"
