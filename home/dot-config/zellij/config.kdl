@@ -71,13 +71,8 @@ keybinds clear-defaults=true {
         bind "Alt c" { SwitchToMode "Normal"; }
         bind "Esc" { UndoRenameTab; SwitchToMode "Tab"; }
     }
-    renamepane {
-        bind "Alt c" { SwitchToMode "Normal"; }
-        bind "Esc" { UndoRenamePane; SwitchToMode "Pane"; }
-    }
     session {
         bind "Alt o" { SwitchToMode "Normal"; }
-        bind "Alt s" { SwitchToMode "Scroll"; }
         bind "d" { Detach; }
         bind "w" {
             LaunchOrFocusPlugin "session-manager" {
@@ -136,9 +131,6 @@ keybinds clear-defaults=true {
     shared_except "normal" {
         bind "Esc" { SwitchToMode "Normal"; }
     }
-    shared_except "pane" {
-        bind "Alt p" { SwitchToMode "Pane"; }
-    }
     shared_except "resize" {
         bind "Alt r" { SwitchToMode "Resize"; }
     }
@@ -155,10 +147,9 @@ keybinds clear-defaults=true {
         bind "Alt m" { SwitchToMode "Move"; }
     }
 }
-plugins {
-}
 theme "cyber-noir"
 default_layout "mine"
+pane_frames false
 session_serialization false
 show_release_notes false
 show_startup_tips false

@@ -66,10 +66,9 @@ function h
     end
     set -l ext (path extension "$argv[1]" | string trim -c '.')
     if test -z "$ext"
-        set ext "txt"
+        set ext txt
     end
-    git log --follow --pretty=format:"%h %ad %s" --date=short -- "$argv[1]" | \
-    fzf --ansi --reverse --no-sort \
+    git log --follow --pretty=format:"%h %ad %s" --date=short -- "$argv[1]" | fzf --ansi --reverse --no-sort \
         --header "History of $argv[1] (Enter to print Commit Hash)" \
         --preview "git show {1}:\"$argv[1]\" 2>/dev/null | bat --color=always --style=numbers --language=$ext" \
         --bind "enter:become(echo {1})"
@@ -96,15 +95,19 @@ function u --description 'Parallel update with grouped output'
     # 1. Build the list of commands to run (Tag + Command pairs)
     set -l jobs
     # System (choose one)
-    if command -v paru >/dev/null; set -a jobs "SYS" "paru -Syu --noconfirm"
-    else if command -v yay >/dev/null; set -a jobs "SYS" "yay -Syu --noconfirm"
-    else if command -v pacman >/dev/null; set -a jobs "SYS" "sudo pacman -Syu --noconfirm"
-    else if command -v apt >/dev/null; set -a jobs "SYS" "sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y"
+    if command -v paru >/dev/null
+        set -a jobs SYS "paru -Syu --noconfirm"
+    else if command -v yay >/dev/null
+        set -a jobs SYS "yay -Syu --noconfirm"
+    else if command -v pacman >/dev/null
+        set -a jobs SYS "sudo pacman -Syu --noconfirm"
+    else if command -v apt >/dev/null
+        set -a jobs SYS "sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y"
     end
     # Dev Tools (only if they exist)
-    command -v brew >/dev/null; and set -a jobs "BREW" "brew update && brew upgrade && brew cleanup"
-    command -v uv >/dev/null; and set -a jobs "UV" "uv tool upgrade --all && uv generate-shell-completion fish > ~/.config/fish/completions/uv.fish"
-    command -v cargo-install-update >/dev/null; and set -a jobs "RUST" "cargo install-update --all"
+    command -v brew >/dev/null; and set -a jobs BREW "brew update && brew upgrade && brew cleanup"
+    command -v uv >/dev/null; and set -a jobs UV "uv tool upgrade --all && uv generate-shell-completion fish > ~/.config/fish/completions/uv.fish"
+    command -v cargo-install-update >/dev/null; and set -a jobs RUST "cargo install-update --all"
     # 2. Execute
     set -l job_count (math (count $jobs) / 2)
     if test $job_count -gt 0
@@ -178,7 +181,7 @@ if status is-interactive
     abbr -a vi nvim
     abbr -a x chmod +x
     abbr -a y 'xclip -selection clipboard'
-    abbr -a z 'clear && tmux new-session -A -s main'
+    abbr -a z 'zellij attach --create main'
 
     # Global aliases for help
     abbr -a --position anywhere -- --help '--help | bat -plhelp'
