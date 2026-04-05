@@ -25,6 +25,18 @@ vim.g.have_nerd_font = true
 -- Set global terminal scrollback to 100,000 lines
 vim.opt.scrollback = 100000
 
+-- Enable UI2: no more press Enter
+require("vim._core.ui2").enable {
+  enable = true,
+  msg = {
+    targets = "cmd",
+    cmd = { height = 0.5 },
+    dialog = { height = 0.5 },
+    msg = { height = 0.5, timeout = 4000 },
+    pager = { height = 0.5 },
+  },
+}
+
 -- ============================================================================
 -- [[ EDITOR OPTIONS ]]
 -- ============================================================================
@@ -243,6 +255,10 @@ vim.api.nvim_create_autocmd("PackChanged", {
 		end
 	end,
 })
+
+-- Enable builtin undo tree and diff tool (Neovim 0.12+)
+vim.cmd.packadd("nvim.undotree")
+vim.cmd.packadd("nvim.difftool")
 
 -- Register and load all plugins
 vim.pack.add({
