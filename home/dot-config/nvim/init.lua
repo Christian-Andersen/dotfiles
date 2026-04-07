@@ -26,16 +26,16 @@ vim.g.have_nerd_font = true
 vim.opt.scrollback = 100000
 
 -- Enable UI2: no more press Enter
-require("vim._core.ui2").enable {
-  enable = true,
-  msg = {
-    targets = "cmd",
-    cmd = { height = 0.5 },
-    dialog = { height = 0.5 },
-    msg = { height = 0.5, timeout = 4000 },
-    pager = { height = 0.5 },
-  },
-}
+require("vim._core.ui2").enable({
+	enable = true,
+	msg = {
+		targets = "cmd",
+		cmd = { height = 0.5 },
+		dialog = { height = 0.5 },
+		msg = { height = 0.5, timeout = 4000 },
+		pager = { height = 0.5 },
+	},
+})
 
 -- ============================================================================
 -- [[ EDITOR OPTIONS ]]
@@ -207,11 +207,39 @@ vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
 -- Go to last buffer (alternate file)
 vim.keymap.set("n", "<leader>b", "<C-^>", { desc = "Go to last [b]uffer" })
 
--- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
--- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
--- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
--- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
--- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+-- Google AI Search
+local function google_ai_search()
+	local code_block = ""
+	local mode = vim.api.nvim_get_mode().mode
+
+	if mode == "v" or mode == "V" or mode == "\22" then
+		vim.cmd('noau normal! "vy"')
+		local selected = vim.fn.getreg("v"):match("^%s*(.-)%s*$")
+		local ft = vim.bo.filetype
+		if ft ~= "" then
+			code_block = "```" .. ft .. "\n" .. selected .. "\n```\n"
+		else
+			code_block = "```\n" .. selected .. "\n```\n"
+		end
+	end
+
+	vim.ui.input({
+		prompt = "Google AI Prompt: ",
+	}, function(input)
+		if not input or input == "" then
+			return
+		end
+		local query = code_block .. input
+		local encoded = query
+			:gsub("([^%w ])", function(c)
+				return string.format("%%%02X", string.byte(c))
+			end)
+			:gsub(" ", "+")
+		local url = "https://www.google.com/search?udm=50&q=" .. encoded
+		vim.fn.jobstart({ "xdg-open", url }, { detach = true })
+	end)
+end
+vim.keymap.set({ "n", "v" }, "<leader><CR>", google_ai_search, { desc = "Search Google AI with Prompt" })
 
 -- ============================================================================
 -- [[ AUTOCOMMANDS ]]
