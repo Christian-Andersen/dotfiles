@@ -920,6 +920,7 @@ local servers = {
 	["azure_pipelines_ls"] = {},
 	["just"] = {},
 	["rust_analyzer"] = {},
+	["denols"] = {},
 	["ruff"] = { init_options = { settings = { lineLength = 120 } } },
 	["ty"] = {
 		cmd = { "ty", "server" },
