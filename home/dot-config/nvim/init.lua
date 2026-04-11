@@ -917,7 +917,6 @@ local servers = {
 	["cssls"] = {},
 	["emmet_ls"] = {},
 	["fish_lsp"] = {},
-	["azure_pipelines_ls"] = {},
 	["just"] = {},
 	["rust_analyzer"] = {},
 	["denols"] = {},
@@ -941,7 +940,6 @@ local lsp_to_mason = {
 	cssls = "css-lsp",
 	emmet_ls = "emmet-ls",
 	fish_lsp = "fish-lsp",
-	azure_pipelines_ls = "azure-pipelines-language-server",
 	just = "just-lsp",
 }
 local ensure_installed = {}
