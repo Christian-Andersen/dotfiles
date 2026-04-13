@@ -46,7 +46,7 @@ require("vim._core.ui2").enable({
 -- Use vim.opt for options that work with tables.
 -- ============================================================================
 
--- Make W also write command because of accidently holding shift
+-- Make W also write command because of accidentally holding shift
 vim.api.nvim_create_user_command("W", "write <args>", {
 	bang = true,
 	nargs = "*",
