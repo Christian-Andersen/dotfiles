@@ -6,7 +6,7 @@ build-essential procps curl file git stow uidmap
 ```
 
 ## Clone this Repo
-Create an SSH key and add it do your [GitHub SSH keys](https://github.com/settings/ssh).
+Create an SSH key and add it to your [GitHub SSH keys](https://github.com/settings/ssh).
 ```sh
 ssh-keygen -t ed25519 -C "@gmail.com"
 cat ~/.ssh/id_ed25519.pub
