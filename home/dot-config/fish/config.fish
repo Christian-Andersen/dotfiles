@@ -18,7 +18,7 @@ for p in $extra_paths
     test -d $p; and fish_add_path -g $p
 end
 
-if test -f /home/linuxbrew/.linuxbrew/bin/brew
+if test -f "/home/linuxbrew/.linuxbrew/bin/brew"
     /home/linuxbrew/.linuxbrew/bin/brew shellenv | source
 end
 
