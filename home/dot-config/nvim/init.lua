@@ -297,6 +297,8 @@ vim.pack.add({
 	"https://github.com/lewis6991/gitsigns.nvim",
 	"https://github.com/folke/which-key.nvim",
 	"https://github.com/folke/lazydev.nvim",
+	"https://github.com/echasnovski/mini.icons",
+	"https://github.com/nvim-tree/nvim-web-devicons",
 	-- Completion
 	"https://github.com/saghen/blink.cmp",
 	-- Formatting & Linting
