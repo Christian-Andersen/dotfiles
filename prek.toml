@@ -66,4 +66,4 @@ id = "uv-audit"
 name = "uv-audit"
 language = "system"
 pass_filenames = false
-entry = "uv run -- uv audit"
+entry = "uv audit"
