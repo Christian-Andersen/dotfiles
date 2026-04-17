@@ -674,6 +674,21 @@ local snacks_keys = {
 		desc = "Rename file [R]",
 	},
 	{
+		"<C-CR>",
+		function()
+			vim.cmd("w")
+			local term = Snacks.terminal(nil, {
+				win = { position = "bottom" },
+			})
+			local chan = vim.bo[term.buf].channel
+			vim.defer_fn(function()
+				vim.fn.chansend(chan, { "clear; just run\r\n" })
+				vim.cmd("stopinsert")
+			end, 100)
+		end,
+		desc = "Save and Run [just run]",
+	},
+	{
 		"<c-/>",
 		function()
 			Snacks.terminal()
