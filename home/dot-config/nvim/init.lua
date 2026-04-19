@@ -740,14 +740,17 @@ require("conform").setup({
 	notify_on_error = false,
 	formatters_by_ft = {
 		lua = { "stylua" },
-		javascript = { "prettierd" },
-		typescript = { "prettierd" },
-		javascriptreact = { "prettierd" },
-		typescriptreact = { "prettierd" },
-		json = { "prettierd" },
-		css = { "prettierd" },
-		scss = { "prettierd" },
-		html = { "prettierd" },
+		javascript = { "biome" },
+		typescript = { "biome" },
+		javascriptreact = { "biome" },
+		typescriptreact = { "biome" },
+		json = { "biome" },
+		css = { "biome" },
+		scss = { "biome" },
+		html = { "biome" },
+		astro = { "biome" },
+		svelte = { "biome" },
+		vue = { "biome" },
 		sh = { "shfmt" },
 		bash = { "shfmt" },
 		c = { "clang-format" },
@@ -759,16 +762,20 @@ vim.keymap.set({ "n", "v" }, "<leader>f", function()
 	require("conform").format({ async = true, lsp_format = "fallback" })
 end, { desc = "[F]ormat buffer" })
 vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()
-	require("conform").format({ lsp_format = "fallback" })
-	vim.cmd("w")
+	require("conform").format({
+		async = false,
+		lsp_format = "fallback",
+	}, function()
+		vim.cmd("w")
+	end)
 end, { desc = "Format and Save" })
 
 -- Lint
 require("lint").linters_by_ft = {
-	javascript = { "eslint_d" },
-	typescript = { "eslint_d" },
-	javascriptreact = { "eslint_d" },
-	typescriptreact = { "eslint_d" },
+	javascript = { "biomejs" },
+	typescript = { "biomejs" },
+	javascriptreact = { "biomejs" },
+	typescriptreact = { "biomejs" },
 	sh = { "shellcheck" },
 	env = { "dotenv_linter" },
 }
@@ -928,7 +935,22 @@ local servers = {
 	["bashls"] = {},
 	["clangd"] = {},
 	["jsonls"] = {},
-	["ts_ls"] = {},
+	["vtsls"] = {
+		settings = {
+			vtsls = {
+				tsserver = {
+					globalPlugins = {
+						{
+							name = "@vue/typescript-plugin",
+							location = vim.fn.stdpath("data") .. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+							languages = { "vue" },
+						},
+					},
+				},
+			},
+		},
+		filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+	},
 	["dockerls"] = {},
 	["yamlls"] = {},
 	["cssls"] = {},
@@ -936,7 +958,6 @@ local servers = {
 	["fish_lsp"] = {},
 	["just"] = {},
 	["rust_analyzer"] = {},
-	["denols"] = {},
 	["ruff"] = { init_options = { settings = { lineLength = 120 } } },
 	["ty"] = {
 		cmd = { "ty", "server" },
@@ -945,11 +966,23 @@ local servers = {
 		settings = { ty = { experimental = { rename = true } } },
 	},
 	["lua_ls"] = { settings = { Lua = { completion = { callSnippet = "Replace" } } } },
+	["gopls"] = {
+		settings = {
+			gopls = {
+				analyses = {
+					unusedparams = true,
+				},
+				staticcheck = true,
+			},
+		},
+	},
+	["vue_ls"] = {},
+	["zls"] = {},
 }
 local lsp_to_mason = {
 	rust_analyzer = "rust-analyzer",
 	lua_ls = "lua-language-server",
-	ts_ls = "typescript-language-server",
+	vtsls = "vtsls",
 	jsonls = "json-lsp",
 	bashls = "bash-language-server",
 	dockerls = "dockerfile-language-server",
@@ -958,6 +991,10 @@ local lsp_to_mason = {
 	emmet_ls = "emmet-ls",
 	fish_lsp = "fish-lsp",
 	just = "just-lsp",
+	gopls = "gopls",
+	vue_ls = "vue-language-server",
+	zls = "zls",
+	ty = "ty",
 }
 local ensure_installed = {}
 for name, _ in pairs(servers) do
@@ -965,7 +1002,7 @@ for name, _ in pairs(servers) do
 end
 vim.list_extend(
 	ensure_installed,
-	{ "stylua", "shfmt", "prettierd", "eslint_d", "clang-format", "sql-formatter", "dotenv-linter", "shellcheck" }
+	{ "stylua", "shfmt", "biome", "clang-format", "sql-formatter", "dotenv-linter", "shellcheck", "vue-language-server", "ty" }
 )
 require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 for name, config in pairs(servers) do
@@ -1014,4 +1051,3 @@ vim.opt.tabstop = 2 -- Tab width for display
 vim.opt.softtabstop = 2 -- Spaces for soft tabs
 vim.opt.shiftwidth = 2 -- Spaces for auto-indentation
 vim.opt.expandtab = true -- Expand tabs to spaces
--- vim: ts=2 sts=2 sw=2 et
