@@ -942,7 +942,8 @@ local servers = {
 					globalPlugins = {
 						{
 							name = "@vue/typescript-plugin",
-							location = vim.fn.stdpath("data") .. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+							location = vim.fn.stdpath("data")
+								.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
 							languages = { "vue" },
 						},
 					},
@@ -1002,7 +1003,7 @@ for name, _ in pairs(servers) do
 end
 vim.list_extend(
 	ensure_installed,
-	{ "stylua", "shfmt", "biome", "clang-format", "sql-formatter", "dotenv-linter", "shellcheck", "vue-language-server", "ty" }
+	{ "stylua", "shfmt", "biome", "clang-format", "sql-formatter", "dotenv-linter", "shellcheck" }
 )
 require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 for name, config in pairs(servers) do
