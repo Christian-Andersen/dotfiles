@@ -1,0 +1,9 @@
+font-size = 14
+background = #000000
+maximize = true
+gtk-titlebar = false
+cursor-style = bar
+shell-integration-features = no-cursor
+window-decoration = false
+window-padding-x = 0
+window-padding-y = 0
