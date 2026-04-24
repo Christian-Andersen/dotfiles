@@ -68,20 +68,6 @@ vim.o.relativenumber = true
 -- - Resize split windows
 vim.o.mouse = "a"
 
--- Don't show the mode indicator (e.g., "-- INSERT --")
-vim.o.showmode = false
-
--- Sync clipboard between OS and Neovim
--- This allows seamless copy/paste between Neovim and your system clipboard
--- - yanked text is copied to system clipboard
--- - system clipboard content can be pasted into Neovim
--- Schedule this after 'UiEnter' to avoid increasing startup time
--- Remove this option if you want your OS clipboard to remain independent
--- See `:help 'clipboard'`
-vim.schedule(function()
-	vim.o.clipboard = "unnamedplus"
-end)
-
 -- Enable break indent
 -- When a line is visually broken/wrapped, the continuation lines are indented
 -- to align with the first line
