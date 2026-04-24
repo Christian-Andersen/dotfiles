@@ -180,7 +180,7 @@ if status is-interactive
     abbr -a s 'git fetch --all --prune && git status'
     abbr -a vi nvim
     abbr -a x chmod +x
-    abbr -a y 'xclip -selection clipboard'
+    abbr -a y 'wl-copy'
     abbr -a z 'zellij attach --create main'
 
     # Global aliases for help
