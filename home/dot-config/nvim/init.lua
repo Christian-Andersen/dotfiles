@@ -300,7 +300,7 @@ vim.pack.add({
 	"https://github.com/echasnovski/mini.icons",
 	"https://github.com/nvim-tree/nvim-web-devicons",
 	-- Completion
-	"https://github.com/saghen/blink.cmp",
+	{ src = "https://github.com/saghen/blink.cmp", version = "v1" },
 	-- Formatting & Linting
 	"https://github.com/stevearc/conform.nvim",
 	"https://github.com/mfussenegger/nvim-lint",
