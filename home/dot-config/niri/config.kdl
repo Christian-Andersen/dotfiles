@@ -329,6 +329,7 @@ binds {
     Super+L { spawn "swaylock"; }
     Super+Q { close-window; }
     Super+Shift+E { quit; }
+    Super+Space { spawn "fuzzel"; }
     Super+Tab { toggle-overview; }
     Super+Slash { show-hotkey-overlay; }
 
