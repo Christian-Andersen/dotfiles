@@ -5,5 +5,5 @@ gtk-titlebar = false
 cursor-style = bar
 shell-integration-features = no-cursor
 window-decoration = false
-window-padding-x = 0
+window-padding-x = 4
 window-padding-y = 0
