@@ -328,6 +328,7 @@ binds {
     Super+backslash { spawn "firefox"; }
     Super+L { spawn "swaylock"; }
     Super+Q { close-window; }
+    Super+F { fullscreen-window; }
     Super+Shift+E { quit; }
     Super+Space { spawn "fuzzel"; }
     Super+Tab { toggle-overview; }
