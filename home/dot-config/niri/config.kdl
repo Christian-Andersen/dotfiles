@@ -304,6 +304,8 @@ window-rule {
     open-floating true
 }
 
+
+
 // Example: block out two password managers from screen capture.
 // (This example rule is commented out with a "/-" in front.)
 /-window-rule {
@@ -326,7 +328,7 @@ window-rule {
 binds {
     Super+Return { spawn "ghostty"; }
     Super+backslash { spawn "firefox"; }
-    Super+L { spawn "swaylock"; }
+    Super+L { spawn-sh "niri msg action power-off-monitors; swaylock"; }
     Super+Q { close-window; }
     Super+F { fullscreen-window; }
     Super+Shift+E { quit; }
