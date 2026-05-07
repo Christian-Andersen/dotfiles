@@ -245,6 +245,7 @@ layout {
 // This line starts waybar, a commonly used bar for Wayland compositors.
 spawn-at-startup "swaybg" "-m" "fill" "-i" "/home/christian/dotfiles/lady.png"
 spawn-at-startup "mako"
+spawn-sh-at-startup "firefox & ghostty & sleep 1 && niri msg action move-column-to-workspace 2"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
@@ -303,8 +304,6 @@ window-rule {
     match app-id=r#"firefox$"# title="^Picture-in-Picture$"
     open-floating true
 }
-
-
 
 // Example: block out two password managers from screen capture.
 // (This example rule is commented out with a "/-" in front.)
