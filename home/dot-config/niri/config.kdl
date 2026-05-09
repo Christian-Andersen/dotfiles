@@ -362,8 +362,8 @@ binds {
     Super+Left { focus-column-left; }
     Super+Right { focus-column-right; }
 
-    XF86AudioRaiseVolume { spawn-sh "pamixer -i 5"; }
-    XF86AudioLowerVolume { spawn-sh "pamixer -d 5"; }
-    XF86AudioMute { spawn-sh "pamixer -t"; }
-    XF86AudioMicMute { spawn-sh "pamixer --default-source -t"; }
+    XF86AudioRaiseVolume { spawn-sh "wpctl set-volume $(wpctl get-default Sink) 5%+"; }
+    XF86AudioLowerVolume { spawn-sh "wpctl set-volume $(wpctl get-default Sink) 5%-"; }
+    XF86AudioMute { spawn-sh "wpctl set-mute $(wpctl get-default Sink) toggle"; }
+    XF86AudioMicMute { spawn-sh "wpctl set-mute $(wpctl get-default Source) toggle"; }
 }
