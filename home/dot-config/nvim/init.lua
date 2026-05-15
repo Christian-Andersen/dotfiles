@@ -68,9 +68,6 @@ vim.o.relativenumber = true
 -- - Resize split windows
 vim.o.mouse = "a"
 
--- Don't show the mode indicator (e.g., "-- INSERT --")
-vim.o.showmode = false
-
 -- Sync clipboard between OS and Neovim
 -- This allows seamless copy/paste between Neovim and your system clipboard
 -- - yanked text is copied to system clipboard
