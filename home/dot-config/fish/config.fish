@@ -8,11 +8,13 @@ set -gx EDITOR nvim
 set -gx VISUAL nvim
 set -gx UV_MANAGED_PYTHON true
 set -gx DE generic
+set -gx GOPATH $HOME/.local/share/go
 
 # Add paths only if they exist to keep PATH clean
 set -l extra_paths \
     ~/.local/bin \
-    ~/.cargo/bin
+    ~/.cargo/bin \
+    $GOPATH/bin
 
 for p in $extra_paths
     test -d $p; and fish_add_path -g $p
