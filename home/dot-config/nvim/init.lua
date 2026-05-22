@@ -951,7 +951,6 @@ local servers = {
 		cmd = { "ty", "server" },
 		filetypes = { "python" },
 		root_markers = { "pyproject.toml", "uv.lock", ".git" },
-		settings = { ty = { experimental = { rename = true } } },
 	},
 	["lua_ls"] = { settings = { Lua = { completion = { callSnippet = "Replace" } } } },
 	["gopls"] = {
