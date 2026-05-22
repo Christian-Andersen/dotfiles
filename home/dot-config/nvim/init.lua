@@ -311,6 +311,7 @@ vim.pack.add({
 	"https://github.com/sainnhe/gruvbox-material",
 	"https://github.com/xeind/nightingale.nvim",
 	"https://github.com/EdenEast/nightfox.nvim",
+	"https://github.com/miladggg/neonwave.nvim",
 })
 
 -- Snacks
@@ -1025,6 +1026,11 @@ vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", n
 vim.fn.sign_define("DapStopped", { text = "▶️", texthl = "", linehl = "", numhl = "" })
 
 -- Theme
+require("neonwave").setup({
+	intensity = "neon",
+	background = "dark",
+	transparent_background = false,
+})
 local theme = vim.env.NVIM_THEME or "wildcharm"
 if not pcall(vim.cmd.colorscheme, theme) then
 	vim.notify("Failed to load theme: " .. theme .. ". Falling back to wildcharm.", vim.log.levels.WARN)
