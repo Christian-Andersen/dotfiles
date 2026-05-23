@@ -950,7 +950,6 @@ local servers = {
 	["ty"] = {
 		cmd = { "ty", "server" },
 		filetypes = { "python" },
-		root_markers = { "pyproject.toml", "uv.lock", ".git" },
 	},
 	["lua_ls"] = { settings = { Lua = { completion = { callSnippet = "Replace" } } } },
 	["gopls"] = {
