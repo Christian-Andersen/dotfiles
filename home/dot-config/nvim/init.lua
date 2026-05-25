@@ -890,6 +890,15 @@ require("nvim-autopairs").setup({})
 vim.cmd.packadd("todo-comments.nvim")
 require("todo-comments").setup({})
 
+-- Filter ty hints before they reach the diagnostic store
+local original_diagnostic_set = vim.diagnostic.set
+vim.diagnostic.set = function(ns, bufnr, diagnostics, opts)
+	local filtered = vim.tbl_filter(function(d)
+		return not (d.source == "ty" and d.severity == vim.diagnostic.severity.HINT)
+	end, diagnostics)
+	original_diagnostic_set(ns, bufnr, filtered, opts)
+end
+
 -- LSP Configuration
 require("mason").setup({})
 require("mason-lspconfig").setup({})
