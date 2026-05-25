@@ -947,10 +947,7 @@ local servers = {
 	["just"] = {},
 	["rust_analyzer"] = {},
 	["ruff"] = { init_options = { settings = { lineLength = 120 } } },
-	["ty"] = {
-		cmd = { "ty", "server" },
-		filetypes = { "python" },
-	},
+	["ty"] = {},
 	["lua_ls"] = { settings = { Lua = { completion = { callSnippet = "Replace" } } } },
 	["gopls"] = {
 		settings = {
