@@ -972,9 +972,7 @@ local servers = {
 	["zls"] = {},
 }
 local lsp_to_mason = {
-	rust_analyzer = "rust-analyzer",
 	lua_ls = "lua-language-server",
-	vtsls = "vtsls",
 	jsonls = "json-lsp",
 	bashls = "bash-language-server",
 	dockerls = "dockerfile-language-server",
@@ -983,10 +981,7 @@ local lsp_to_mason = {
 	emmet_ls = "emmet-ls",
 	fish_lsp = "fish-lsp",
 	just = "just-lsp",
-	gopls = "gopls",
 	vue_ls = "vue-language-server",
-	zls = "zls",
-	ty = "ty",
 }
 local ensure_installed = {}
 for name, _ in pairs(servers) do
