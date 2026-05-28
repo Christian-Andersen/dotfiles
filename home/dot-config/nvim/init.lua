@@ -1030,9 +1030,9 @@ require("neonwave").setup({
 	background = "dark",
 	transparent_background = false,
 })
-local theme = vim.env.NVIM_THEME or "wildcharm"
+local theme = vim.env.NVIM_THEME or "neonwave"
 if not pcall(vim.cmd.colorscheme, theme) then
-	vim.notify("Failed to load theme: " .. theme .. ". Falling back to wildcharm.", vim.log.levels.WARN)
+	vim.notify("Failed to load theme: " .. theme, vim.log.levels.WARN)
 end
 
 -- ============================================================================
