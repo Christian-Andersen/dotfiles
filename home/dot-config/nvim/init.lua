@@ -954,7 +954,13 @@ local servers = {
 	["emmet_ls"] = {},
 	["fish_lsp"] = {},
 	["just"] = {},
-	["rust_analyzer"] = {},
+	["rust_analyzer"] = {
+		settings = {
+			["rust-analyzer"] = {
+				checkOnSave = { command = "clippy" },
+			},
+		},
+	},
 	["ruff"] = { init_options = { settings = { lineLength = 120 } } },
 	["ty"] = {},
 	["lua_ls"] = { settings = { Lua = { completion = { callSnippet = "Replace" } } } },
