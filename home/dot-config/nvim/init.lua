@@ -975,7 +975,11 @@ local servers = {
 		},
 	},
 	["vue_ls"] = {},
-	["zls"] = {},
+	["zls"] = {
+		settings = {
+			enable_build_on_save = true,
+		},
+	},
 }
 local lsp_to_mason = {
 	lua_ls = "lua-language-server",
