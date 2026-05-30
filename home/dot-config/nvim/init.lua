@@ -901,7 +901,7 @@ end
 
 -- LSP Configuration
 require("mason").setup({})
-require("mason-lspconfig").setup({})
+require("mason-lspconfig").setup({ automatic_enable = false })
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 	callback = function(event)
@@ -941,6 +941,8 @@ local servers = {
 							location = vim.fn.stdpath("data")
 								.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
 							languages = { "vue" },
+							configNamespace = "typescript",
+							enableForWorkspaceTypeScriptVersions = true,
 						},
 					},
 				},
@@ -963,7 +965,15 @@ local servers = {
 	},
 	["ruff"] = { init_options = { settings = { lineLength = 120 } } },
 	["ty"] = {},
-	["lua_ls"] = { settings = { Lua = { completion = { callSnippet = "Replace" } } } },
+	["lua_ls"] = {
+		settings = {
+			Lua = {
+				completion = { callSnippet = "Replace" },
+				workspace = { checkThirdParty = false },
+				diagnostics = { globals = { "vim" } },
+			},
+		},
+	},
 	["gopls"] = {
 		settings = {
 			gopls = {
