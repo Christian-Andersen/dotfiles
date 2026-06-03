@@ -12,6 +12,7 @@ set -gx GOPATH $HOME/.local/share/go
 
 # Add paths only if they exist to keep PATH clean
 set -l extra_paths \
+    ~/.nix-profile/bin \
     ~/.local/bin \
     ~/.cargo/bin \
     $GOPATH/bin
