@@ -76,14 +76,14 @@
     ];
   in {
     homeConfigurations = {
-      dev = home-manager.lib.homeManagerConfiguration {
+      christian = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [ ./home.nix ];
         extraSpecialArgs = { inherit tools; };
       };
     };
     packages.${system} = {
-      dev = import ./image.nix { inherit pkgs tools; dotfilesSrc = dotfiles-root; };
+      christian = import ./image.nix { inherit pkgs tools; dotfilesSrc = dotfiles-root; };
     };
   };
 }
