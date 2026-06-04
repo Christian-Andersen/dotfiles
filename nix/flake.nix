@@ -38,6 +38,7 @@
       gh
       git
       go
+      harlequin
       huggingface-hub
       hyperfine
       jj
