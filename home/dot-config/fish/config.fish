@@ -120,6 +120,20 @@ function u --description 'Parallel update with grouped output'
     echo (set_color -o green)"All tools are up to date."(set_color normal)
 end
 
+function e --description 'Open in file explorer'
+    set target .
+    set -q argv[1]; and set target $argv[1]
+    if command -q explorer.exe
+        if command -q wslpath
+            explorer.exe (wslpath -w "$target")
+        else
+            explorer.exe "$target"
+        end
+    else
+        xdg-open "$target"
+    end
+end
+
 function o --description 'List a directory or open a file'
     set targets $argv
     if test (count $targets) -eq 0
@@ -165,7 +179,6 @@ if status is-interactive
     abbr -a d0 'CUDA_VISIBLE_DEVICES=0'
     abbr -a d1 'CUDA_VISIBLE_DEVICES=1'
     abbr -a d2 'CUDA_VISIBLE_DEVICES=2'
-    abbr -a e explorer.exe .
     abbr -a f "fzf --preview 'fzf-preview.sh {}'"
     abbr -a g lazygit
     abbr -a i 'uv run --with ipython -- ipython -i'
