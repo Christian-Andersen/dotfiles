@@ -47,6 +47,7 @@
       lazygit
       lazydocker
       neovim
+      nh
       ninja
       opencode
       openssh
