@@ -19,10 +19,10 @@
       inherit system;
       config.allowUnfree = true;
     };
+    huggingface-hub = pkgs.python3Packages.huggingface-hub;
     tools = with pkgs; [
       aria2
       bat
-      btop
       chafa
       curl
       deno
@@ -38,6 +38,7 @@
       gh
       git
       go
+      huggingface-hub
       hyperfine
       jj
       jq
@@ -62,6 +63,7 @@
       tokei
       unzip
       uv
+      vulnix
       wget
       wl-clipboard
       xdg-utils

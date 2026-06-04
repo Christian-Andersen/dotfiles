@@ -37,7 +37,7 @@ end
 # ==============================================================================
 
 function check_commands --description 'Check that all the commands I need are installed'
-    set -l commands_to_check nvim unzip eza fd fzf bat cargo uv uvx zoxide starship lazygit git ruff ty prek just btop xdg-open xclip zellij tldr docker wget curl aria2c ssh scp fastfetch rg dos2unix npm openssl dust tokei hyperfine yazi 7z jq resvg xsel chafa stylua gcc ninja stow parallel
+    set -l commands_to_check nvim unzip eza fd fzf bat cargo uv uvx zoxide starship lazygit git deno fnm gh go hf jj lazydocker opencode rsync rustup vulnix zig prek just btop xdg-open xclip zellij tldr docker wget curl aria2c ssh scp fastfetch rg dos2unix npm openssl dust tokei hyperfine yazi 7z jq resvg xsel chafa stylua gcc ninja stow parallel
     for cmd in $commands_to_check
         if not type -q $cmd
             echo "**✗ FAILURE**: Command '$cmd' NOT found in your \$PATH."
