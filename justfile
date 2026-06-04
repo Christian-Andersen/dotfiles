@@ -7,19 +7,19 @@ stow:
 
 [working-directory('nix')]
 nix-activate:
-    nix build '.#homeConfigurations.dev.activationPackage' && ./result/activate
+    nh home switch .
 
 [working-directory('nix')]
 nix-update:
-    nix flake update
+    nh home switch -u .
 
 [working-directory('nix')]
 container-build:
-    nix build '.#dev' && podman load < result
+    nix build '.#christian' && podman load < result
 
 container-run:
     podman run --rm -it -v ~/c:/root/c dev
 
 [working-directory('nix')]
 vulnix-flake:
-    nix build '.#dev' && vulnix ./result
+    nix build '.#christian' && vulnix ./result

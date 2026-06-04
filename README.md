@@ -16,7 +16,7 @@ nix flake update ~/dotfiles/nix
 ## Dev Container
 
 ```sh
-nix build ~/dotfiles/nix#dev && podman load < result
+nix build ~/dotfiles/nix#christian && podman load < result
 
 podman run --rm -it \
   -v ~/c:/root/c \
