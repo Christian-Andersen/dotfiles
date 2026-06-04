@@ -6,6 +6,10 @@ stow:
     mkdir -p ~/.config/fish && stow --dotfiles home
 
 [working-directory('nix')]
+bootstrap:
+    nix build '.#homeConfigurations.christian.activationPackage' && ./result/activate
+
+[working-directory('nix')]
 nix-activate:
     nh home switch .
 
