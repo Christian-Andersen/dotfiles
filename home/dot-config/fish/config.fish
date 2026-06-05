@@ -45,6 +45,28 @@ function check_commands --description 'Check that all the commands I need are in
     end
 end
 
+function bp --description "Append language-specific config boilerplate to current directory"
+    if test (count $argv) -eq 0
+        echo "Error: Please specify a language (e.g., boilerplate python)"
+        return 1
+    end
+    set -l lang $argv[1]
+    set -l source_dir "$HOME/dotfiles/boilerplate/$lang"
+    if not test -d $source_dir
+        echo "Error: No configuration directory found at $source_dir"
+        return 1
+    end
+    echo "Appending boilerplate for: $lang..."
+    for source_file in $source_dir/*
+        if test -f $source_file
+            set -l filename (basename $source_file)
+            cat $source_file >>./$filename
+            echo " -> Appended to ./$filename"
+        end
+    end
+    echo "Done!"
+end
+
 function ? --description 'Search Google with a query'
     xdg-open "https://www.google.com/search?q="(string escape --style=url "$argv")
 end
@@ -196,7 +218,7 @@ if status is-interactive
     abbr -a s 'git fetch --all --prune && git status'
     abbr -a vi nvim
     abbr -a x chmod +x
-    abbr -a y 'wl-copy'
+    abbr -a y wl-copy
     abbr -a z 'zellij attach --create main'
 
     # Global aliases for help

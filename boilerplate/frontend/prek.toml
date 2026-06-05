@@ -1,0 +1,25 @@
+orphan = true
+
+[[repos]]
+repo = "local"
+
+[[repos.hooks]]
+id = "biome-check"
+name = "biome-check"
+language = "system"
+pass_filenames = false
+entry = "pnpm exec biome check --write src/"
+
+[[repos.hooks]]
+id = "vue-tsc"
+name = "vue-tsc"
+language = "system"
+pass_filenames = false
+entry = "pnpm run type-check"
+
+[[repos.hooks]]
+id = "pnpm-audit"
+name = "pnpm-audit"
+language = "system"
+pass_filenames = false
+entry = "pnpm audit"
