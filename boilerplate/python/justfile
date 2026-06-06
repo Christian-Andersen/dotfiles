@@ -18,10 +18,10 @@ check:
     uvx prek@latest run --all-files
 
 run *args:
-    uv run main.py {{ args }}
+    uv run -- main.py {{ args }}
 
 test *args:
-    uv run pytest {{ args }}
+    uv run -- pytest {{ args }}
 
 audit:
     uv audit
