@@ -23,6 +23,12 @@
     tools = with pkgs; [
       aria2
       bat
+      bat-extras.batdiff
+      bat-extras.batgrep
+      bat-extras.batman
+      bat-extras.batpipe
+      bat-extras.batwatch
+      bat-extras.prettybat
       chafa
       curl
       deno
