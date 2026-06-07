@@ -188,6 +188,20 @@ function v --description 'List a directory or cat a file'
     end
 end
 
+function z --description "Zellij project session manager"
+    clear
+    set -l eza_cmd eza --long --header --group --git --git-repos --sort=date --color=always -d $HOME $HOME/c/* 2>/dev/null
+    set -l lines ($eza_cmd)
+    set -l choice (printf "%s\n" $lines | fzf --ansi --header-lines=1 --prompt="Project Session: " --height=40% --reverse)
+    if test -z "$choice"
+        return
+    end
+    set -l clean_choice (string replace -r '\e\[[0-9;]*[a-zA-Z]' '' -- "$choice" | string trim)
+    set -l target_dir (string match -r "$HOME.*" -- "$clean_choice")
+    set -l session_name (basename "$target_dir")
+    zellij attach --create "$session_name" options --default-cwd "$target_dir"
+end
+
 # ==============================================================================
 # Interactive-only Configuration
 # ==============================================================================
@@ -219,7 +233,6 @@ if status is-interactive
     abbr -a vi nvim
     abbr -a x chmod +x
     abbr -a y wl-copy
-    abbr -a z 'zellij attach --create main'
 
     # Global aliases for help
     abbr -a --position anywhere -- --help '--help | bat -plhelp'
