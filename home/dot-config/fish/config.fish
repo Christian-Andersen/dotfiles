@@ -192,11 +192,24 @@ function z --description "Zellij project session manager"
     clear
     set -l eza_cmd eza --long --header --group --git --git-repos --sort=date --color=always -d $HOME $HOME/c/* 2>/dev/null
     set -l lines ($eza_cmd)
-    set -l choice (printf "%s\n" $lines | fzf --ansi --header-lines=1 --prompt="Project Session: " --height=40% --reverse)
+    set -l active_sessions (zellij list-sessions --short --no-formatting 2>/dev/null)
+    set -l annotated_lines
+    for line in $lines
+        set -l clean (string replace -ra '\e\[[0-9;]*[a-zA-Z]' '' -- "$line" | string trim)
+        set -l dir_path (string match -r "$HOME.*" -- "$clean")
+        set -l dir_name (basename "$dir_path" 2>/dev/null)
+        if test -n "$dir_name"; and contains -- "$dir_name" $active_sessions
+            set -a annotated_lines "$line"(set_color green)" ●"(set_color normal)
+        else
+            set -a annotated_lines "$line"
+        end
+    end
+    set -l choice (printf "%s\n" $annotated_lines | fzf --ansi --header-lines=1 --prompt="Project Session: " --height=40% --reverse)
     if test -z "$choice"
         return
     end
-    set -l clean_choice (string replace -r '\e\[[0-9;]*[a-zA-Z]' '' -- "$choice" | string trim)
+    set -l clean_choice (string replace -ra '\e\[[0-9;]*[a-zA-Z]' '' -- "$choice" | string trim)
+    set -l clean_choice (string replace -r '\s*●\s*$' '' -- "$clean_choice" | string trim)
     set -l target_dir (string match -r "$HOME.*" -- "$clean_choice")
     set -l session_name (basename "$target_dir")
     zellij attach --create "$session_name" options --default-cwd "$target_dir"
