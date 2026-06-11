@@ -57,8 +57,6 @@
       nodejs
       ninja
       opencode
-      openssh
-      openssl
       p7zip
       parallel
       prek
