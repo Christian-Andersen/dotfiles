@@ -43,6 +43,8 @@
       gcc
       gh
       git
+      git-lfs
+      git-xet
       go
       harlequin
       huggingface-hub
