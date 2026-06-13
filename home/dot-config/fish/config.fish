@@ -214,15 +214,17 @@ function z --description "Zellij project session manager"
         end
     end
     set -l active_sessions (zellij list-sessions --short --no-formatting 2>/dev/null)
-    set -l annotated_dirs
+    set -l live_dirs
+    set -l inactive_dirs
     for dir in $dirs
         set -l dir_name (basename "$dir")
         if contains -- "$dir_name" $active_sessions
-            set -a annotated_dirs (set_color green)"● "(set_color normal)"$dir"
+            set -a live_dirs (set_color green)"● "(set_color normal)"$dir"
         else
-            set -a annotated_dirs "  $dir"
+            set -a inactive_dirs "  $dir"
         end
     end
+    set -l annotated_dirs $live_dirs $inactive_dirs
     set -l choice (printf "%s\n" $annotated_dirs | fzf --ansi --prompt="Project Session: " --height=40% --reverse)
     if test -z "$choice"
         return
