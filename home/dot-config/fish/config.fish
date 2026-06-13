@@ -256,6 +256,7 @@ if status is-interactive
     abbr -a la 'eza --all --long --header --group --git'
     abbr -a lsize 'eza --all --long --header --group --git --total-size --sort=size'
     abbr -a ltree 'eza --tree --long --header --group --git --total-size --sort=size'
+    abbr -a zl 'zellij list-sessions'
     abbr -a n 'ss -tulpn'
     abbr -a p 'uv run --'
     abbr -a q exit
