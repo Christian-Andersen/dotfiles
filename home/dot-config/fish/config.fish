@@ -254,6 +254,7 @@ if status is-interactive
     abbr -a l 'eza --long --header --group --git'
     abbr -a ls eza
     abbr -a la 'eza --all --long --header --group --git'
+    abbr -a cl 'cd ~/c && eza --long --header --group --git --git-repos --sort=date'
     abbr -a lsize 'eza --all --long --header --group --git --total-size --sort=size'
     abbr -a ltree 'eza --tree --long --header --group --git --total-size --sort=size'
     abbr -a zl 'zellij list-sessions'
