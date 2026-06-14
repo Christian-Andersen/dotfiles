@@ -225,7 +225,7 @@ function z --description "Zellij project session manager"
         end
     end
     set -l annotated_dirs $live_dirs $inactive_dirs
-    set -l choice (printf "%s\n" $annotated_dirs | fzf --ansi --prompt="Project Session: " --height=40% --reverse)
+    set -l choice (printf "%s\n" $annotated_dirs | fzf --ansi --prompt="Project Session: " --reverse)
     if test -z "$choice"
         return
     end
