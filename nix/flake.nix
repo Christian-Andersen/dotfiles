@@ -22,6 +22,7 @@
     huggingface-hub = pkgs.python3Packages.huggingface-hub;
     tools = with pkgs; [
       aria2
+      bash
       bat
       bat-extras.batdiff
       bat-extras.batgrep
@@ -31,6 +32,7 @@
       bat-extras.prettybat
       chafa
       curl
+      dash
       deno
       dos2unix
       dust
@@ -62,6 +64,7 @@
       p7zip
       parallel
       prek
+      prettier
       resvg
       ripgrep
       rsync
@@ -80,6 +83,7 @@
       zellij
       zig
       zoxide
+      yq
     ];
   in {
     homeConfigurations = {
