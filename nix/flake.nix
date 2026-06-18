@@ -36,6 +36,7 @@
       deno
       dos2unix
       dust
+      entr
       eza
       fastfetch
       fd
