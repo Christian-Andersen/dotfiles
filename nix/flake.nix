@@ -71,6 +71,7 @@
       rsync
       rustup
       starship
+      stdenv.cc.cc.lib
       stow
       tlrc
       tokei
@@ -90,7 +91,14 @@
     homeConfigurations = {
       christian = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        modules = [ ./home.nix ];
+        modules = [ 
+          ./home.nix
+          ({ pkgs, ... }: {
+            home.file.".config/fish/conf.d/nix_ld_library_path.fish".text = ''
+              set -gx LD_LIBRARY_PATH "${pkgs.stdenv.cc.cc.lib}/lib" $LD_LIBRARY_PATH
+            '';
+          })
+        ];
         extraSpecialArgs = { inherit tools; };
       };
     };
