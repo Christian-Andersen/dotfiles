@@ -93,11 +93,6 @@
         inherit pkgs;
         modules = [ 
           ./home.nix
-          ({ pkgs, ... }: {
-            home.file.".config/fish/conf.d/nix_ld_library_path.fish".text = ''
-              set -gx LD_LIBRARY_PATH "${pkgs.stdenv.cc.cc.lib}/lib" $LD_LIBRARY_PATH
-            '';
-          })
         ];
         extraSpecialArgs = { inherit tools; };
       };
