@@ -739,6 +739,7 @@ require("conform").setup({
 		c = { "clang-format" },
 		cpp = { "clang-format" },
 		sql = { "sql-formatter" },
+		nix = { "alejandra" },
 	},
 })
 vim.keymap.set({ "n", "v" }, "<leader>f", function()
@@ -986,6 +987,7 @@ local servers = {
 			enable_build_on_save = true,
 		},
 	},
+	["nixd"] = {},
 }
 for name, config in pairs(servers) do
 	config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)

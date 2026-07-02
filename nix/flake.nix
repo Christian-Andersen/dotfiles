@@ -25,11 +25,9 @@
       };
     };
     huggingface-hub = pkgs.python3Packages.huggingface-hub;
-    debugpy = pkgs.python3Packages.debugpy;
     tools = with pkgs; [
       aria2
       bash
-      bash-language-server
       bat
       bat-extras.batdiff
       bat-extras.batgrep
@@ -37,85 +35,61 @@
       bat-extras.batpipe
       bat-extras.batwatch
       bat-extras.prettybat
-      biome
       chafa
-      clang-tools
       curl
       dash
-      debugpy
-      deno
-      dockerfile-language-server
       dos2unix
-      dotenv-linter
       dust
-      emmet-language-server
       entr
       eza
       fastfetch
       fd
       fish
-      fish-lsp
-      fnm
       fzf
-      gcc
       gh
       git
       git-lfs
       git-xet
-      go
-      gopls
       harlequin
       huggingface-hub
       hyperfine
       jj
       jq
       just
-      just-lsp
       lazygit
       lazydocker
-      lua-language-server
       neovim
       nh
-      nodejs
-      ninja
       opencode
       parallel
-      prek
       prettier
       resvg
       ripgrep
       rsync
-      rustup
-      ruff
-      shellcheck
-      shfmt
-      sql-formatter
       starship
       stdenv.cc.cc.lib
       stow
-      stylua
       tlrc
       tokei
-      ty
       unar
       unzip
-      uv
-      vscode-css-languageserver
-      vscode-json-languageserver
-      vtsls
-      vue-language-server
       vulnix
       wget
       wl-clipboard
       xdg-utils
-      yaml-language-server
       yazi
       yq
       zellij
-      zig
-      zls
       zoxide
       _7zz
+      alejandra
+      bash-language-server
+      dockerfile-language-server
+      lua-language-server
+      nixd
+      shellcheck
+      shfmt
+      stylua
     ];
   in {
     homeConfigurations = {
