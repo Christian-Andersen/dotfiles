@@ -97,6 +97,7 @@
       tlrc
       tokei
       ty
+      unar
       unzip
       uv
       vscode-css-languageserver
