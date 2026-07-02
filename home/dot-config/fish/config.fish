@@ -265,7 +265,6 @@ if status is-interactive
     abbr -a q exit
     abbr -a r 'clear; just run'
     abbr -a s 'git fetch --all --prune && git status'
-    abbr -a vi nvim
     abbr -a x chmod +x
     abbr -a y wl-copy
 
