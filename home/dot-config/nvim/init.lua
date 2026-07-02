@@ -279,7 +279,7 @@ vim.pack.add({
 	-- Core
 	"https://github.com/folke/snacks.nvim",
 	"https://github.com/nvim-treesitter/nvim-treesitter",
-	"https://github.com/neovim/nvim-lspconfig", -- required by mason-lspconfig
+	"https://github.com/neovim/nvim-lspconfig",
 	"https://github.com/lewis6991/gitsigns.nvim",
 	"https://github.com/folke/which-key.nvim",
 	"https://github.com/folke/lazydev.nvim",
@@ -294,11 +294,7 @@ vim.pack.add({
 	"https://github.com/mfussenegger/nvim-dap",
 	"https://github.com/igorlfs/nvim-dap-view",
 	"https://github.com/mfussenegger/nvim-dap-python",
-	"https://github.com/jay-babu/mason-nvim-dap.nvim",
-	-- LSP management
-	"https://github.com/mason-org/mason.nvim",
-	"https://github.com/mason-org/mason-lspconfig.nvim",
-	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+
 	-- Misc
 	"https://github.com/windwp/nvim-autopairs",
 	"https://github.com/folke/todo-comments.nvim",
@@ -900,8 +896,6 @@ vim.diagnostic.set = function(ns, bufnr, diagnostics, opts)
 end
 
 -- LSP Configuration
-require("mason").setup({})
-require("mason-lspconfig").setup({ automatic_enable = false })
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 	callback = function(event)
@@ -938,8 +932,10 @@ local servers = {
 					globalPlugins = {
 						{
 							name = "@vue/typescript-plugin",
-							location = vim.fn.stdpath("data")
-								.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+							location = (function()
+								local bin = vim.fn.exepath("vue-language-server")
+								return bin ~= "" and bin:gsub("/bin/vue%-language%-server$", "/lib/node_modules/@vue/language-server") or ""
+							end)(),
 							languages = { "vue" },
 							configNamespace = "typescript",
 							enableForWorkspaceTypeScriptVersions = true,
@@ -991,27 +987,6 @@ local servers = {
 		},
 	},
 }
-local lsp_to_mason = {
-	lua_ls = "lua-language-server",
-	jsonls = "json-lsp",
-	bashls = "bash-language-server",
-	dockerls = "dockerfile-language-server",
-	yamlls = "yaml-language-server",
-	cssls = "css-lsp",
-	emmet_ls = "emmet-ls",
-	fish_lsp = "fish-lsp",
-	just = "just-lsp",
-	vue_ls = "vue-language-server",
-}
-local ensure_installed = {}
-for name, _ in pairs(servers) do
-	table.insert(ensure_installed, lsp_to_mason[name] or name)
-end
-vim.list_extend(
-	ensure_installed,
-	{ "stylua", "shfmt", "biome", "clang-format", "sql-formatter", "dotenv-linter", "shellcheck" }
-)
-require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 for name, config in pairs(servers) do
 	config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
 	vim.lsp.config[name] = config
@@ -1019,10 +994,8 @@ for name, config in pairs(servers) do
 end
 
 -- Debug (DAP)
-require("mason-nvim-dap").setup({ ensure_installed = { "python" }, handlers = {}, automatic_installation = false })
 require("dap-view").setup()
-local mason_path = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
-require("dap-python").setup(mason_path)
+require("dap-python").setup("python3")
 local dap = require("dap")
 local dap_view = require("dap-view")
 vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
