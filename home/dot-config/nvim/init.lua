@@ -299,6 +299,7 @@ vim.pack.add({
 	"https://github.com/windwp/nvim-autopairs",
 	"https://github.com/folke/todo-comments.nvim",
 	"https://github.com/nvim-lua/plenary.nvim",
+	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
 	-- Themes
 	"https://github.com/folke/tokyonight.nvim",
 	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
@@ -699,6 +700,9 @@ for _, key in ipairs(snacks_keys) do
 	local mode = key.mode or "n"
 	vim.keymap.set(mode, key[1], key[2], { desc = key.desc, nowait = key.nowait })
 end
+
+-- Render Markdown (in-editor markdown rendering)
+require("render-markdown").setup({})
 
 -- Treesitter (v1.0+: no more nvim-treesitter.configs, highlight/indent are automatic)
 require("nvim-treesitter").setup({})
