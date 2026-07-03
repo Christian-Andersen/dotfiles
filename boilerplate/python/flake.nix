@@ -15,6 +15,7 @@
       devShells.${system}.default = pkgs.mkShell {
         packages = with pkgs; [
           debugpy
+          git
           just
           prek
           ruff
