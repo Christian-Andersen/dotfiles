@@ -75,6 +75,14 @@ function ?? --description 'Search Google AI with a query'
     xdg-open "https://www.google.com/search?udm=50&q="(string escape --style=url "$argv")
 end
 
+function ns --description 'Launch a nix shell into fish without typing nixpkgs#'
+    set -l pkgs
+    for pkg in $argv
+        set pkgs $pkgs "nixpkgs#$pkg"
+    end
+    nix shell $pkgs --command fish
+end
+
 function b
     set tmp (mktemp -t "yazi-cwd.XXXXXX")
     command yazi $argv --cwd-file="$tmp"
