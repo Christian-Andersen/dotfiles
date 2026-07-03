@@ -108,7 +108,6 @@
       sql-formatter
       starship
       statix
-      stdenv.cc.cc.lib
       stow
       stylua
       tlrc
