@@ -147,8 +147,10 @@ function e --description 'Open in file explorer'
     set -q argv[1]; and set target $argv[1]
     if command -q explorer.exe
         if command -q wslpath
+            # @fish-lsp-disable-next-line 7001
             explorer.exe (wslpath -w "$target")
         else
+            # @fish-lsp-disable-next-line 7001
             explorer.exe "$target"
         end
     else
