@@ -57,7 +57,7 @@ function bp --description "Append language-specific config boilerplate to curren
         return 1
     end
     echo "Appending boilerplate for: $lang..."
-    for source_file in $source_dir/*
+    for source_file in $source_dir/{.,}*
         if test -f $source_file
             set -l filename (basename $source_file)
             cat $source_file >>./$filename
