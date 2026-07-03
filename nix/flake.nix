@@ -50,6 +50,7 @@
       debugpy
       delve
       deno
+      direnv
       dockerfile-language-server
       dos2unix
       dotenv-linter
@@ -88,6 +89,7 @@
       mesonlsp
       neovim
       nh
+      nix-direnv
       nixd
       nixpkgs-fmt
       nodejs

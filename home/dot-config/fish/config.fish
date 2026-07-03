@@ -275,4 +275,5 @@ if status is-interactive
     # Sourced directly, assuming these commands are always present.
     zoxide init fish --cmd cd | source
     starship init fish | source
+    direnv hook fish | source
 end
