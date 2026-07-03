@@ -15,7 +15,6 @@
         packages = with pkgs; [
           git
           just
-          lldb
           prek
           rust-analyzer
           rustup
