@@ -9,17 +9,13 @@
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
-      debugpy = pkgs.python3Packages.debugpy;
     in
     {
       devShells.${system}.default = pkgs.mkShell {
         packages = with pkgs; [
-          debugpy
           git
           just
           prek
-          ruff
-          ty
           uv
         ];
       };
