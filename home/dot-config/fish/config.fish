@@ -269,7 +269,7 @@ if status is-interactive
     abbr -a cl 'clear; cd ~/c && eza --long --header --group --git --git-repos --sort=date'
     abbr -a lsize 'eza --all --long --header --group --git --total-size --sort=size'
     abbr -a lt 'eza --tree --long --header --group --git --total-size --sort=size'
-    abbr -a zl 'zellij list-sessions'
+    abbr -a ndi 'nix develop -i --keep HOME --keep TERM --keep COLORTERM --keep LANG --keep USER'
     abbr -a n 'ss -tulpn'
     abbr -a p 'uv run --'
     abbr -a q exit
@@ -277,6 +277,7 @@ if status is-interactive
     abbr -a s 'git fetch --all --prune && git status'
     abbr -a x chmod +x
     abbr -a y wl-copy
+    abbr -a zl 'zellij list-sessions'
 
     # Global aliases for help
     abbr -a --position anywhere -- --help '--help | bat -plhelp'
