@@ -17,6 +17,7 @@
       devShells.${system}.default = pkgs.mkShell {
         packages = with pkgs; [
           biome
+          git
           just
           nodejs
           prek
