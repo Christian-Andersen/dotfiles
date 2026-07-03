@@ -740,6 +740,10 @@ require("conform").setup({
 		cpp = { "clang-format" },
 		sql = { "sql-formatter" },
 		nix = { "alejandra" },
+		toml = { "taplo" },
+		yaml = { "yamlfmt" },
+		markdown = { "markdownlint-cli" },
+		proto = { "buf" },
 	},
 })
 vim.keymap.set({ "n", "v" }, "<leader>f", function()
@@ -756,12 +760,16 @@ end, { desc = "Format and Save" })
 
 -- Lint
 require("lint").linters_by_ft = {
-	javascript = { "biomejs" },
-	typescript = { "biomejs" },
-	javascriptreact = { "biomejs" },
-	typescriptreact = { "biomejs" },
+	javascript = { "eslint_d", "biomejs" },
+	typescript = { "eslint_d", "biomejs" },
+	javascriptreact = { "eslint_d", "biomejs" },
+	typescriptreact = { "eslint_d", "biomejs" },
 	sh = { "shellcheck" },
 	env = { "dotenv_linter" },
+	nix = { "statix", "deadnix" },
+	markdown = { "markdownlint" },
+	go = { "golangci_lint" },
+	proto = { "buf" },
 }
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 	group = vim.api.nvim_create_augroup("lint", { clear = true }),
@@ -988,6 +996,10 @@ local servers = {
 		},
 	},
 	["nixd"] = {},
+	["taplo"] = {},
+	["marksman"] = {},
+	["mesonlsp"] = {},
+	["cmake"] = {},
 }
 for name, config in pairs(servers) do
 	config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
@@ -1016,6 +1028,40 @@ end
 dap.listeners.after.event_initialized["dap_exception_config"] = function()
 	dap.set_exception_breakpoints({ "uncaught" })
 end
+dap.adapters.go = {
+	type = "server",
+	port = "${port}",
+	executable = {
+		command = "dlv",
+		args = { "dap", "-l", "127.0.0.1:${port}" },
+	},
+}
+dap.configurations.go = {
+	{
+		type = "go",
+		name = "Debug",
+		request = "launch",
+		program = "${file}",
+	},
+}
+dap.adapters.rust = {
+	type = "executable",
+	command = "lldb-dap",
+	name = "lldb",
+}
+dap.configurations.rust = {
+	{
+		name = "Launch",
+		type = "rust",
+		request = "launch",
+		program = function()
+			return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
+		end,
+		cwd = "${workspaceFolder}",
+		stopOnEntry = false,
+		args = {},
+	},
+}
 vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", numhl = "" })
 vim.fn.sign_define("DapStopped", { text = "▶️", texthl = "", linehl = "", numhl = "" })
 
