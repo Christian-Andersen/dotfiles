@@ -10,6 +10,7 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
+        config.permittedInsecurePackages = [ "pnpm-10.34.0" ];
       };
     in
     {
@@ -18,7 +19,6 @@
           biome
           just
           nodejs
-          npm
           prek
           vtsls
           vue-language-server
