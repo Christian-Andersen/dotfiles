@@ -18,8 +18,8 @@ pass_filenames = false
 entry = "npm run type-check"
 
 [[repos.hooks]]
-id = "pnpm-audit"
-name = "pnpm-audit"
+id = "npm-audit"
+name = "npm-audit"
 language = "system"
 pass_filenames = false
-entry = "pnpm audit"
+entry = "npm audit"
