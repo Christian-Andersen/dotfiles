@@ -742,7 +742,7 @@ require("conform").setup({
 		nix = { "alejandra" },
 		toml = { "taplo" },
 		yaml = { "yamlfmt" },
-		markdown = { "markdownlint-cli" },
+		markdown = { "markdownlint" },
 		proto = { "buf" },
 	},
 })
@@ -769,7 +769,6 @@ require("lint").linters_by_ft = {
 	nix = { "statix", "deadnix" },
 	markdown = { "markdownlint" },
 	go = { "golangci_lint" },
-	proto = { "buf" },
 }
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 	group = vim.api.nvim_create_augroup("lint", { clear = true }),
@@ -1042,6 +1041,7 @@ dap.configurations.go = {
 		name = "Debug",
 		request = "launch",
 		program = "${file}",
+		dlvToolPath = vim.fn.exepath("dlv"),
 	},
 }
 dap.adapters.rust = {
@@ -1049,6 +1049,7 @@ dap.adapters.rust = {
 	command = "lldb-dap",
 	name = "lldb",
 }
+dap.adapters.zig = dap.adapters.rust
 dap.configurations.rust = {
 	{
 		name = "Launch",
@@ -1056,6 +1057,19 @@ dap.configurations.rust = {
 		request = "launch",
 		program = function()
 			return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
+		end,
+		cwd = "${workspaceFolder}",
+		stopOnEntry = false,
+		args = {},
+	},
+}
+dap.configurations.zig = {
+	{
+		name = "Launch",
+		type = "zig",
+		request = "launch",
+		program = function()
+			return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/zig-out/bin/", "file")
 		end,
 		cwd = "${workspaceFolder}",
 		stopOnEntry = false,
