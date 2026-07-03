@@ -40,11 +40,15 @@
       bat-extras.batwatch
       bat-extras.prettybat
       biome
+      buf
       chafa
+      cmake-language-server
       clang-tools
       curl
       dash
+      deadnix
       debugpy
+      delve
       deno
       dockerfile-language-server
       dos2unix
@@ -52,6 +56,7 @@
       dust
       emmet-language-server
       entr
+      eslint_d
       eza
       fastfetch
       fd
@@ -65,6 +70,7 @@
       git-lfs
       git-xet
       go
+      golangci-lint
       gopls
       harlequin
       huggingface-hub
@@ -75,10 +81,15 @@
       just-lsp
       lazygit
       lazydocker
+      lldb
       lua-language-server
+      markdownlint-cli
+      marksman
+      mesonlsp
       neovim
       nh
       nixd
+      nixpkgs-fmt
       nodejs
       ninja
       opencode
@@ -94,10 +105,12 @@
       shfmt
       sql-formatter
       starship
+      statix
       stdenv.cc.cc.lib
       stow
       stylua
       tlrc
+      taplo
       tokei
       ty
       unar
@@ -114,6 +127,7 @@
       yaml-language-server
       yazi
       yq
+      yamlfmt
       zellij
       zig
       zls
