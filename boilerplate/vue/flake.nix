@@ -1,5 +1,5 @@
 {
-  description = "Frontend development environment";
+  description = "Vue development environment";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -21,6 +21,8 @@
           just
           nodejs
           prek
+          vtsls
+          vue-language-server
         ];
       };
     };

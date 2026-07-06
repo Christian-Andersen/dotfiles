@@ -11,11 +11,11 @@ pass_filenames = false
 entry = "npx --no-install biome check --write src/"
 
 [[repos.hooks]]
-id = "tsc"
-name = "tsc"
+id = "vue-tsc"
+name = "vue-tsc"
 language = "system"
 pass_filenames = false
-entry = "npx --no-install tsc --noEmit"
+entry = "npx --no-install vue-tsc --noEmit"
 
 [[repos.hooks]]
 id = "npm-audit"
