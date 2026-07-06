@@ -101,7 +101,8 @@
       resvg
       ripgrep
       rsync
-      rustup
+      (pkgs.lib.lowPrio pkgs.rustup)
+      pkgs.rust-analyzer
       ruff
       shellcheck
       shfmt
