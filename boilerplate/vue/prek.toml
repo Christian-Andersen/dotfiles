@@ -1,0 +1,25 @@
+orphan = true
+
+[[repos]]
+repo = "local"
+
+[[repos.hooks]]
+id = "biome-check"
+name = "biome-check"
+language = "system"
+pass_filenames = false
+entry = "npx --no-install biome check --write src/"
+
+[[repos.hooks]]
+id = "vue-tsc"
+name = "vue-tsc"
+language = "system"
+pass_filenames = false
+entry = "npx --no-install vue-tsc --noEmit"
+
+[[repos.hooks]]
+id = "npm-audit"
+name = "npm-audit"
+language = "system"
+pass_filenames = false
+entry = "npm audit"

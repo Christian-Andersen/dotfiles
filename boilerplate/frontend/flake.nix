@@ -21,8 +21,6 @@
           just
           nodejs
           prek
-          vtsls
-          vue-language-server
         ];
       };
     };

@@ -8,14 +8,14 @@ id = "biome-check"
 name = "biome-check"
 language = "system"
 pass_filenames = false
-entry = "npx biome check --write src/"
+entry = "npx --no-install biome check --write src/"
 
 [[repos.hooks]]
-id = "vue-tsc"
-name = "vue-tsc"
+id = "tsc"
+name = "tsc"
 language = "system"
 pass_filenames = false
-entry = "npm run type-check"
+entry = "npx --no-install tsc --noEmit"
 
 [[repos.hooks]]
 id = "npm-audit"
