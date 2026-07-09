@@ -1090,15 +1090,19 @@ vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", n
 vim.fn.sign_define("DapStopped", { text = "▶️", texthl = "", linehl = "", numhl = "" })
 
 -- Theme
+local oled = vim.env.NVIM_OLED == "1"
 require("neonwave").setup({
 	intensity = "neon",
 	background = "dark",
-	transparent_background = false,
 })
 local theme = vim.env.NVIM_THEME or "neonwave"
 if not pcall(vim.cmd.colorscheme, theme) then
 	vim.notify("Failed to load theme: " .. theme, vim.log.levels.WARN)
 end
+if oled then
+	vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
+end
+
 
 -- ============================================================================
 -- The line below is a vim modeline that sets editor options for this specific file
