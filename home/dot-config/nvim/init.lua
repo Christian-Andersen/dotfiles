@@ -309,6 +309,7 @@ vim.pack.add({
 	"https://github.com/xeind/nightingale.nvim",
 	"https://github.com/EdenEast/nightfox.nvim",
 	"https://github.com/miladggg/neonwave.nvim",
+	"https://github.com/keremimo/noctalia.nvim",
 })
 
 -- Snacks
@@ -946,7 +947,12 @@ local servers = {
 							name = "@vue/typescript-plugin",
 							location = (function()
 								local bin = vim.fn.exepath("vue-language-server")
-								return bin ~= "" and bin:gsub("/bin/vue%-language%-server$", "/lib/node_modules/@vue/language-server") or ""
+								return bin ~= ""
+										and bin:gsub(
+											"/bin/vue%-language%-server$",
+											"/lib/node_modules/@vue/language-server"
+										)
+									or ""
 							end)(),
 							languages = { "vue" },
 							configNamespace = "typescript",
