@@ -3,12 +3,14 @@ set $left h
 set $down j
 set $up k
 set $right l
+set $term ghostty
+set $browser firefox
 
 output * bg /home/christian/dotfiles/images/lady-monochrome.jpg fill
 output DP-1 mode 2560x1440@359.979Hz
 
-bindsym $mod+Return exec ghostty
-bindsym $mod+Backslash exec firefox
+bindsym $mod+Return exec $term
+bindsym $mod+Backslash exec $browser
 bindsym $mod+Shift+q kill
 floating_modifier $mod normal
 bindsym $mod+Shift+c reload
@@ -76,6 +78,8 @@ default_floating_border none
 
 include /etc/sway/config.d/*
 exec noctalia
+exec $browser
+exec swaymsg workspace number 2
 
 bindsym $mod+space exec noctalia msg panel-toggle launcher
 bindsym $mod+n exec noctalia msg panel-toggle control-center
