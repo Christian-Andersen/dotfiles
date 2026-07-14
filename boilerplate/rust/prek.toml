@@ -37,6 +37,13 @@ pass_filenames = false
 entry = "cargo clippy -- -D warnings"
 
 [[repos.hooks]]
+id = "cargo-audit"
+name = "cargo-audit"
+language = "system"
+pass_filenames = false
+entry = "cargo audit"
+
+[[repos.hooks]]
 id = "cargo-test"
 name = "cargo-test"
 language = "system"

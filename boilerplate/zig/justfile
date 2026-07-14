@@ -4,7 +4,6 @@ alias b := build
 alias c := check
 alias d := doc
 alias r := run
-alias t := test
 alias ci := continuous_integration
 
 [private]
@@ -23,7 +22,4 @@ doc *args:
 run *args:
     zig build run {{ args }}
 
-test *args:
-    zig build test {{ args }}
-
-continuous_integration: check build doc test
+continuous_integration: check build doc

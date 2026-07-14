@@ -42,3 +42,17 @@ name = "golangci-lint"
 language = "system"
 pass_filenames = false
 entry = "golangci-lint run ./..."
+
+[[repos.hooks]]
+id = "govulncheck"
+name = "govulncheck"
+language = "system"
+pass_filenames = false
+entry = "govulncheck ./..."
+
+[[repos.hooks]]
+id = "go-test"
+name = "go-test"
+language = "system"
+pass_filenames = false
+entry = "go test ./..."
