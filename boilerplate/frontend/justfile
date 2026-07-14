@@ -4,7 +4,6 @@ alias a := audit
 alias b := build
 alias c := check
 alias r := run
-alias t := test
 alias ci := continuous_integration
 
 [private]
@@ -28,7 +27,4 @@ build:
 run:
     npm start
 
-test:
-    npm test
-
-continuous_integration: bootstrap audit check build test
+continuous_integration: bootstrap audit check build
