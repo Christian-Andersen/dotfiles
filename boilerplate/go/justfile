@@ -17,10 +17,10 @@ check:
 audit:
     govulncheck ./...
 
-build *args:
+build:
     go build ./...
 
-doc *args:
+doc:
     go doc ./...
 
 run *args:
