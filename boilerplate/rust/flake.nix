@@ -18,6 +18,7 @@
           prek
           rust-analyzer
           rustup
+          cargo-audit
         ];
       };
     };
