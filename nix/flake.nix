@@ -96,6 +96,7 @@
       ninja
       opencode
       parallel
+      pi-coding-agent
       prek
       prettier
       resvg
