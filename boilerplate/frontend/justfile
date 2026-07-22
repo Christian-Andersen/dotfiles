@@ -1,6 +1,5 @@
 set dotenv-load
 
-alias a := audit
 alias b := build
 alias c := check
 alias r := run
