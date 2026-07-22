@@ -112,7 +112,7 @@ function m --description 'Make directory (recursive) and change to it'
     mkdir -p $target && builtin cd $target
 end
 
-function t --description 'Create and cd into a temp directory'
+function tmp --description 'Create and cd into a temp directory'
     set -l tmp_dir (mktemp -d -t 'tmp-XXXXXX')
     if test -n "$tmp_dir"
         echo "Created and changing to: $tmp_dir"
@@ -254,6 +254,7 @@ if status is-interactive
     # --- Single Letter Abbreviations ---
     abbr -a a '. .venv/bin/activate.fish'
     abbr -a c 'clear; just check'
+    abbr -a ci 'clear; just ci'
     abbr -a d 'CUDA_VISIBLE_DEVICES='
     abbr -a d0 'CUDA_VISIBLE_DEVICES=0'
     abbr -a d1 'CUDA_VISIBLE_DEVICES=1'
@@ -275,6 +276,7 @@ if status is-interactive
     abbr -a q exit
     abbr -a r 'clear; just run'
     abbr -a s 'git fetch --all --prune && git status'
+    abbr -a t 'clear; just test'
     abbr -a x chmod +x
     abbr -a y wl-copy
     abbr -a zl 'zellij list-sessions'
