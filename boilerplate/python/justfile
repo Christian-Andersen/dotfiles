@@ -8,10 +8,6 @@ alias ci := continuous_integration
 default:
     @just --choose
 
-bootstrap:
-    @command -v uv >/dev/null 2>&1 || { echo "Error: uv is required but was not found in PATH." >&2; exit 1; }
-    uv sync --locked
-
 check:
     uvx prek@latest run --all-files
 
@@ -21,4 +17,4 @@ run *args:
 audit:
     uv audit
 
-continuous_integration: bootstrap audit check
+continuous_integration: audit check

@@ -9,11 +9,6 @@ alias ci := continuous_integration
 default:
     @just --choose
 
-bootstrap:
-    @command -v npm >/dev/null 2>&1 || { echo "Error: npm is required but was not found in PATH." >&2; exit 1; }
-    @command -v prek >/dev/null 2>&1 || { echo "Error: prek is required but was not found in PATH." >&2; exit 1; }
-    npm ci
-
 audit:
     npm audit
 
@@ -26,4 +21,4 @@ build:
 run:
     npm start
 
-continuous_integration: bootstrap audit check build
+continuous_integration: audit check build
