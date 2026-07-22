@@ -1,10 +1,6 @@
 [[repos]]
 repo = "builtin"
 hooks = [
-  {
-    id = "no-commit-to-branch",
-    args = ["--branch", "main", "--branch", "dev", "--branch", "master"],
-  },
   { id = "check-added-large-files", exclude = "(^|/)uv\\.lock$" },
   { id = "mixed-line-ending" },
   { id = "check-yaml" },
