@@ -1,6 +1,5 @@
 set dotenv-load
 
-alias a := audit
 alias c := check
 alias r := run
 alias ci := continuous_integration
