@@ -1,0 +1,24 @@
+set dotenv-load
+
+alias c := check
+alias r := run
+alias t := test
+alias ci := continuous_integration
+
+[private]
+default:
+    @just --choose
+
+check:
+    prek run --all-files
+
+audit:
+    deno audit
+
+run *args:
+    deno run main.ts {{ args }}
+
+test *args:
+    deno test {{ args }}
+
+continuous_integration: audit check test
