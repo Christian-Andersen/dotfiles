@@ -8,3 +8,4 @@ window-decoration = false
 window-padding-x = 4
 window-padding-y = 0
 keybind = ctrl+enter=unbind
+window-inherit-working-directory = false
