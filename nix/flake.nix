@@ -115,6 +115,7 @@
       tlrc
       taplo
       tokei
+      tuxedo
       ty
       unar
       unzip
