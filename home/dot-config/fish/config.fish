@@ -67,6 +67,42 @@ function bp --description "Append language-specific config boilerplate to curren
     echo "Done!"
 end
 
+function git-check-sync --description "Fetch and list repos that are un-synced or lack a remote"
+    echo "Fetching remotes and checking status..."
+    set -l pids
+    for dir in */
+        test -e "$dir/.git"; or continue
+        set -l clean_dir (string trim -r -c '/' -- $dir)
+        fish -c '
+            set dir $argv[1]
+            set clean_dir $argv[2]
+            git -C "$dir" fetch --quiet --all 2>/dev/null
+            set -l remotes (git -C "$dir" remote 2>/dev/null)
+            if test -z "$remotes"
+                printf "%-30s \033[33m%s\033[0m\n" "$clean_dir" "⚠️  NO REMOTE"; exit
+            end
+            set -l upstream (git -C "$dir" rev-parse --abbrev-ref @{u} 2>/dev/null)
+            if test -z "$upstream"
+                printf "%-30s \033[33m%s\033[0m\n" "$clean_dir" "⚠️  NO UPSTREAM TRACKING"; exit
+            end
+            set -l counts (git -C "$dir" rev-list --left-right --count HEAD...@{u} 2>/dev/null)
+            if test -n "$counts"
+                set -l parts (string split \t -- $counts)
+                set -l ahead $parts[1]; set -l behind $parts[2]
+                if test "$ahead" -gt 0 -a "$behind" -gt 0
+                    printf "%-30s \033[31m%s\033[0m\n" "$clean_dir" "⇕ DIVERGED (+$ahead / -$behind)"
+                else if test "$ahead" -gt 0
+                    printf "%-30s \033[36m%s\033[0m\n" "$clean_dir" "↑ AHEAD (+$ahead unpushed)"
+                else if test "$behind" -gt 0
+                    printf "%-30s \033[35m%s\033[0m\n" "$clean_dir" "↓ BEHIND (-$behind unpulled)"
+                end
+            end
+        ' -- "$dir" "$clean_dir" &
+        set -a pids $last_pid
+    end
+    test -n "$pids"; and wait $pids
+end
+
 function ? --description 'Search Google with a query'
     xdg-open "https://www.google.com/search?q="(string escape --style=url "$argv")
 end
@@ -268,6 +304,7 @@ if status is-interactive
     abbr -a ls eza
     abbr -a la 'eza --all --long --header --group --git'
     abbr -a cl 'clear; cd ~/c && eza --long --header --group --git --git-repos --sort=date'
+    abbr -a clg 'clear; cd ~/c && eza --long --header --group --git --git-repos --sort=date && git-check-sync'
     abbr -a lsize 'eza --all --long --header --group --git --total-size --sort=size'
     abbr -a lt 'eza --tree --long --header --group --git --total-size --sort=size'
     abbr -a ndi 'nix develop -i --keep HOME --keep TERM --keep COLORTERM --keep LANG --keep USER'
