@@ -13,7 +13,12 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, dotfiles-root, ... }: let
+  outputs = {
+    nixpkgs,
+    home-manager,
+    dotfiles-root,
+    ...
+  }: let
     system = "x86_64-linux";
     pkgs = import nixpkgs {
       inherit system;
@@ -23,6 +28,20 @@
           "pnpm-10.34.0"
         ];
       };
+      # TODO: remove once nixpkgs fixes sqlfmt's pname upstream
+      overlays = [
+        (_: prev: {
+          pythonPackagesExtensions =
+            (prev.pythonPackagesExtensions or [])
+            ++ [
+              (_: pyprev: {
+                sqlfmt = pyprev.sqlfmt.overridePythonAttrs (_: {
+                  pname = "shandy-sqlfmt";
+                });
+              })
+            ];
+        })
+      ];
     };
     huggingface-hub = pkgs.python3Packages.huggingface-hub;
     debugpy = pkgs.python3Packages.debugpy;
@@ -142,14 +161,17 @@
     homeConfigurations = {
       christian = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        modules = [ 
+        modules = [
           ./home.nix
         ];
-        extraSpecialArgs = { inherit tools; };
+        extraSpecialArgs = {inherit tools;};
       };
     };
     packages.${system} = {
-      christian = import ./image.nix { inherit pkgs tools; dotfilesSrc = dotfiles-root; };
+      christian = import ./image.nix {
+        inherit pkgs tools;
+        dotfilesSrc = dotfiles-root;
+      };
     };
   };
 }
