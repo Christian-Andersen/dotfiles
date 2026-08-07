@@ -4,10 +4,11 @@ line-length = 120
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-  "COM812",  # missing-trailing-comma
-  "T20",  # flake8-print
-  "ERA",  # eradicate
-  "D",  # docstrings
+  "COM812", # missing-trailing-comma
+  "T20",    # flake8-print
+  "ERA",    # eradicate
+  "D",      # docstrings
+  "CPY",    # copyright
 ]
 
 [tool.ruff.lint.pydocstyle]
