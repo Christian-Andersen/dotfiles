@@ -17,6 +17,7 @@
     nixpkgs,
     home-manager,
     dotfiles-root,
+    self,
     ...
   }: let
     system = "x86_64-linux";
@@ -172,6 +173,7 @@
         inherit pkgs tools;
         dotfilesSrc = dotfiles-root;
       };
+      default = self.packages.${system}.christian;
     };
   };
 }
