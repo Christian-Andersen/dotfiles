@@ -1,4 +1,8 @@
-{ pkgs, tools, ... }: let
+{
+  pkgs,
+  tools,
+  ...
+}: let
   symlinks = pkgs.runCommand "symlinks" {} ''
     mkdir -p $out/bin
     ln -s ${pkgs.neovim}/bin/nvim $out/bin/vi
@@ -10,7 +14,7 @@ in {
   home.username = "christian";
   home.homeDirectory = "/home/christian";
 
-  home.packages = tools ++ [ symlinks ];
+  home.packages = tools ++ [symlinks];
 
   home.stateVersion = "24.11";
 }

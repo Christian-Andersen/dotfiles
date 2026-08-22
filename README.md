@@ -19,13 +19,13 @@ git clone https://github.com/christian/dotfiles ~/dotfiles && cd ~/dotfiles
 just stow
 
 # First-time: build + activate without nh
-just bootstrap
+just nix setup
 
 # Subsequent updates
-just nix-activate
+just nix activate
 
 # Update flake lock + activate
-just nix-update
+just nix update
 ```
 
 ## Dev Container
