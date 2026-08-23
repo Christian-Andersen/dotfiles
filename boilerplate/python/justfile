@@ -6,7 +6,7 @@ alias ci := continuous_integration
 
 [private]
 default:
-    @just --choose
+    @just --list
 
 check:
     uvx prek@latest run --all-files

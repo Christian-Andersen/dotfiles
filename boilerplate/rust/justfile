@@ -9,7 +9,7 @@ alias ci := continuous_integration
 
 [private]
 default:
-    @just --choose
+    @just --list
 
 check:
     prek run --all-files
