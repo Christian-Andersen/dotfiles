@@ -49,6 +49,7 @@
     tools = with pkgs; [
       _7zz
       alejandra
+      antigravity-cli
       aria2
       bash
       bash-language-server
