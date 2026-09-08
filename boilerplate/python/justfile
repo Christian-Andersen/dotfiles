@@ -9,7 +9,7 @@ default:
     @just --list
 
 check:
-    uvx prek@latest run --all-files
+    uvx run -- prek run --all-files
 
 run *args:
     uv run -- main.py {{ args }}
