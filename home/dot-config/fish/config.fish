@@ -111,6 +111,10 @@ function ?? --description 'Search Google AI with a query'
     xdg-open "https://www.google.com/search?udm=50&q="(string escape --style=url "$argv")
 end
 
+function notme --description "Find all files (including hidden/ignored) not owned by current user or group"
+    fd -H -I --owner "!"(id -un)":!"(id -gn) $argv
+end
+
 function ns --description 'Launch a nix shell into fish without typing nixpkgs#'
     set -l pkgs
     for pkg in $argv
