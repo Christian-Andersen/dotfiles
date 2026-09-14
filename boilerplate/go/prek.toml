@@ -30,8 +30,8 @@ pass_filenames = false
 entry = "golangci-lint run --fix ./..."
 
 [[repos.hooks]]
-id = "golangci-lint"
-name = "golangci-lint"
+id = "go-build"
+name = "go build"
 language = "system"
 pass_filenames = false
 entry = "go build ./..."
