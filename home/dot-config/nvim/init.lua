@@ -648,11 +648,11 @@ local snacks_keys = {
 		desc = "[S]elect scratch buffer",
 	},
 	{
-		"<leader>bd",
+		"<leader>x",
 		function()
 			Snacks.bufdelete()
 		end,
-		desc = "[b]uffer [d]elete",
+		desc = "Close buffer [x]",
 	},
 	{
 		"<leader>cR",
@@ -746,7 +746,7 @@ require("conform").setup({
 		bash = { "shfmt" },
 		c = { "clang-format" },
 		cpp = { "clang-format" },
-		sql = { "sql-formatter" },
+		sql = { "sql_formatter" },
 		nix = { "alejandra" },
 		toml = { "taplo" },
 		yaml = { "yamlfmt" },
@@ -975,7 +975,7 @@ local servers = {
 	["dockerls"] = {},
 	["yamlls"] = {},
 	["cssls"] = {},
-	["emmet_ls"] = {},
+	["emmet_language_server"] = {},
 	["fish_lsp"] = {},
 	["just"] = {},
 	["rust_analyzer"] = {
