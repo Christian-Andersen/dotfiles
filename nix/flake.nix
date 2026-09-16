@@ -107,6 +107,7 @@
       lua-language-server
       markdownlint-cli
       marksman
+      mermaid-cli
       mesonlsp
       neovim
       nh
@@ -128,11 +129,13 @@
       ruff
       shellcheck
       shfmt
+      sqlite
       sql-formatter
       starship
       statix
       stow
       stylua
+      tectonic
       tlrc
       taplo
       tokei
