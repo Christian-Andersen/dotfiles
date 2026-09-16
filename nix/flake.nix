@@ -139,6 +139,7 @@
       tlrc
       taplo
       tokei
+      tree-sitter
       tuxedo
       ty
       unar
