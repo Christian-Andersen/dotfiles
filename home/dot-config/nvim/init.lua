@@ -753,6 +753,11 @@ require("conform").setup({
 		markdown = { "markdownlint" },
 		proto = { "buf" },
 	},
+	formatters = {
+		taplo = {
+			append_args = { "-o", "array_auto_collapse=false" },
+		},
+	},
 })
 vim.keymap.set({ "n", "v" }, "<leader>f", function()
 	require("conform").format({ async = true, lsp_format = "fallback" })
