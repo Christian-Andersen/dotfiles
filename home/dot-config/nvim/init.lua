@@ -710,6 +710,37 @@ require("render-markdown").setup({})
 
 -- Treesitter (v1.0+: no more nvim-treesitter.configs, highlight/indent are automatic)
 require("nvim-treesitter").setup({})
+require("nvim-treesitter").install({
+	-- Core & Web
+	"html",
+	"css",
+	"scss",
+	"javascript",
+	"typescript",
+	"tsx",
+	"vue",
+	"svelte",
+	"astro",
+	-- Systems & Languages
+	"rust",
+	"go",
+	"zig",
+	"python",
+	"c",
+	"cpp",
+	"bash",
+	"nix",
+	"sql",
+	"proto",
+	-- Data & Docs
+	"json",
+	"toml",
+	"yaml",
+	"dockerfile",
+	"regex",
+	"latex",
+	"typst",
+})
 
 -- Blink.cmp
 require("blink.cmp").setup({
