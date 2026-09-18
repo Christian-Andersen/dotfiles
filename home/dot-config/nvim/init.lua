@@ -326,6 +326,9 @@ require("snacks").setup({
 		sources = {
 			explorer = {
 				auto_close = true,
+				-- Show hidden files (dotfiles) in the explorer,
+				-- but keep respecting .gitignore for everything else
+				hidden = true,
 			},
 		},
 	},
@@ -363,7 +366,9 @@ local snacks_keys = {
 	{
 		"<leader>sf",
 		function()
-			Snacks.picker.files()
+			-- Show hidden files (dotfiles) in the file search,
+			-- but keep respecting .gitignore for everything else
+			Snacks.picker.files({ hidden = true })
 		end,
 		desc = "Search [f]iles",
 	},
