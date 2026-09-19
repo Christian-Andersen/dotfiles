@@ -135,6 +135,7 @@
       statix
       stow
       stylua
+      tea
       tectonic
       tlrc
       taplo
