@@ -11,11 +11,11 @@ files = []
 # ─────────────────────────────── General ────────────────────────────────────
 
 [general]
-# Launch noctalia, then open firefox, then switch to workspace 2 (mirrors sway exec lines)
+# Launch noctalia, then open firefox, then set an idle timer
 autostart = [
   "noctalia",
   "firefox",
-  "umbriel msg workspace-switch 2",
+  "swayidle -w timeout 300 'umbriel msg dpms-off' resume 'umbriel msg dpms-on'",
 ]
 xwayland = true
 show_cheatsheet = false
