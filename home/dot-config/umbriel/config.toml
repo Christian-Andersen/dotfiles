@@ -1,0 +1,432 @@
+# Complete documentation: https://docs.noctalia.dev/umbriel/
+
+# ─────────────────────────────── Includes ───────────────────────────────────
+
+[include]
+files = []
+
+[include.optional]
+files = []
+
+# ─────────────────────────────── General ────────────────────────────────────
+
+[general]
+# Launch noctalia, then open firefox, then switch to workspace 2 (mirrors sway exec lines)
+autostart = [
+  "noctalia",
+  "firefox",
+  "umbriel msg workspace-switch 2",
+]
+xwayland = true
+show_cheatsheet = false
+focus_on_activate = false
+honor_restored_maximize = false
+
+[environment]
+# ELECTRON_OZONE_PLATFORM_HINT = "auto"
+# SDL_VIDEODRIVER = "wayland"
+
+[events]
+# lid_close = "notify-send 'The laptop lid is closed'"
+# lid_open  = "notify-send 'The laptop lid is open'"
+
+# ─────────────────────────────── Outputs ────────────────────────────────────
+# sway: output DP-1 mode 2560x1440@359.979Hz
+
+[output.DP-1]
+enabled = true
+mode = "2560x1440@360"
+# workspaces = 10        # Fixed slots — mirrors sway's workspace number 1-10
+
+# ────────────────────────────── Workspaces ──────────────────────────────────
+
+[workspaces]
+back_and_forth = false
+empty_above = false
+
+# ─────────────────────────────── Colors ─────────────────────────────────────
+
+[colors]
+# background        = "#141419FF"
+# text_primary      = "#E8E8EAFF"
+# text_muted        = "#8A8A92FF"
+# accent_primary    = "#7AA3FFFF"
+# accent_secondary  = "#F5C96BFF"
+# warning           = "#F5C96BFF"
+# error             = "#FF6B6BFF"
+# insert_hint       = "#7FC8FF80"
+# backdrop          = "#000000FF"
+# shadow            = "#0000007F"
+
+[colors.border]
+# focused             = "#7AA3FFFF"
+# unfocused           = "#292933FF"
+# scratchpad_focused  = "#E5C07BFF"
+# scratchpad_unfocused= "#5C4A2AFF"
+# outer               = "#1A1A1FFF"
+
+[colors.overview]
+# background_tint     = "#10101430"
+# workspace_background= "#00000044"
+# badge               = "#7AA3FFFF"
+
+# ───────────────────────────── Appearance ───────────────────────────────────
+# sway: default_border none / default_floating_border none
+
+[appearance]
+prefer_no_csd = true
+border_width = 0       # no borders — matches sway default_border none
+outer_border_width = 0
+corner_radius = 10
+drag_opacity = 0.75
+
+[appearance.blur]
+enabled = true
+optimized = true
+passes = 3
+radius = 3
+noise = 0.02
+brightness = 0.9
+contrast = 0.9
+saturation = 1.1
+
+[appearance.shadow]
+enabled = true
+softness = 10
+offset_x = 2
+offset_y = 2
+
+# ──────────────────────────────── Input ─────────────────────────────────────
+
+[input]
+middle_click_paste = true
+window_drag_toggle = "none"
+
+[input.keyboard]
+layout = ""
+variant = ""
+options = ""
+repeat_rate = 25
+repeat_delay = 600
+numlock_toggle = true
+track_layout = "global"
+
+[input.touchpad]
+tap = true
+
+[input.mouse]
+sensitivity = 0.0
+scroll_wheel_step = 60
+
+[input.tablet]
+enabled = true
+
+[input.cursor]
+theme = ""
+size = 24
+hardware_cursor = true
+follows_focus = false
+hide_when_typing = false
+hide_timeout_ms = 0
+
+[input.focus]
+follows_mouse = false
+
+# ─────────────────────────────── Keybinds ───────────────────────────────────
+
+[keybinds]
+
+# ── Applications and session ──────────────────────────────────────────────────
+# sway: bindsym $mod+Return exec ghostty
+"Mod+Return" = "spawn:ghostty"
+# sway: bindsym $mod+Backslash exec firefox
+"Mod+Backslash" = "spawn:firefox"
+# sway: bindsym $mod+Shift+q kill
+"Mod+Shift+Q" = "window-close"
+# sway: bindsym $mod+Shift+c reload
+"Mod+Shift+C" = "config-reload"
+# sway: bindsym $mod+Shift+e exec swaynag … exit
+"Mod+Shift+E" = "session-quit"
+
+# Emergency escape when a client has inhibited shortcuts
+"Mod+Shift+Escape" = { action = "shortcuts-inhibit-toggle", allow_when_inhibited = true, repeat = false }
+
+# ── Noctalia shell integration ────────────────────────────────────────────────
+# sway: bindsym $mod+space  exec noctalia msg panel-toggle launcher
+"Mod+Space" = "spawn:noctalia msg panel-toggle launcher"
+# sway: bindsym $mod+n      exec noctalia msg panel-toggle control-center
+"Mod+N" = "spawn:noctalia msg panel-toggle control-center"
+# sway: bindsym $mod+m      exec noctalia msg panel-toggle control-center media
+"Mod+M" = "spawn:noctalia msg panel-toggle control-center media"
+# Windows+L-ish: blank the displays (DPMS off) instead of suspending.
+# The OLED sees the panel "not in use" and runs its refresh; the system stays
+# awake and every program keeps running. Move the mouse or press a key to wake.
+"Mod+L" = "dpms-off"
+
+# ── Focus navigation ──────────────────────────────────────────────────────────
+# sway: bindsym $mod+Left/Down/Up/Right focus …
+"Mod+Left" = "window-focus-left"
+"Mod+Down" = "window-focus-down"
+"Mod+Up" = "window-focus-up"
+"Mod+Right" = "window-focus-right"
+# sway: set $left h / $down j / $up k / $right l
+"Mod+H" = "window-focus-left"
+"Mod+J" = "window-focus-down"
+"Mod+K" = "window-focus-up"
+# Mod+L is taken by session lock above (same as sway)
+
+# sway: Alt+Tab exec swaymsg focus right
+"Alt+Tab" = "window-focus-right"
+
+# ── Window movement ───────────────────────────────────────────────────────────
+# sway: bindsym $mod+Shift+Left/Down/Up/Right move …
+"Mod+Shift+Left" = "column-move-left"
+"Mod+Shift+Down" = "window-move-down"
+"Mod+Shift+Up" = "window-move-up"
+"Mod+Shift+Right" = "column-move-right"
+
+# ── Window state ──────────────────────────────────────────────────────────────
+# sway: bindsym $mod+f fullscreen
+"Mod+F" = "window-toggle-fullscreen"
+# sway: bindsym $mod+v floating toggle
+"Mod+V" = "window-toggle-floating"
+# sway: bindsym $mod+e layout toggle split
+"Mod+E" = "workspace-set-layout:toggle"
+
+# Overview (umbriel-native)
+"Mod+O" = { action = "overview-toggle", repeat = false }
+
+# ── Resize submap — mirrors sway's resize mode exactly ───────────────────────
+# sway: bindsym $mod+r mode "resize"
+"Mod+R" = { action = "submap:resize", repeat = false }
+# sway resize: $left/$right shrink/grow width, $up/$down shrink/grow height
+"submap[resize],H" = "window-modify-primary-extent:-0.05"
+"submap[resize],L" = "window-modify-primary-extent:0.05"
+"submap[resize],K" = "window-modify-secondary-extent:-0.05"
+"submap[resize],J" = "window-modify-secondary-extent:0.05"
+"submap[resize],Left" = "window-modify-primary-extent:-0.05"
+"submap[resize],Right" = "window-modify-primary-extent:0.05"
+"submap[resize],Up" = "window-modify-secondary-extent:-0.05"
+"submap[resize],Down" = "window-modify-secondary-extent:0.05"
+"submap[resize],Return" = "submap:reset"
+"submap[resize],Escape" = "submap:reset"
+
+# ── Workspaces ────────────────────────────────────────────────────────────────
+# sway: bindsym $mod+1-9 workspace number N  /  $mod+0 → 10
+"Mod+1" = "workspace-switch:1"
+"Mod+2" = "workspace-switch:2"
+"Mod+3" = "workspace-switch:3"
+"Mod+4" = "workspace-switch:4"
+"Mod+5" = "workspace-switch:5"
+"Mod+6" = "workspace-switch:6"
+"Mod+7" = "workspace-switch:7"
+"Mod+8" = "workspace-switch:8"
+"Mod+9" = "workspace-switch:9"
+"Mod+0" = "workspace-switch:10"
+# sway: bindsym $mod+Shift+1-9 move container to workspace number N
+"Mod+Shift+1" = "window-move-to-workspace:1"
+"Mod+Shift+2" = "window-move-to-workspace:2"
+"Mod+Shift+3" = "window-move-to-workspace:3"
+"Mod+Shift+4" = "window-move-to-workspace:4"
+"Mod+Shift+5" = "window-move-to-workspace:5"
+"Mod+Shift+6" = "window-move-to-workspace:6"
+"Mod+Shift+7" = "window-move-to-workspace:7"
+"Mod+Shift+8" = "window-move-to-workspace:8"
+"Mod+Shift+9" = "window-move-to-workspace:9"
+"Mod+Shift+0" = "window-move-to-workspace:10"
+
+# ── Scratchpad ────────────────────────────────────────────────────────────────
+"Mod+Shift+Space" = "window-move-to-scratchpad"
+"Mod+Ctrl+Space" = "window-restore-from-scratchpad"
+"Mod+Tab" = "scratchpad-focus-next"
+
+# ── Media keys — allow_when_locked mirrors sway's --locked flag ───────────────
+# sway: bindsym --locked XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+"XF86AudioMute" = { action = "spawn:pactl set-sink-mute @DEFAULT_SINK@ toggle", allow_when_locked = true }
+# sway: bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+"XF86AudioLowerVolume" = { action = "spawn:pactl set-sink-volume @DEFAULT_SINK@ -5%", allow_when_locked = true }
+# sway: bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+"XF86AudioRaiseVolume" = { action = "spawn:pactl set-sink-volume @DEFAULT_SINK@ +5%", allow_when_locked = true }
+# sway: bindsym --locked XF86AudioPlay exec spotify_player playback play-pause
+"XF86AudioPlay" = { action = "spawn:spotify_player playback play-pause", allow_when_locked = true }
+# sway: bindsym --locked XF86AudioPrev exec spotify_player playback previous
+"XF86AudioPrev" = { action = "spawn:spotify_player playback previous", allow_when_locked = true }
+# sway: bindsym --locked XF86AudioNext exec spotify_player playback next
+"XF86AudioNext" = { action = "spawn:spotify_player playback next", allow_when_locked = true }
+# sway: bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+"XF86MonBrightnessDown" = { action = "spawn:brightnessctl set 5%-", allow_when_locked = true }
+# sway: bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+"XF86MonBrightnessUp" = { action = "spawn:brightnessctl set 5%+", allow_when_locked = true }
+
+# ── Screenshot ────────────────────────────────────────────────────────────────
+# sway: bindsym $mod+Shift+s exec grim -g "$(slurp)" - | wl-copy
+"Mod+Shift+S" = "spawn:sh -c 'grim -g \"$(slurp)\" - | wl-copy'"
+
+# ─────────────────────────────── Layout ─────────────────────────────────────
+# dwindle is the closest equivalent to sway's tiling layout
+
+[layout]
+mode = "dwindle"
+gap = 0
+extent_presets = [0.333, 0.5, 0.667]
+
+[layout.struts]
+left = 0
+right = 0
+top = 0
+bottom = 0
+
+[layout.dwindle]
+# preserve_split = false        # Keep split directions fixed after creation
+new_exits_fullscreen = false
+
+[layout.master]
+position = "left"
+default_width_fraction = 0.55
+new_on_top = true
+new_becomes_master = false
+new_exits_fullscreen = false
+
+# ───────────────────────────── Window Rules ─────────────────────────────────
+
+# Blur every window
+[[window_rule]]
+blur = true
+blur_optimized = false
+
+# Noctalia settings
+[[window_rule]]
+match.app_id = "^dev.noctalia.Noctalia$"
+default_floating = true
+default_floating_size_px = { width = 1020, height = 900 }
+
+# Noctalia share picker
+[[window_rule]]
+match.app_id = "^dev.noctalia.UmbrielSharePicker$"
+default_floating = true
+default_floating_size_px = { width = 800, height = 600 }
+
+# Picture-in-Picture
+[[window_rule]]
+match.title = "^(Picture-in-Picture|Picture in picture)$"
+default_floating = true
+default_maximize = false
+default_position = { x = 20, y = 20, anchor = "bottom_right" }
+
+# Steam notification toasts
+[[window_rule]]
+match.title = "^notificationtoasts_.+_desktop"
+default_position = { x = 0, y = 0, anchor = "bottom_right" }
+default_focused = false
+default_pinned = true
+
+# ────────────────────────────── Layer Rules ─────────────────────────────────
+
+[[layer_rule]]
+match.namespace = "^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd|desktop-widget-[^\"]*)$"
+blur = true
+blur_ignore_alpha = 0.5
+blur_popups = true
+blur_optimized = false
+
+# ────────────────────────────── Animation ───────────────────────────────────
+
+[animation]
+enabled = true
+duration_ms = 250
+curve = "easeout"
+
+[animation.windows_in]
+enabled = true
+duration_ms = 150
+curve = "easeout"
+style = "popin"
+scale = 0.85
+
+[animation.windows_out]
+enabled = true
+duration_ms = 150
+curve = "easeout"
+style = "fade"
+
+[animation.windows_move]
+enabled = true
+duration_ms = 250
+curve = "snappy"
+
+[animation.workspaces]
+enabled = true
+duration_ms = 250
+curve = "easeout"
+
+[animation.overview]
+enabled = true
+duration_ms = 250
+curve = "easeout"
+workspace_curve = "spring:1,1000"
+
+[animation.scratchpad]
+enabled = false
+duration_ms = 250
+curve = "easeout"
+dim = 0.5
+blur = false
+scale = 0.0
+maximize = false
+fullscreen = false
+
+[animation.border]
+enabled = false
+duration_ms = 250
+curve = "easeout"
+
+[animation.dim_unfocused]
+enabled = false
+duration_ms = 250
+curve = "easeout"
+dim = 0.0
+
+[animation.layers]
+enabled = false
+duration_ms = 250
+curve = "easeout"
+
+[animation.beziers]
+# myBezier = [0.05, 0.9, 0.1, 1.0]
+
+[animation.springs]
+# myBounce = { damping = 0.5, stiffness = 200 }
+
+# ─────────────────────── Overview and Hot Corners ───────────────────────────
+
+[overview]
+zoom = 0.5
+scroll_factor_horizontal = 1.0
+scroll_factor_vertical = 1.0
+
+[hot_corners.top_left]
+enabled = true
+delay_ms = 500
+action = "overview-open"
+
+[hot_corners.top_right]
+enabled = false
+delay_ms = 500
+action = "overview-close"
+
+[hot_corners.bottom_left]
+enabled = false
+delay_ms = 500
+action = "overview-toggle"
+
+[hot_corners.bottom_right]
+enabled = false
+delay_ms = 500
+action = "spawn:notify-send 'Bottom right'"
+
+# ─────────────────────── Security Context Rules ─────────────────────────────
+
+# [[security_context_rule]]
+# match.sandbox_engine = 'org\.flatpak'
+# match.app_id         = 'org\.example\.ClipboardManager'
+# allow_globals        = ["ext_data_control_manager_v1", "zwlr_data_control_manager_v1"]
