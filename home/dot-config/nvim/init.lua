@@ -156,6 +156,10 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+-- Hide the classic cmdline bar; ui2 renders it in a floating window instead
+-- (also required for tiny-cmdline to center the `:` prompt)
+vim.o.cmdheight = 0
+
 -- ============================================================================
 -- [[ KEYBINDINGS ]]
 -- ============================================================================
@@ -299,6 +303,7 @@ vim.pack.add({
 	"https://github.com/mfussenegger/nvim-dap-python",
 
 	-- Misc
+	"https://github.com/rachartier/tiny-cmdline.nvim",
 	"https://github.com/windwp/nvim-autopairs",
 	"https://github.com/folke/todo-comments.nvim",
 	"https://github.com/nvim-lua/plenary.nvim",
@@ -313,6 +318,12 @@ vim.pack.add({
 	"https://github.com/EdenEast/nightfox.nvim",
 	"https://github.com/miladggg/neonwave.nvim",
 	"https://github.com/keremimo/noctalia.nvim",
+})
+
+-- Tiny-cmdline (centered `:` prompt, powered by native ui2)
+vim.cmd.packadd("tiny-cmdline.nvim")
+require("tiny-cmdline").setup({
+	on_reposition = require("tiny-cmdline").adapters.blink, -- keep blink.cmp menu aligned with the popup
 })
 
 -- Snacks
