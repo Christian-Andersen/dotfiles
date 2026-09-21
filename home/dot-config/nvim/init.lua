@@ -32,7 +32,11 @@ vim.opt.scrollback = 100000
 require("vim._core.ui2").enable({
 	enable = true,
 	msg = {
-		targets = "cmd",
+		-- Route messages to the 'msg' window (bottom-right, auto-dismisses,
+		-- non-focusable) instead of 'cmd', so pressing <CR> after e.g. :w
+		-- can't dump the cursor into the message/pager window. See
+		-- neovim/neovim#40282.
+		targets = "msg",
 		cmd = { height = 0.5 },
 		dialog = { height = 0.5 },
 		msg = { height = 0.5, timeout = 4000 },
