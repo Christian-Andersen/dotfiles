@@ -13,6 +13,9 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 vim.filetype.add({
+	extension = {
+		gotmpl = "gotmpl",
+	},
 	pattern = {
 		[".env.*"] = "env",
 		[".env"] = "env",
@@ -773,7 +776,7 @@ require("lint").linters_by_ft = {
 	env = { "dotenv_linter" },
 	nix = { "statix", "deadnix" },
 	markdown = { "markdownlint" },
-	go = { "golangci_lint" },
+	go = { "golangcilint" },
 }
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 	group = vim.api.nvim_create_augroup("lint", { clear = true }),
@@ -992,7 +995,10 @@ local servers = {
 		settings = {
 			gopls = {
 				analyses = {
+					nilness = true,
 					unusedparams = true,
+					unusedwrite = true,
+					shadow = false,
 				},
 				staticcheck = true,
 			},
@@ -1102,7 +1108,6 @@ end
 if oled then
 	vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
 end
-
 
 -- ============================================================================
 -- The line below is a vim modeline that sets editor options for this specific file
