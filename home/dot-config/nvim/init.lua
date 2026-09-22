@@ -309,6 +309,7 @@ vim.pack.add({
 	-- Misc
 	"https://github.com/rachartier/tiny-cmdline.nvim",
 	"https://github.com/windwp/nvim-autopairs",
+	"https://github.com/nvim-lualine/lualine.nvim",
 	"https://github.com/folke/todo-comments.nvim",
 	"https://github.com/nvim-lua/plenary.nvim",
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
@@ -1164,6 +1165,35 @@ end
 if oled then
 	vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
 end
+
+-- Lualine (statusline)
+-- Restores the pending-key (showcmd) and macro-recording indicators that
+-- cmdheight=0 / tiny-cmdline hides in the idle cmdline window.
+-- See tiny-cmdline README "Troubleshooting" for why these are needed.
+vim.cmd.packadd("lualine.nvim")
+vim.o.showcmd = true
+vim.o.showcmdloc = "statusline" -- render showcmd into the %S statusline item
+local function macro_recording()
+	local reg = vim.fn.reg_recording()
+	if reg == "" then
+		return ""
+	end
+	return "rec @" .. reg
+end
+require("lualine").setup({
+	options = {
+		theme = "auto",
+		globalstatus = true,
+	},
+	sections = {
+		lualine_a = { "mode" },
+		lualine_b = { "branch", "diff", "diagnostics" },
+		lualine_c = { "filename" },
+		lualine_x = { "%S", macro_recording, "filetype" },
+		lualine_y = { "progress" },
+		lualine_z = { "location" },
+	},
+})
 
 -- ============================================================================
 -- The line below is a vim modeline that sets editor options for this specific file
