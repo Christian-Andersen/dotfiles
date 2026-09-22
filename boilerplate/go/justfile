@@ -2,7 +2,6 @@ set dotenv-load
 
 alias b := build
 alias c := check
-alias d := doc
 alias r := run
 alias ci := continuous_integration
 
@@ -19,10 +18,7 @@ audit:
 build:
     go build ./...
 
-doc:
-    go doc ./...
-
 run *args:
     go run . {{ args }}
 
-continuous_integration: audit check build doc
+continuous_integration: audit check build

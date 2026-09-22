@@ -2,7 +2,6 @@ set dotenv-load
 
 alias b := build
 alias c := check
-alias d := doc
 alias r := run
 alias ci := continuous_integration
 
@@ -16,10 +15,7 @@ check:
 build *args:
     zig build -Doptimize=ReleaseFast {{ args }}
 
-doc *args:
-    zig build docs {{ args }}
-
 run *args:
     zig build run {{ args }}
 
-continuous_integration: check build doc
+continuous_integration: check build
