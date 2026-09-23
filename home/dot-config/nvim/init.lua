@@ -409,7 +409,7 @@ require("snacks").setup({
 		-- snacks normalizes remotes to https://; the local Forgejo web UI is
 		-- plain http on :3000, so downgrade the scheme for our server only
 		open = function(url)
-			vim.ui.open(url:gsub("^https://server:3000", "http://server:3000"))
+			vim.ui.open((url:gsub("^https://server:3000", "http://server:3000")))
 		end,
 	},
 	lazygit = { enabled = true },
