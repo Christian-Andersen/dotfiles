@@ -1246,8 +1246,8 @@ require("bufferline").setup({
 		},
 	},
 })
-vim.keymap.set("n", "<S-h>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Previous buffer" })
-vim.keymap.set("n", "<S-l>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next buffer" })
+vim.keymap.set({ "n", "t" }, "<C-Tab>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next buffer" })
+vim.keymap.set({ "n", "t" }, "<C-S-Tab>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Previous buffer" })
 
 -- ============================================================================
 -- The line below is a vim modeline that sets editor options for this specific file
