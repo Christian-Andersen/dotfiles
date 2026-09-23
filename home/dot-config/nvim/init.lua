@@ -371,7 +371,47 @@ require("snacks").setup({
 	statuscolumn = { enabled = true },
 	words = { enabled = true },
 	git = { enabled = true },
-	gitbrowse = { enabled = true },
+	gitbrowse = {
+		enabled = true,
+		-- Open the repo root page by default (matches <leader>gB expectation)
+		what = "repo",
+		-- NOTE: `remote_patterns` is a LIST, so it *replaces* snacks' defaults.
+		-- Reproduced here in full, with our Forgejo rewrite appended last so the
+		-- generic ssh/https/port-strip rules run first.
+		-- Forgejo: internal ssh host `forgejo` (port 2222) maps to the web UI on
+		-- `server:3000`. kosher here as https:// because snacks normalizes to
+		-- https:// at the end of the pipeline; the scheme is fixed in `open`.
+		remote_patterns = {
+			{ "^(https?://.*)%.git$", "%1" },
+			{ "^git@(.+):(.+)%.git$", "https://%1/%2" },
+			{ "^git@(.+):(.+)$", "https://%1/%2" },
+			{ "^git@(.+)/(.+)$", "https://%1/%2" },
+			{ "^org%-%d+@(.+):(.+)%.git$", "https://%1/%2" },
+			{ "^ssh://git@(.*)$", "https://%1" },
+			{ "^ssh://([^:/]+)(:%d+)/(.*)$", "https://%1/%3" },
+			{ "^ssh://([^/]+)/(.*)$", "https://%1/%2" },
+			{ "ssh%.dev%.azure%.com/v3/(.*)/(.*)$", "dev.azure.com/%1/_git/%2" },
+			{ "^https://%w*@(.*)", "https://%1" },
+			{ "^git@(.*)", "https://%1" },
+			{ ":%d+", "" },
+			{ "%.git$", "" },
+			{ "^https://forgejo/", "https://server:3000/" },
+		},
+		-- Gitea/Forgejo URL scheme for the local server
+		url_patterns = {
+			["server:3000"] = {
+				branch = "/src/branch/{branch}",
+				file = "/src/branch/{branch}/{file}#L{line_start}-L{line_end}",
+				permalink = "/src/{commit}/{file}#L{line_start}-L{line_end}",
+				commit = "/commit/{commit}",
+			},
+		},
+		-- snacks normalizes remotes to https://; the local Forgejo web UI is
+		-- plain http on :3000, so downgrade the scheme for our server only
+		open = function(url)
+			vim.ui.open(url:gsub("^https://server:3000", "http://server:3000"))
+		end,
+	},
 	lazygit = { enabled = true },
 	image = { enabled = true },
 	toggle = { enabled = true },
