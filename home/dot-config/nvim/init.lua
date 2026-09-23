@@ -318,6 +318,7 @@ vim.pack.add({
 	"https://github.com/rachartier/tiny-cmdline.nvim",
 	"https://github.com/windwp/nvim-autopairs",
 	"https://github.com/nvim-lualine/lualine.nvim",
+	"https://github.com/akinsho/bufferline.nvim",
 	"https://github.com/folke/todo-comments.nvim",
 	"https://github.com/nvim-lua/plenary.nvim",
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
@@ -1202,6 +1203,29 @@ require("lualine").setup({
 		lualine_z = { "location" },
 	},
 })
+
+-- Bufferline (tab-style buffer list at the top, themable to match lualine)
+vim.cmd.packadd("bufferline.nvim")
+require("bufferline").setup({
+	options = {
+		mode = "buffers",
+		themable = true,
+		diagnostics = "nvim_lsp",
+		separator_style = "thin",
+		show_buffer_close_icons = false,
+		show_close_icon = false,
+		always_show_bufferline = true,
+		offsets = {
+			{
+				filetype = "snacks_dashboard",
+				highlight = "Directory",
+				text = "Dashboard",
+			},
+		},
+	},
+})
+vim.keymap.set("n", "<S-h>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Previous buffer" })
+vim.keymap.set("n", "<S-l>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next buffer" })
 
 -- ============================================================================
 -- The line below is a vim modeline that sets editor options for this specific file
