@@ -1248,6 +1248,13 @@ require("bufferline").setup({
 })
 vim.keymap.set({ "n", "t" }, "<C-Tab>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next buffer" })
 vim.keymap.set({ "n", "t" }, "<C-S-Tab>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Previous buffer" })
+-- Insert mode: drop back to normal after switching, so you don't keep typing
+-- into the new buffer (mode is preserved by <Cmd> otherwise)
+vim.keymap.set("i", "<C-Tab>", "<C-\\><C-n><cmd>BufferLineCycleNext<CR>", { desc = "Next buffer (from insert)" })
+vim.keymap.set("i", "<C-S-Tab>", "<C-\\><C-n><cmd>BufferLineCyclePrev<CR>", { desc = "Previous buffer (from insert)" })
+-- Visual mode: exit the selection (it dies on buffer switch anyway) then cycle
+vim.keymap.set("v", "<C-Tab>", "<Esc><cmd>BufferLineCycleNext<CR>", { desc = "Next buffer (from visual)" })
+vim.keymap.set("v", "<C-S-Tab>", "<Esc><cmd>BufferLineCyclePrev<CR>", { desc = "Previous buffer (from visual)" })
 
 -- ============================================================================
 -- The line below is a vim modeline that sets editor options for this specific file
