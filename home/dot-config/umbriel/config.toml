@@ -175,8 +175,9 @@ follows_mouse = false
 "Mod+K" = "window-focus-up"
 # Mod+L is taken by session lock above (same as sway)
 
-# sway: Alt+Tab exec swaymsg focus right
-"Alt+Tab" = "window-focus-right"
+# Cycle through windows in layout order (wraps around)
+"Alt+Tab" = "window-focus-next"
+"Alt+Shift+Tab" = "window-focus-previous"
 
 # ── Window movement ───────────────────────────────────────────────────────────
 # sway: bindsym $mod+Shift+Left/Down/Up/Right move …
