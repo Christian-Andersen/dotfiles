@@ -781,7 +781,7 @@ require("colorizer").setup({
 		mode = "background",
 		rgb = true,
 		rrggbb = true,
-		hsl = false, -- hsl() handled below via css support
+		rrggbbaa = true, -- #rgba / #rrggbbaa
 	},
 })
 
