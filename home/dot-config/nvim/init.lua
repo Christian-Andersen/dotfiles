@@ -124,6 +124,14 @@ vim.o.timeoutlen = 300
 vim.o.splitright = true
 vim.o.splitbelow = true
 
+-- Keep visible text stationary when opening splits (less viewport jumping)
+vim.o.splitkeep = "screen"
+-- Scroll wrapped lines by display line instead of jumping whole logical lines
+vim.o.smoothscroll = true
+-- One border style for ALL floating windows (completion docs, which-key,
+-- LSP hover, pickers, ...) so the UI feels cohesive
+vim.o.winborder = "rounded"
+
 -- Display whitespace characters as visible symbols
 -- This helps identify trailing whitespace, tabs, and non-breaking spaces
 -- See `:help 'list'` and `:help 'listchars'` for more details
