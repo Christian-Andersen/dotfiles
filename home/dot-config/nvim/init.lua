@@ -395,6 +395,11 @@ require("snacks").setup({
 			{ "^git@(.*)", "https://%1" },
 			{ ":%d+", "" },
 			{ "%.git$", "" },
+			-- Forgejo remotes in any of the common styles:
+			--   ssh://git@forgejo:2222/org/repo.git   (ssh URL w/ port)
+			--   forgejo:org/repo.git                  (scp-style, port via ~/.ssh/config)
+			--   https://forgejo/org/repo.git          (https)
+			{ "^forgejo:(.+)$", "https://server:3000/%1" },
 			{ "^https://forgejo/", "https://server:3000/" },
 		},
 		-- Gitea/Forgejo URL scheme for the local server
