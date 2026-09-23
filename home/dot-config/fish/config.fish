@@ -316,6 +316,7 @@ if status is-interactive
     abbr -a p 'uv run --'
     abbr -a q exit
     abbr -a r 'clear; just run'
+    abbr -a rge 'rg "[\p{Emoji}--\p{Ascii}]"'
     abbr -a s 'git status --verbose'
     abbr -a t 'clear; just test'
     abbr -a x chmod +x
