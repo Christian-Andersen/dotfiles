@@ -67,6 +67,11 @@ vim.o.number = true
 --  Experiment for yourself to see if you like it!
 vim.o.relativenumber = true
 
+-- Enforce truecolor; required by colorschemes and plugins like nvim-colorizer.
+-- Neovim only defaults this to on when the terminal advertises truecolor, so
+-- force it to be safe in every environment (tmux, ssh, headless, ...).
+vim.o.termguicolors = true
+
 -- Enable mouse mode for all vim modes ('a')
 -- This allows you to interact with the editor using a mouse:
 -- - Click to position cursor
