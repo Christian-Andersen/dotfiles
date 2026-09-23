@@ -8,6 +8,9 @@ window-decoration = false
 window-padding-x = 4
 window-padding-y = 0
 keybind = ctrl+enter=unbind
+# let Neovim receive these (buffer cycling via bufferline)
+keybind = ctrl+tab=unbind
+keybind = ctrl+shift+tab=unbind
 window-inherit-working-directory = false
 
 # experimental keybinds
