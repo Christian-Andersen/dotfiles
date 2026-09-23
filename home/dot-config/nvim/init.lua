@@ -322,6 +322,8 @@ vim.pack.add({
 	"https://github.com/folke/todo-comments.nvim",
 	"https://github.com/nvim-lua/plenary.nvim",
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
+	"https://github.com/NvChad/nvim-colorizer.lua",
+	"https://github.com/HiPhish/rainbow-delimiters.nvim",
 	-- Themes
 	"https://github.com/folke/tokyonight.nvim",
 	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
@@ -771,6 +773,21 @@ require("nvim-treesitter").install({
 	"latex",
 	"typst",
 })
+
+-- Colorizer (inline color previews: #hex, rgb(), hsl(), named colors)
+vim.cmd.packadd("nvim-colorizer.lua")
+require("colorizer").setup({
+	user_default_options = {
+		mode = "background",
+		rgb = true,
+		rrggbb = true,
+		hsl = false, -- hsl() handled below via css support
+	},
+})
+
+-- Rainbow delimiters (treesitter-based nesting colors, palette from theme)
+-- NOTE: no setup() — works out of the box with the treesitter highlight engine
+vim.cmd.packadd("rainbow-delimiters.nvim")
 
 -- Blink.cmp
 require("blink.cmp").setup({
