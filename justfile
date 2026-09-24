@@ -10,8 +10,8 @@ run:
 
 [working-directory('nix')]
 nix-setup:
-    nix build '.#homeConfigurations.christian.activationPackage'
-    ./result/activate
+    nix build --out-link /tmp/dotfiles-activation '.#homeConfigurations.christian.activationPackage'
+    /tmp/dotfiles-activation/activate
 
 [working-directory('nix')]
 nix-activate:
@@ -23,5 +23,5 @@ nix-update:
 
 [working-directory('nix')]
 nix-build:
-    nix build
-    podman load < result
+    nix build --out-link /tmp/dotfiles-image
+    podman load < /tmp/dotfiles-image

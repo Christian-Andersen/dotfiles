@@ -31,7 +31,7 @@ just nix update
 ## Dev Container
 
 ```sh
-nix build ~/dotfiles/nix#christian && podman load < result
+nix build ~/dotfiles/nix#christian --out-link /tmp/dotfiles-image && podman load < /tmp/dotfiles-image
 
 podman run --rm -it \
   -v ~/c:/root/c \
