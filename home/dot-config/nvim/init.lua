@@ -1175,7 +1175,7 @@ end
 
 -- Debug (DAP)
 require("dap-view").setup()
-require("dap-python").setup("python3")
+require("dap-python").setup("uv")
 local dap = require("dap")
 local dap_view = require("dap-view")
 vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
