@@ -162,7 +162,6 @@
       vscode-json-languageserver
       vtsls
       vue-language-server
-      vulnix
       watchexec
       wget
       wl-clipboard
