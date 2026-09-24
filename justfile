@@ -25,8 +25,3 @@ nix-update:
 nix-build:
     nix build
     podman load < result
-
-[working-directory('nix')]
-nix-vul:
-    nix build
-    vulnix ./result
