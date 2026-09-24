@@ -349,6 +349,20 @@ require("tiny-cmdline").setup({
 
 -- Snacks
 require("snacks").setup({
+	-- Default dashboard (auto-opens on a bare `nvim`): ASCII header, default
+	-- quick keys, and the files you most recently edited in the current project
+	-- (`1`–`0` open them). The stock default also ships a `startup` section that
+	-- hard-requires lazy.nvim (`require("lazy.stats")`), which this vim.pack
+	-- setup doesn't have, so we keep header + keys + recent files instead.
+	-- `pane = 2` renders Recent in the right column, beside the keys (in a
+	-- snug terminal it gracefully folds underneath them).
+	dashboard = {
+		sections = {
+			{ section = "header" },
+			{ section = "keys", gap = 1, padding = 1 },
+			{ section = "recent_files", cwd = true, limit = 10, title = "Recent", pane = 2 },
+		},
+	},
 	bigfile = { enabled = true },
 	explorer = { enabled = true },
 	indent = { enabled = true },
