@@ -37,12 +37,16 @@ require("vim._core.ui2").enable({
 		-- can't dump the cursor into the message/pager window. See
 		-- neovim/neovim#40282.
 		targets = "msg",
-		cmd = { height = 0.5 },
 		dialog = { height = 0.5 },
-		msg = { height = 0.5, timeout = 4000 },
+		msg = { height = 0.5 },
 		pager = { height = 0.5 },
 	},
 })
+-- Nightly (0.13-dev) moved two per-window config keys out of ui2 into the
+-- 'messagesopt' option:
+--   msg.msg.timeout  -> timeout:{ms}   (4000 keeps the old auto-dismiss)
+--   msg.cmd.height   -> maxheight:{%}  (default 50 == the old cmd height 0.5)
+vim.opt.messagesopt = vim.opt.messagesopt:append("timeout:4000")
 
 -- ============================================================================
 -- [[ EDITOR OPTIONS ]]
