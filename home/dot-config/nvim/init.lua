@@ -352,19 +352,85 @@ require("tiny-cmdline").setup({
 })
 
 -- Snacks
+-- Dashboard "Recent", ordered by frecency (visit frequency + recency) instead of
+-- shada's plain MRU.
+--
+-- `picker.matcher.frecency` below only re-ranks matches *inside pickers*; it has
+-- no effect on the dashboard. The stock `recent_files` section walks
+-- `vim.v.oldfiles` in pure MRU order and accepts only `limit` / `cwd` / `filter`
+-- -- there is no frecency option for it. So we reuse snacks' own file list (same
+-- `cwd` + stdpath filtering, same `uv.fs_stat` existence check) and only change
+-- the ordering.
+--
+-- Registered before `setup()` because dashboard sections are resolved by *name*
+-- (`Snacks.dashboard.sections[section]`), at render time.
+--
+-- Calling `.new()` here also installs the `BufWinEnter` tracker, so frecency
+-- starts accumulating from the first dashboard render rather than the first time
+-- you happen to open a picker.
+--
+-- NOTE: must go through `require("snacks")`, not the `Snacks` global -- the global
+-- is only set once `snacks/init.lua` has run (which also defines `svim`, used
+-- below via `Snacks.dashboard.oldfiles`).
+local Snacks = require("snacks")
+
+Snacks.dashboard.sections.frecency_recent = function(opts)
+	local limit = opts.limit or 5
+	local root = opts.cwd and vim.fs.normalize(opts.cwd == true and vim.fn.getcwd() or opts.cwd) or nil
+	local oldfiles_opts = root and { filter = { [root] = true } } or nil
+
+	return function()
+		local frecency = require("snacks.picker.core.frecency").new()
+		local files = {}
+		for file in Snacks.dashboard.oldfiles(oldfiles_opts) do
+			if not opts.filter or opts.filter(file) then
+				-- `recent = true` is required: untracked files are only allowed to
+				-- fall back to a decayed mtime seed if the probe looks like a
+				-- recent file. Without it every score is 0 on a fresh install and
+				-- the order degrades back to plain MRU.
+				local i = #files + 1
+				files[i] = {
+					file = file,
+					i = i, -- shada position, used as the tiebreak below
+					score = frecency:get({ file = file, recent = true }),
+				}
+			end
+		end
+		table.sort(files, function(a, b)
+			if a.score == b.score then
+				return a.i < b.i
+			end
+			return a.score > b.score
+		end)
+
+		local ret = {} ---@type snacks.dashboard.Section
+		for i = 1, math.min(limit, #files) do
+			local file = files[i].file
+			ret[i] = {
+				file = file,
+				icon = "file",
+				action = ":e " .. vim.fn.fnameescape(file),
+				autokey = true, -- keep the `1`–`0` bindings working
+			}
+		end
+		return ret
+	end
+end
+
 require("snacks").setup({
 	-- Default dashboard (auto-opens on a bare `nvim`): ASCII header, default
-	-- quick keys, and the files you most recently edited in the current project
-	-- (`1`–`0` open them). The stock default also ships a `startup` section that
-	-- hard-requires lazy.nvim (`require("lazy.stats")`), which this vim.pack
-	-- setup doesn't have, so we keep header + keys + recent files instead.
+	-- quick keys, and the files you use most in the current project (`1`–`0`
+	-- open them), ranked by frecency -- see `frecency_recent` above. The stock
+	-- default also ships a `startup` section that hard-requires lazy.nvim
+	-- (`require("lazy.stats")`), which this vim.pack setup doesn't have, so we
+	-- keep header + keys + recent files instead.
 	-- `pane = 2` renders Recent in the right column, beside the keys (in a
 	-- snug terminal it gracefully folds underneath them).
 	dashboard = {
 		sections = {
 			{ section = "header" },
 			{ section = "keys", gap = 1, padding = 1 },
-			{ section = "recent_files", cwd = true, limit = 10, title = "Recent", pane = 2 },
+			{ section = "frecency_recent", cwd = true, limit = 10, title = "Recent", pane = 2 },
 		},
 	},
 	bigfile = { enabled = true },
@@ -373,6 +439,9 @@ require("snacks").setup({
 	input = { enabled = true },
 	picker = {
 		enabled = true,
+		matcher = {
+			frecency = true,
+		},
 		sources = {
 			explorer = {
 				auto_close = true,
