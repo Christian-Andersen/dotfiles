@@ -1,0 +1,438 @@
+#!/usr/bin/env python3
+"""Check every repository in this directory against the shared conventions.
+
+Takes no arguments. Discovers repositories as subdirectories containing a
+``renovate.json``, runs every rule against each one, prints the violations
+grouped by repository, and exits non-zero if anything failed.
+
+    python3 check_repos.py
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+import sys
+from collections.abc import Iterator
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
+from fnmatch import fnmatch
+from pathlib import Path
+from typing import Any
+
+import tomllib
+import yaml
+
+# --------------------------------------------------------------------------
+# Policy
+# --------------------------------------------------------------------------
+
+REQUIRED_FILES: tuple[str, ...] = (
+    ".forgejo/workflows/ci.yml",
+    "justfile",
+    "flake.nix",
+    "flake.lock",
+    "prek.toml",
+)
+
+REQUIRED_JUST_RECIPES: tuple[str, ...] = ("ci",)
+
+REQUIRED_PREK_HOOKS: tuple[str, ...] = (
+    "check-yaml",
+    "check-json",
+    "trailing-whitespace",
+    "end-of-file-fixer",
+)
+
+# Keys removed or never wanted. "fileMatch" was dropped in Renovate v44 with
+# no rename migration, so a config still using it matches zero files.
+FORBIDDEN_RENOVATE_KEYS: tuple[str, ...] = ("schedule", "fileMatch")
+
+# (action name suffix, required ref). Matched as a suffix so the short form
+# and the fully-qualified URL form both resolve to the same rule.
+PINNED_ACTIONS: tuple[tuple[str, str], ...] = (
+    ("actions/checkout", "v7"),
+    ("DeterminateSystems/nix-installer-action", "v23"),
+)
+
+# "actions/setup-node", "astral-sh/setup-uv", ... These duplicate what the
+# flake already provides and drift out of sync with it.
+FORBIDDEN_ACTION_RE = re.compile(r"^[\w.-]+/setup-[\w-]+$")
+
+# Tools the dev shells provide. Using one outside "nix develop" means CI is
+# running something other than the pinned flake.
+NIX_TOOL_RE = re.compile(
+    r"\b(npx|npm|node|uv|just|prek|biome|python3?)\b",
+)
+
+# Unindented "name:" or "name args:" in a justfile. Recipe bodies are
+# indented, and "alias x := y" / "set dotenv-load" do not match.
+JUST_RECIPE_RE = re.compile(
+    r"^([A-Za-z_][A-Za-z0-9_-]*)(?:[ \t]+[^:\n=]*)?:",
+    re.MULTILINE,
+)
+
+SKIP_DIRS: frozenset[str] = frozenset({".git", "node_modules", "result"})
+
+
+# --------------------------------------------------------------------------
+# Model
+# --------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class Repo:
+    """A candidate repository rooted at ``path``."""
+
+    path: Path
+
+    @property
+    def name(self) -> str:
+        return self.path.name
+
+    def read(self, relative: str) -> str | None:
+        """Return the text of ``relative``, or None if unreadable."""
+        try:
+            return (self.path / relative).read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            return None
+
+    def files(self) -> frozenset[str]:
+        """Relative POSIX paths of every tracked-ish file, minus vendored dirs."""
+        found: set[str] = set()
+        try:
+            candidates = list(self.path.rglob("*"))
+        except OSError:
+            return frozenset()
+        for candidate in candidates:
+            try:
+                if not candidate.is_file():
+                    continue
+                relative = candidate.relative_to(self.path)
+            except (OSError, ValueError):
+                continue
+            if SKIP_DIRS.intersection(relative.parts):
+                continue
+            found.add(relative.as_posix())
+        return frozenset(found)
+
+
+@dataclass(frozen=True)
+class Violation:
+    """A single rule failure, attributed to a repository."""
+
+    rule: str
+    detail: str
+
+
+Check = Any
+# --------------------------------------------------------------------------
+# Structure walking helpers
+#
+# json.loads and yaml.safe_load both return Any, so every helper below takes
+# and returns object and narrows with isinstance before touching anything.
+# --------------------------------------------------------------------------
+
+
+def iter_keys(node: object) -> Iterator[str]:
+    """Yield every mapping key anywhere in a parsed document."""
+    if isinstance(node, dict):
+        for key, value in node.items():
+            yield str(key)
+            yield from iter_keys(value)
+    elif isinstance(node, list):
+        for item in node:
+            yield from iter_keys(item)
+
+
+def iter_strings_under(node: object, key: str) -> Iterator[str]:
+    """Yield every string value stored under ``key`` anywhere in a document.
+
+    Handles both scalars ("uses" = "actions/checkout@v7", "id" = "check-yaml")
+    and lists of strings ("managerFilePatterns" = ["prek.toml"]).
+    """
+    if isinstance(node, dict):
+        for name, value in node.items():
+            if name == key:
+                if isinstance(value, str):
+                    yield value
+                elif isinstance(value, list):
+                    for item in value:
+                        if isinstance(item, str):
+                            yield item
+                continue
+            yield from iter_strings_under(value, key)
+    elif isinstance(node, list):
+        for item in node:
+            yield from iter_strings_under(item, key)
+
+
+def iter_run_scripts(node: object) -> Iterator[str]:
+    """Yield the body of every workflow step that uses ``run:``."""
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if key == "run" and isinstance(value, str):
+                yield value
+            else:
+                yield from iter_run_scripts(value)
+    elif isinstance(node, list):
+        for item in node:
+            yield from iter_run_scripts(item)
+
+
+def dig(node: object, *path: str) -> object:
+    """Follow a chain of mapping keys, returning None if any step is missing."""
+    current: object = node
+    for key in path:
+        if not isinstance(current, dict):
+            return None
+        current = current.get(key)
+    return current
+
+
+# --------------------------------------------------------------------------
+# Loading
+# --------------------------------------------------------------------------
+
+
+def load_structured(
+    repo: Repo,
+    relative: str,
+    loader: Any,
+    parse: Any,
+) -> tuple[object | None, Violation | None]:
+    """Read and parse one file, reporting a violation if it will not parse."""
+    text = repo.read(relative)
+    if text is None:
+        return None, None
+    try:
+        return parse(text), None
+    except Exception as exc:  # noqa: BLE001 - any parser error is a violation
+        name = type(exc).__name__
+        return None, Violation("parses", f"{relative} is not valid ({name})")
+
+
+# --------------------------------------------------------------------------
+# Rules
+# --------------------------------------------------------------------------
+
+
+def check_required_files(repo: Repo) -> list[Violation]:
+    """Every repo carries the shared skeleton."""
+    return [
+        Violation("required-files", f"missing {name}") for name in REQUIRED_FILES if not (repo.path / name).is_file()
+    ]
+
+
+def check_justfile(repo: Repo) -> list[Violation]:
+    """CI invokes "just ci", so every justfile must define it."""
+    text = repo.read("justfile")
+    if text is None:
+        return []
+    found = set(JUST_RECIPE_RE.findall(text))
+    return [Violation("justfile", f"no '{recipe}' recipe") for recipe in REQUIRED_JUST_RECIPES if recipe not in found]
+
+
+def check_renovate(repo: Repo) -> list[Violation]:
+    """Base policy, forbidden keys, and live custom managers."""
+    config, problem = load_structured(repo, "renovate.json", json, json.loads)
+    if problem is not None:
+        return [problem]
+    if config is None:
+        return []
+
+    out: list[Violation] = []
+
+    extends = dig(config, "extends")
+    if not (isinstance(extends, list) and "config:recommended" in extends):
+        out.append(Violation("renovate-base", "extends lacks 'config:recommended'"))
+
+    for dotted, rule in (
+        (("nix", "enabled"), "nix"),
+        (("lockFileMaintenance", "enabled"), "lockfile"),
+    ):
+        if dig(config, *dotted) is not True:
+            out.append(Violation(f"renovate-{rule}", f"{'.'.join(dotted)} is not true"))
+
+    present = set(iter_keys(config))
+    out.extend(
+        Violation("renovate-keys", f"forbidden key '{key}'") for key in FORBIDDEN_RENOVATE_KEYS if key in present
+    )
+
+    out.extend(check_managers(repo, config))
+    return out
+
+
+def check_managers(repo: Repo, config: object) -> list[Violation]:
+    """Every declared managerFilePatterns entry must match a real file.
+
+    This is the invariant that would have caught the four repos whose configs
+    used the v44-removed "fileMatch" key and silently matched nothing.
+    """
+    patterns = list(iter_strings_under(config, "managerFilePatterns"))
+    if not patterns:
+        return []
+    files = repo.files()
+    return [
+        Violation("managers", f"matches no file: {pattern}")
+        for pattern in patterns
+        if not pattern_matches(pattern, files)
+    ]
+
+
+def pattern_matches(pattern: str, files: frozenset[str]) -> bool:
+    """Does a managerFilePatterns entry select at least one real file?
+
+    Supports bare globs ("prek.toml", ".forgejo/workflows/*.yml") and
+    Renovate's /regex/ form ("/^prek\\.toml$/"). Negations are exclusions, so
+    they are not required to match anything.
+    """
+    if pattern.startswith("!"):
+        return True
+    if len(pattern) > 1 and pattern.startswith("/") and pattern.endswith("/"):
+        try:
+            regex = re.compile(pattern[1:-1])
+        except re.error:
+            return False
+        return any(regex.search(name) for name in files)
+    return any(fnmatch(name, pattern) for name in files)
+
+
+def check_workflows(repo: Repo) -> list[Violation]:
+    """Pinned action refs, no duplicated setup-* actions, nix-wrapped tools."""
+    out: list[Violation] = []
+    for relative in ("ci.yml", "renovate.yaml", "release.yml"):
+        document, problem = load_structured(
+            repo,
+            f".forgejo/workflows/{relative}",
+            yaml,
+            yaml.safe_load,
+        )
+        if problem is not None:
+            out.append(problem)
+            continue
+        if document is None:
+            continue
+        out.extend(check_uses(relative, document))
+        out.extend(check_nix_wrapped(relative, document))
+    return out
+
+
+def check_uses(relative: str, document: object) -> list[Violation]:
+    """Enforce the action pinning policy."""
+    out: list[Violation] = []
+    for uses in iter_strings_under(document, "uses"):
+        # Split the ref off first. Both patterns below match the bare action
+        # name, and "actions/checkout@v7" carries the name on the left.
+        name, sep, ref = uses.rpartition("@")
+        if not sep:
+            name, ref = uses, ""
+        if FORBIDDEN_ACTION_RE.match(name):
+            out.append(Violation("actions", f"{relative}: '{uses}' duplicates the flake"))
+            continue
+        for suffix, expected in PINNED_ACTIONS:
+            if not name.endswith(suffix):
+                continue
+            if ref != expected:
+                out.append(
+                    Violation(
+                        "actions",
+                        f"{relative}: {suffix} is @{ref}, expected @{expected}",
+                    )
+                )
+            break
+    return out
+
+
+def check_nix_wrapped(relative: str, document: object) -> list[Violation]:
+    """A flake-provided tool must be invoked through "nix develop"."""
+    out: list[Violation] = []
+    for script in iter_run_scripts(document):
+        for line in script.splitlines():
+            stripped = line.strip()
+            if not stripped or "nix develop" in stripped:
+                continue
+            # Ignore comments, which legitimately mention tool names.
+            if stripped.startswith("#"):
+                continue
+            if NIX_TOOL_RE.search(stripped):
+                tool = NIX_TOOL_RE.search(stripped)
+                name = tool.group(0) if tool else "?"
+                out.append(
+                    Violation(
+                        "nix-only",
+                        f"{relative}: '{name}' used outside nix develop",
+                    )
+                )
+    return out
+
+
+def check_prek(repo: Repo) -> list[Violation]:
+    """Every repo runs the same pre-commit hygiene hooks."""
+    config, problem = load_structured(repo, "prek.toml", tomllib, tomllib.loads)
+    if problem is not None:
+        return [problem]
+    if config is None:
+        return []
+    found = set(iter_strings_under(config, "id"))
+    return [Violation("prek-hooks", f"missing hook '{hook}'") for hook in REQUIRED_PREK_HOOKS if hook not in found]
+
+
+CHECKS: tuple[Any, ...] = (
+    check_required_files,
+    check_justfile,
+    check_renovate,
+    check_workflows,
+    check_prek,
+)
+
+
+# --------------------------------------------------------------------------
+# Driver
+# --------------------------------------------------------------------------
+
+
+def discover(root: Path) -> list[Repo]:
+    """Every immediate subdirectory holding a renovate.json."""
+    found: list[Repo] = []
+    for candidate in sorted(root.iterdir()):
+        if candidate.is_dir() and (candidate / "renovate.json").is_file():
+            found.append(Repo(candidate))
+    return found
+
+
+def check_repo(repo: Repo) -> tuple[str, list[Violation]]:
+    """Run every rule against one repository."""
+    return repo.name, [v for check in CHECKS for v in check(repo)]
+
+
+def main() -> int:
+    root = Path().cwd()
+    repos = discover(root)
+    if not repos:
+        print(f"no repositories found under {root}")
+        return 1
+
+    workers = min(32, (os.cpu_count() or 1) + 4)
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        # map yields results in input order, so the report stays deterministic
+        # however the work interleaves across threads.
+        results = list(pool.map(check_repo, repos))
+
+    total = 0
+    for name, violations in results:
+        if not violations:
+            continue
+        total += len(violations)
+        print(name)
+        for violation in violations:
+            print(f"  {violation.rule}: {violation.detail}")
+
+    print()
+    print(f"{len(repos)} repositories checked, {total} violations")
+    return 1 if total else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
