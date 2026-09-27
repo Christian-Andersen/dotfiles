@@ -168,7 +168,7 @@
       xdg-utils
       yaml-language-server
       yazi
-      yq
+      yq-go
       yamlfmt
       zellij
       zig
