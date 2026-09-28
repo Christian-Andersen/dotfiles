@@ -25,9 +25,6 @@ vim.filetype.add({
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
--- Set global terminal scrollback to 100,000 lines
-vim.opt.scrollback = 100000
-
 -- Enable UI2: no more press Enter
 require("vim._core.ui2").enable({
 	enable = true,
@@ -199,13 +196,6 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 -- Useful for reviewing all issues in the buffer at once
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [q]uickfix list" })
 
--- Exit terminal mode with a more intuitive key combination
--- By default, you need to press <C-\><C-n> to exit terminal mode, which is hard to discover
--- This mapping allows <Esc><Esc> instead - much more intuitive
--- NOTE: This may not work in all terminal emulators or within tmux
--- If it doesn't work for you, use the default <C-\><C-n> or adjust the mapping
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-
 -- Navigate between splits with Ctrl+h/j/k/l
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to lower window" })
@@ -274,12 +264,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
 		vim.hl.on_yank()
 	end,
-})
-
--- Auto-enter insert mode when opening a terminal
-vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter" }, {
-	pattern = "term://*",
-	command = "startinsert",
 })
 
 -- ============================================================================
@@ -829,28 +813,6 @@ local snacks_keys = {
 			Snacks.rename.rename_file()
 		end,
 		desc = "Rename file [R]",
-	},
-	{
-		"<C-CR>",
-		function()
-			vim.cmd("w")
-			local term = Snacks.terminal(nil, {
-				win = { position = "bottom" },
-			})
-			local chan = vim.bo[term.buf].channel
-			vim.defer_fn(function()
-				vim.fn.chansend(chan, { "clear; just run\r\n" })
-				vim.cmd("stopinsert")
-			end, 100)
-		end,
-		desc = "Save and Run [just run]",
-	},
-	{
-		"<c-/>",
-		function()
-			Snacks.terminal()
-		end,
-		desc = "Toggle terminal [/]",
 	},
 	{
 		"]]",
