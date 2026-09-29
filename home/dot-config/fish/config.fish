@@ -114,6 +114,12 @@ function ?? --description 'Search Google AI with a query'
     xdg-open "https://www.google.com/search?udm=50&q="(string escape --style=url "$argv")
 end
 
+function para --description 'simple parallel over directories in this directory'
+    set -l dirs */
+    test -z "$dirs"; and return 0
+    parallel -j 8 'cd "{}" &&' $argv ::: $dirs
+end
+
 function notme --description "Find all files (including hidden/ignored) not owned by current user or group"
     fd -H -I --owner "!"(id -un)":!"(id -gn) $argv
 end
