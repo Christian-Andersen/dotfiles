@@ -67,40 +67,43 @@ function bp --description "Append language-specific config boilerplate to curren
     echo "Done!"
 end
 
-function git-check-sync --description "Fetch and list repos that are un-synced or lack a remote"
-    echo "Fetching remotes and checking status..."
-    set -l pids
-    for dir in */
-        test -e "$dir/.git"; or continue
-        set -l clean_dir (string trim -r -c '/' -- $dir)
-        fish -c '
-            set dir $argv[1]
-            set clean_dir $argv[2]
-            git -C "$dir" fetch --quiet --all 2>/dev/null
-            set -l remotes (git -C "$dir" remote 2>/dev/null)
-            if test -z "$remotes"
-                printf "%-30s \033[33m%s\033[0m\n" "$clean_dir" "⚠️  NO REMOTE"; exit
-            end
-            set -l upstream (git -C "$dir" rev-parse --abbrev-ref @{u} 2>/dev/null)
-            if test -z "$upstream"
-                printf "%-30s \033[33m%s\033[0m\n" "$clean_dir" "⚠️  NO UPSTREAM TRACKING"; exit
-            end
-            set -l counts (git -C "$dir" rev-list --left-right --count HEAD...@{u} 2>/dev/null)
-            if test -n "$counts"
-                set -l parts (string split \t -- $counts)
-                set -l ahead $parts[1]; set -l behind $parts[2]
-                if test "$ahead" -gt 0 -a "$behind" -gt 0
-                    printf "%-30s \033[31m%s\033[0m\n" "$clean_dir" "⇕ DIVERGED (+$ahead / -$behind)"
-                else if test "$ahead" -gt 0
-                    printf "%-30s \033[36m%s\033[0m\n" "$clean_dir" "↑ AHEAD (+$ahead unpushed)"
-                else if test "$behind" -gt 0
-                    printf "%-30s \033[35m%s\033[0m\n" "$clean_dir" "↓ BEHIND (-$behind unpulled)"
-                end
-            end
-        ' -- "$dir" "$clean_dir" &
-        set -a pids $last_pid
+function git-repo-status -a clean --description 'Get git repo status'
+    set -l dir "$clean/"
+    git -C "$dir" fetch --quiet --all 2>/dev/null
+    set -l remotes (git -C "$dir" remote 2>/dev/null)
+    if test -z "$remotes"
+        printf "%-30s \033[33m%s\033[0m\n" "$clean" "⚠️  NO REMOTE"
+        return
     end
-    test -n "$pids"; and wait $pids
+    set -l upstream (git -C "$dir" rev-parse --abbrev-ref @{u} 2>/dev/null)
+    if test -z "$upstream"
+        printf "%-30s \033[33m%s\033[0m\n" "$clean" "⚠️  NO UPSTREAM TRACKING"
+        return
+    end
+    set -l counts (git -C "$dir" rev-list --left-right --count HEAD...@{u} 2>/dev/null)
+    if test -n "$counts"
+        set -l parts (string split \t -- $counts)
+        set -l ahead $parts[1]
+        set -l behind $parts[2]
+
+        if test "$ahead" -gt 0 -a "$behind" -gt 0
+            printf "%-30s \033[31m%s\033[0m\n" "$clean" "⇕ DIVERGED (+$ahead / -$behind)"
+        else if test "$ahead" -gt 0
+            printf "%-30s \033[36m%s\033[0m\n" "$clean" "↑ AHEAD (+$ahead unpushed)"
+        else if test "$behind" -gt 0
+            printf "%-30s \033[35m%s\033[0m\n" "$clean" "↓ BEHIND (-$behind unpulled)"
+        end
+    end
+end
+
+function git-check-sync --description 'Fetch and list repos that are un-synced or lack a remote'
+    echo "Fetching remotes and checking status..."
+    set -l dirs
+    for dir in */
+        test -d "$dir/.git"; and set -a dirs (string trim -r -c '/' -- $dir)
+    end
+    test -z "$dirs"; and return 0
+    printf "%s\n" $dirs | parallel -j 8 'git-repo-status {}'
 end
 
 function ? --description 'Search Google with a query'
