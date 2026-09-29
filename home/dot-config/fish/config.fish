@@ -163,31 +163,16 @@ function tmp --description 'Create and cd into a temp directory'
     end
 end
 
-function u --description 'Parallel update with grouped output'
-    sudo --validate; or return 1
-    # 1. Build the list of commands to run (Tag + Command pairs)
-    set -l jobs
-    # System (choose one)
+function u --description 'Update by automatically checking for different package managers'
     if command -v paru >/dev/null
-        set -a jobs SYS "paru -Syu --noconfirm"
+        paru -Syu --noconfirm
     else if command -v yay >/dev/null
-        set -a jobs SYS "yay -Syu --noconfirm"
+        yay -Syu --noconfirm
     else if command -v pacman >/dev/null
-        set -a jobs SYS "sudo pacman -Syu --noconfirm"
+        sudo pacman -Syu --noconfirm
     else if command -v apt >/dev/null
-        set -a jobs SYS "sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y"
+        sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y
     end
-    # Dev Tools (only if they exist)
-    command -v brew >/dev/null; and set -a jobs BREW "brew update && brew upgrade && brew cleanup"
-    command -v uv >/dev/null; and set -a jobs UV "uv tool upgrade --all && uv generate-shell-completion fish > ~/.config/fish/completions/uv.fish"
-    command -v cargo-install-update >/dev/null; and set -a jobs RUST "cargo install-update --all"
-    # 2. Execute
-    set -l job_count (math (count $jobs) / 2)
-    if test $job_count -gt 0
-        echo (set_color yellow)"Running $job_count updates in parallel..."(set_color normal)
-        printf "%s\n" $jobs | parallel -N2 --tagstring (set_color -o cyan)"[{1}]"(set_color normal) --line-buffer fish -c "{2}"
-    end
-    echo (set_color -o green)"All tools are up to date."(set_color normal)
 end
 
 function e --description 'Open in file explorer'
@@ -195,10 +180,8 @@ function e --description 'Open in file explorer'
     set -q argv[1]; and set target $argv[1]
     if command -q explorer.exe
         if command -q wslpath
-            # @fish-lsp-disable-next-line 7001
             explorer.exe (wslpath -w "$target")
         else
-            # @fish-lsp-disable-next-line 7001
             explorer.exe "$target"
         end
     else
