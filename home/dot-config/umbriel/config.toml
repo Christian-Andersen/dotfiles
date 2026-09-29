@@ -270,6 +270,7 @@ follows_mouse = false
 mode = "dwindle"
 gap = 0
 extent_presets = [0.333, 0.5, 0.667]
+new_exits_fullscreen = "all"
 
 [layout.struts]
 left = 0
@@ -279,14 +280,12 @@ bottom = 0
 
 [layout.dwindle]
 # preserve_split = false        # Keep split directions fixed after creation
-new_exits_fullscreen = false
 
 [layout.master]
 position = "left"
 default_width_fraction = 0.55
 new_on_top = true
 new_becomes_master = false
-new_exits_fullscreen = false
 
 # ───────────────────────────── Window Rules ─────────────────────────────────
 
