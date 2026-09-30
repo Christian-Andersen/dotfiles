@@ -174,7 +174,7 @@ end
 
 function u --description 'Update by automatically checking for different package managers'
     if command -v paru >/dev/null
-        paru -Syu --noconfirm
+        PATH=/usr/local/bin:/usr/bin paru -Syu --noconfirm
     else if command -v yay >/dev/null
         yay -Syu --noconfirm
     else if command -v pacman >/dev/null
