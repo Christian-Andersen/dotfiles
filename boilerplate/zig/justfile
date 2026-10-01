@@ -4,7 +4,6 @@ alias b := build
 alias c := check
 alias r := run
 alias t := test
-alias ci := continuous_integration
 
 [private]
 default:
@@ -25,4 +24,4 @@ build *args:
 run *args:
     zig build run {{ args }}
 
-continuous_integration: check manual build
+ci: check manual build
