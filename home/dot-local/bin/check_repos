@@ -360,9 +360,8 @@ def check_nix_wrapped(relative: str, document: object) -> list[Violation]:
             # Ignore comments, which legitimately mention tool names.
             if stripped.startswith("#"):
                 continue
-            if NIX_TOOL_RE.search(stripped):
-                tool = NIX_TOOL_RE.search(stripped)
-                name = tool.group(0) if tool else "?"
+            if tool := NIX_TOOL_RE.search(stripped):
+                name = tool.group(0)
                 out.append(
                     Violation(
                         "nix-only",
