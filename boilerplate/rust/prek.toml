@@ -27,7 +27,7 @@ id = "cargo-format"
 name = "cargo-format"
 language = "system"
 pass_filenames = false
-entry = "cargo fmt --check"
+entry = "cargo fmt"
 
 [[repos.hooks]]
 id = "cargo-check"

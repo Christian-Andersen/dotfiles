@@ -27,7 +27,7 @@ id = "zig-format"
 name = "zig-format"
 language = "system"
 pass_filenames = false
-entry = "zig fmt --check ."
+entry = "zig fmt ."
 
 [[repos.hooks]]
 id = "zig-check"

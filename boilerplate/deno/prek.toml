@@ -27,14 +27,14 @@ id = "deno-fmt"
 name = "deno-fmt"
 language = "system"
 pass_filenames = false
-entry = "deno fmt --check"
+entry = "deno fmt"
 
 [[repos.hooks]]
 id = "deno-lint"
 name = "deno-lint"
 language = "system"
 pass_filenames = false
-entry = "deno lint"
+entry = "deno lint --fix"
 
 [[repos.hooks]]
 id = "deno-check"

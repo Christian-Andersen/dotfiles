@@ -8,10 +8,7 @@
   outputs = { nixpkgs, ... }:
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        config.permittedInsecurePackages = [ "pnpm-10.34.0" ];
-      };
+      pkgs = import nixpkgs { inherit system; };
     in
     {
       devShells.${system}.default = pkgs.mkShell {
