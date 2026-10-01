@@ -3,7 +3,6 @@ set dotenv-load
 alias b := build
 alias c := check
 alias r := run
-alias t := test
 alias ci := continuous_integration
 
 [private]
@@ -13,8 +12,8 @@ default:
 check:
     prek run --all-files
 
-audit:
-    cargo audit
+manual:
+    prek run --stage manual --all-files
 
 build *args:
     cargo build --release {{ args }}
@@ -22,7 +21,4 @@ build *args:
 run *args:
     cargo run {{ args }}
 
-test *args:
-    cargo test {{ args }}
-
-continuous_integration: audit check build test
+continuous_integration: check manual build

@@ -12,8 +12,8 @@ default:
 check:
     prek run --all-files
 
-audit:
-    govulncheck ./...
+manual:
+    prek run --stage manual --all-files
 
 build:
     go build ./...
@@ -21,4 +21,4 @@ build:
 run *args:
     go run . {{ args }}
 
-continuous_integration: audit check build
+continuous_integration: check manual build

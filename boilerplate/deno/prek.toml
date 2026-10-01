@@ -42,3 +42,21 @@ name = "deno-check"
 language = "system"
 pass_filenames = false
 entry = "deno check main.ts"
+
+[[repos.hooks]]
+id = "audit"
+name = "audit"
+language = "system"
+pass_filenames = false
+always_run = true
+stages = ["manual"]
+entry = "deno audit"
+
+[[repos.hooks]]
+id = "test"
+name = "test"
+language = "system"
+pass_filenames = false
+always_run = true
+stages = ["manual"]
+entry = "deno test"
