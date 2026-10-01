@@ -16,7 +16,7 @@ manual:
     prek run --stage manual --all-files
 
 test:
-    prek run test --all-files
+    prek run test --all-files --verbose
 
 build *args:
     zig build -Doptimize=ReleaseFast {{ args }}
@@ -24,4 +24,5 @@ build *args:
 run *args:
     zig build run {{ args }}
 
-ci: check manual build
+ci:
+    prek run --stage manual --all-files
