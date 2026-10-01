@@ -18,6 +18,7 @@
           go
           golangci-lint
           gopls
+          govulncheck
           just
           prek
         ];

@@ -3,6 +3,7 @@ set dotenv-load
 alias b := build
 alias c := check
 alias r := run
+alias t := test
 alias ci := continuous_integration
 
 [private]
@@ -14,6 +15,9 @@ check:
 
 manual:
     prek run --stage manual --all-files
+
+test:
+    prek run test --all-files
 
 build *args:
     zig build -Doptimize=ReleaseFast {{ args }}

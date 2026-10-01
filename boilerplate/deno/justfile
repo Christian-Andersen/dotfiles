@@ -2,6 +2,7 @@ set dotenv-load
 
 alias c := check
 alias r := run
+alias t := test
 alias ci := continuous_integration
 
 [private]
@@ -13,6 +14,12 @@ check:
 
 manual:
     prek run --stage manual --all-files
+
+audit:
+    prek run audit --all-files
+
+test:
+    prek run test --all-files
 
 run *args:
     deno run main.ts {{ args }}
