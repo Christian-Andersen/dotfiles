@@ -35,3 +35,21 @@ name = "cargo-check"
 language = "system"
 pass_filenames = false
 entry = "cargo clippy -- -D warnings"
+
+[[repos.hooks]]
+id = "audit"
+name = "audit"
+language = "system"
+pass_filenames = false
+always_run = true
+stages = ["manual"]
+entry = "cargo audit"
+
+[[repos.hooks]]
+id = "test"
+name = "test"
+language = "system"
+pass_filenames = false
+always_run = true
+stages = ["manual"]
+entry = "cargo test"

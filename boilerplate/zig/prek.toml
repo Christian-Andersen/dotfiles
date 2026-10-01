@@ -35,3 +35,12 @@ name = "zig-check"
 language = "system"
 pass_filenames = false
 entry = "zig build check"
+
+[[repos.hooks]]
+id = "test"
+name = "test"
+language = "system"
+pass_filenames = false
+always_run = true
+stages = ["manual"]
+entry = "zig build test"

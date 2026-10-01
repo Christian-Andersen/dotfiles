@@ -42,3 +42,21 @@ name = "ty-check"
 language = "system"
 pass_filenames = false
 entry = "uv run -- ty check"
+
+[[repos.hooks]]
+id = "audit"
+name = "audit"
+language = "system"
+pass_filenames = false
+always_run = true
+stages = ["manual"]
+entry = "uv audit"
+
+[[repos.hooks]]
+id = "test"
+name = "test"
+language = "system"
+pass_filenames = false
+always_run = true
+stages = ["manual"]
+entry = "uv run -- pytest"

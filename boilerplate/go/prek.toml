@@ -35,3 +35,21 @@ name = "go build"
 language = "system"
 pass_filenames = false
 entry = "go build ./..."
+
+[[repos.hooks]]
+id = "audit"
+name = "audit"
+language = "system"
+pass_filenames = false
+always_run = true
+stages = ["manual"]
+entry = "govulncheck ./..."
+
+[[repos.hooks]]
+id = "test"
+name = "test"
+language = "system"
+pass_filenames = false
+always_run = true
+stages = ["manual"]
+entry = "go test ./..."

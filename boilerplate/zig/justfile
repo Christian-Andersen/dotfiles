@@ -12,10 +12,13 @@ default:
 check:
     prek run --all-files
 
+manual:
+    prek run --stage manual --all-files
+
 build *args:
     zig build -Doptimize=ReleaseFast {{ args }}
 
 run *args:
     zig build run {{ args }}
 
-continuous_integration: check build
+continuous_integration: check manual build
