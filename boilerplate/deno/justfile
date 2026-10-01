@@ -3,7 +3,6 @@ set dotenv-load
 alias c := check
 alias r := run
 alias t := test
-alias ci := continuous_integration
 
 [private]
 default:
@@ -24,4 +23,4 @@ test:
 run *args:
     deno run main.ts {{ args }}
 
-continuous_integration: check manual
+ci: check manual
