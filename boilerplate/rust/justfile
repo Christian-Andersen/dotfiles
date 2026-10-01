@@ -19,7 +19,7 @@ audit:
     prek run audit --all-files
 
 test:
-    prek run test --all-files
+    prek run test --all-files --verbose
 
 build *args:
     cargo build --release {{ args }}
@@ -27,4 +27,5 @@ build *args:
 run *args:
     cargo run {{ args }}
 
-ci: check manual build
+ci:
+    prek run --stage manual --all-files
