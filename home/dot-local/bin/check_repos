@@ -73,6 +73,13 @@ JUST_RECIPE_RE = re.compile(
     re.MULTILINE,
 )
 
+# "alias ci := continuous_integration" also satisfies a "just ci" call site,
+# so aliases count as provided recipes.
+JUST_ALIAS_RE = re.compile(
+    r"^alias[ \t]+([A-Za-z_][A-Za-z0-9_-]*)[ \t]*:=",
+    re.MULTILINE,
+)
+
 SKIP_DIRS: frozenset[str] = frozenset({".git", "node_modules", "result"})
 
 
@@ -230,7 +237,7 @@ def check_justfile(repo: Repo) -> list[Violation]:
     text = repo.read("justfile")
     if text is None:
         return []
-    found = set(JUST_RECIPE_RE.findall(text))
+    found = set(JUST_RECIPE_RE.findall(text)) | set(JUST_ALIAS_RE.findall(text))
     return [Violation("justfile", f"no '{recipe}' recipe") for recipe in REQUIRED_JUST_RECIPES if recipe not in found]
 
 
