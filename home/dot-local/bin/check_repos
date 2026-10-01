@@ -206,7 +206,6 @@ def dig(node: object, *path: str) -> object:
 def load_structured(
     repo: Repo,
     relative: str,
-    loader: Any,
     parse: Any,
 ) -> tuple[object | None, Violation | None]:
     """Read and parse one file, reporting a violation if it will not parse."""
@@ -243,7 +242,7 @@ def check_justfile(repo: Repo) -> list[Violation]:
 
 def check_renovate(repo: Repo) -> list[Violation]:
     """Base policy, forbidden keys, and live custom managers."""
-    config, problem = load_structured(repo, "renovate.json", json, json.loads)
+    config, problem = load_structured(repo, "renovate.json", json.loads)
     if problem is not None:
         return [problem]
     if config is None:
@@ -313,7 +312,6 @@ def check_workflows(repo: Repo) -> list[Violation]:
         document, problem = load_structured(
             repo,
             f".forgejo/workflows/{relative}",
-            yaml,
             yaml.safe_load,
         )
         if problem is not None:
@@ -377,7 +375,7 @@ def check_nix_wrapped(relative: str, document: object) -> list[Violation]:
 
 def check_prek(repo: Repo) -> list[Violation]:
     """Every repo runs the same pre-commit hygiene hooks."""
-    config, problem = load_structured(repo, "prek.toml", tomllib, tomllib.loads)
+    config, problem = load_structured(repo, "prek.toml", tomllib.loads)
     if problem is not None:
         return [problem]
     if config is None:
