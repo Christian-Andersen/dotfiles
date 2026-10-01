@@ -173,7 +173,7 @@ follows_mouse = false
 "Mod+H" = "window-focus-left"
 "Mod+J" = "window-focus-down"
 "Mod+K" = "window-focus-up"
-# Mod+L is taken by session lock above (same as sway)
+# Mod+L is taken by dpms-off above, so no focus-right bind here
 
 # Cycle through windows in layout order (wraps around)
 "Alt+Tab" = "window-focus-next"
