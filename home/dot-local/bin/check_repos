@@ -5,7 +5,7 @@ Takes no arguments. Discovers repositories as subdirectories containing a
 ``renovate.json``, runs every rule against each one, prints the violations
 grouped by repository, and exits non-zero if anything failed.
 
-    python3 check_repos.py
+    python3 check_repos
 """
 
 from __future__ import annotations
