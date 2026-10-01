@@ -411,7 +411,7 @@ def check_repo(repo: Repo) -> tuple[str, list[Violation]]:
 
 
 def main() -> int:
-    root = Path().cwd()
+    root = Path.cwd()
     repos = discover(root)
     if not repos:
         print(f"no repositories found under {root}")
