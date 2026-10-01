@@ -133,7 +133,6 @@ class Violation:
     detail: str
 
 
-Check = Any
 # --------------------------------------------------------------------------
 # Structure walking helpers
 #
