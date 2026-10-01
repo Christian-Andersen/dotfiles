@@ -36,9 +36,6 @@
       inherit system;
       config = {
         allowUnfree = true;
-        permittedInsecurePackages = [
-          "pnpm-10.34.0"
-        ];
       };
       # TODO: remove once nixpkgs fixes sqlfmt's pname upstream
       overlays = [
