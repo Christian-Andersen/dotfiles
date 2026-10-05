@@ -836,6 +836,30 @@ for _, key in ipairs(snacks_keys) do
 	vim.keymap.set(mode, key[1], key[2], { desc = key.desc, nowait = key.nowait })
 end
 
+-- Just (task runner fullscreen, equivalent to `:term just <recipe>`)
+-- Opens in Normal mode so output can be yanked right away; press `i` to
+-- interact with the job, `<Esc><Esc>` (same as snacks terminals) to go back.
+local function just_term(recipe)
+	vim.cmd("terminal just" .. (recipe and recipe ~= "" and " " .. recipe or ""))
+	vim.cmd("stopinsert")
+	vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { buffer = vim.api.nvim_get_current_buf() })
+end
+vim.keymap.set("n", "<leader>jj", function()
+	just_term()
+end, { desc = "[j]ust (default recipe)" })
+vim.keymap.set("n", "<leader>jr", function()
+	just_term("run")
+end, { desc = "[j]ust [r]un" })
+vim.keymap.set("n", "<leader>jc", function()
+	just_term("check")
+end, { desc = "[j]ust [c]heck" })
+vim.keymap.set("n", "<leader>jt", function()
+	just_term("test")
+end, { desc = "[j]ust [t]est" })
+vim.keymap.set("n", "<leader>ji", function()
+	just_term("ci")
+end, { desc = "[j]ust c[i]" })
+
 -- Render Markdown (in-editor markdown rendering)
 require("render-markdown").setup({})
 
@@ -1063,6 +1087,7 @@ require("which-key").setup({
 		{ "<leader>d", group = "[d]ebug" },
 		{ "<leader>h", group = "Git [h]unk", mode = { "n", "v" } },
 		{ "<leader>g", group = "[g]it" },
+		{ "<leader>j", group = "[j]ust" },
 		{ "<leader>f", desc = "[f]ormat" },
 		{ "<leader>q", desc = "[q]uickfix" },
 		{ "g", group = "[g]oto / LSP" },
