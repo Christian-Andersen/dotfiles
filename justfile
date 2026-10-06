@@ -5,8 +5,8 @@ default:
 stow:
     mkdir -p ~/.config/fish && stow --dotfiles home
 
-run:
-    podman run --rm -it -v ~/c:/root/c dev
+run image="ghcr.io/christian-andersen/dotfiles:latest":
+    podman run --rm -it -v ~/c:/root/c {{image}}
 
 [working-directory('nix')]
 nix-setup:
