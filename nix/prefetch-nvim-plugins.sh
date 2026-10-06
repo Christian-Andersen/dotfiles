@@ -39,8 +39,11 @@ for name in sorted(plugins):
         continue
     src, rev = plugins[name]["src"], plugins[name]["rev"]
     print(f"prefetching {name} @ {rev[:12]}...", flush=True)
+    # NOTE: --fetch-submodules mirrors fetchgit's default (true). The builder
+    # always fetches submodules, so hashes must include their content, or
+    # every plugin with submodules fails verification in CI.
     out = subprocess.run(
-        [prefetch_bin, "--url", src, "--rev", rev],
+        [prefetch_bin, "--fetch-submodules", "--url", src, "--rev", rev],
         capture_output=True,
         text=True,
         check=True,
