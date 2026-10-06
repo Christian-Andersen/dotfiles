@@ -1,0 +1,62 @@
+name: build-image
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# GITHUB_TOKEN needs packages:write to push to GHCR.
+# If the package lands as private, flip it to public once under
+# https://github.com/users/<you>/packages (Package settings).
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Generate image tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image with Nix
+        working-directory: nix
+        run: nix build --print-out-paths '.#default'
+
+      - name: Load image into Docker
+        working-directory: nix
+        run: docker load --input result
+
+      - name: Smoke test the image
+        run: docker run --rm dev:latest nvim --version
+
+      - name: Tag and push
+        run: |
+          for tag in ${{ steps.meta.outputs.tags }}; do
+            docker tag dev:latest "$tag"
+            docker push "$tag"
+          done
