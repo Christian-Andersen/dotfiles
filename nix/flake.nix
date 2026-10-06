@@ -1,13 +1,6 @@
 {
   description = "Christian's development environment";
 
-  nixConfig = {
-    extra-substituters = ["https://nix-community.cachix.org"];
-    extra-trusted-public-keys = [
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    ];
-  };
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     home-manager = {
@@ -67,8 +60,8 @@
       biome
       buf
       chafa
-      cmake-language-server
       clang-tools
+      cmake-language-server
       curl
       dash
       deadnix
@@ -105,8 +98,8 @@
       jq
       just
       just-lsp
-      lazygit
       lazydocker
+      lazygit
       lldb
       lua-language-server
       markdownlint-cli
@@ -115,11 +108,10 @@
       mesonlsp
       neovim
       nh
+      ninja
       nix-direnv
       nixd
-      nixpkgs-fmt
       nodejs
-      ninja
       opencode
       parallel
       pi-coding-agent
@@ -128,21 +120,21 @@
       resvg
       ripgrep
       rsync
-      (pkgs.lib.lowPrio pkgs.rustup)
-      pkgs.rust-analyzer
       ruff
+      rust-analyzer
+      (lib.lowPrio rustup)
       shellcheck
       shfmt
-      sqlite
       sql-formatter
+      sqlite
       starship
       statix
       stow
       stylua
+      taplo
       tea
       tectonic
       tlrc
-      taplo
       tokei
       tree-sitter
       tuxedo
@@ -159,15 +151,16 @@
       wl-clipboard
       xdg-utils
       yaml-language-server
+      yamlfmt
       yazi
       yq-go
-      yamlfmt
       zellij
       zig
       zls
       zoxide
     ];
   in {
+    formatter.${system} = pkgs.alejandra;
     homeConfigurations = {
       christian = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
