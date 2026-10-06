@@ -15,8 +15,13 @@
       url = data.src;
       rev = data.rev;
       sha256 = hashes.${name} or (throw "nvim-plugins: no hash for '${name}' — run nix/prefetch-nvim-plugins.sh");
-      # Keep .git so future online `vim.pack.update()` calls keep working.
-      leaveDotGit = true;
+      # NOTE: no `leaveDotGit` on purpose. Hashing `.git` makes the hash depend
+      # on git version and upstream ref movement (proven: same rev hashed
+      # differently on another machine), which breaks CI. The checked-out tree
+      # for a pinned SHA is byte-identical everywhere.
+      # Trade-off: `vim.pack.update()` cannot run in place on these seed copies
+      # (no repo to fetch into). Update plugins on your main machine, commit the
+      # lockfile, re-prefetch, rebuild the image.
     };
   plugins = pkgs.lib.mapAttrs fetchPlugin lock.plugins;
   copyPlugin = name: drv: ''

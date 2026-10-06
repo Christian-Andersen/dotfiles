@@ -18,8 +18,7 @@ OUTFILE="nvim-plugins-hashes.json"
 # Resolve nix-prefetch-git once (not necessarily on PATH) and reuse it.
 PREFETCH_BIN="$(nix build nixpkgs#nix-prefetch-git --print-out-paths --no-link)/bin/nix-prefetch-git"
 
-NIX_PREFETCH_GIT_LEAVE_DOT_GIT=1 \
-  python3 - "$LOCKFILE" "$OUTFILE" "$REFRESH" "$PREFETCH_BIN" <<'EOF'
+python3 - "$LOCKFILE" "$OUTFILE" "$REFRESH" "$PREFETCH_BIN" <<'EOF'
 import json
 import subprocess
 import sys
