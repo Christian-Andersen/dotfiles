@@ -3,11 +3,7 @@
   tools,
   ...
 }: let
-  symlinks = pkgs.runCommand "symlinks" {} ''
-    mkdir -p $out/bin
-    ln -s ${pkgs.neovim}/bin/nvim $out/bin/vi
-    ln -s ${pkgs._7zz}/bin/7zz $out/bin/7z
-  '';
+  symlinks = import ./symlinks.nix {inherit pkgs;};
 in {
   programs.bash.enable = false;
 
