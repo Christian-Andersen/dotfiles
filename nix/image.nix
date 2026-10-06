@@ -3,6 +3,9 @@
   tools,
   dotfilesSrc,
 }: let
+  # Pre-seeded vim.pack plugins (pinned by nvim-pack-lock.json) so the first
+  # launch inside the image needs no network. See ./nvim-plugins.nix.
+  nvimPlugins = import ./nvim-plugins.nix {inherit pkgs dotfilesSrc;};
   homeDir = pkgs.runCommand "setup-dotfiles" {buildInputs = [pkgs.stow];} ''
     mkdir -p $out/root/dotfiles $out/tmp $out/etc
     echo "root:x:0:0::/root:${pkgs.fish}/bin/fish" > $out/etc/passwd
@@ -11,6 +14,8 @@
     chmod -R u+w $out/root/dotfiles
     cd $out/root/dotfiles
     stow --dotfiles home
+    mkdir -p $out/root/.local/share/nvim/site/pack/core
+    cp -r ${nvimPlugins}/opt $out/root/.local/share/nvim/site/pack/core/opt
   '';
 in
   pkgs.dockerTools.buildImage {
