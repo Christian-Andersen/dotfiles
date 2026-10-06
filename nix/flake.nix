@@ -14,9 +14,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    neovim-nightly-overlay = {
-      url = "github:nix-community/neovim-nightly-overlay";
-    };
     dotfiles-root = {
       url = "path:../";
       flake = false;
@@ -26,7 +23,6 @@
   outputs = {
     nixpkgs,
     home-manager,
-    neovim-nightly-overlay,
     dotfiles-root,
     self,
     ...
@@ -39,7 +35,6 @@
       };
       # TODO: remove once nixpkgs fixes sqlfmt's pname upstream
       overlays = [
-        neovim-nightly-overlay.overlays.default
         (_: prev: {
           pythonPackagesExtensions =
             (prev.pythonPackagesExtensions or [])
