@@ -19,7 +19,7 @@
   '';
 in
   pkgs.dockerTools.buildImage {
-    name = "dev";
+    name = "dotfiles";
     tag = "latest";
 
     copyToRoot = pkgs.buildEnv {
