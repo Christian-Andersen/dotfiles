@@ -207,6 +207,15 @@ vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
 -- Go to last buffer (alternate file)
 vim.keymap.set("n", "<leader>b", "<C-^>", { desc = "Go to last [b]uffer" })
 
+-- Yank the entire buffer into the unnamed (`"`) and system clipboard (`+`) registers
+vim.keymap.set("n", "<leader>y", function()
+	local view = vim.fn.winsaveview()
+	vim.cmd("silent %yank +")
+	vim.cmd("silent %yank")
+	vim.fn.winrestview(view)
+	vim.notify("Yanked " .. vim.api.nvim_buf_line_count(0) .. " lines to clipboard (+)", vim.log.levels.INFO)
+end, { desc = "[y]ank whole buffer to clipboard" })
+
 -- Google AI Search
 local function google_ai_search()
 	local code_block = ""
