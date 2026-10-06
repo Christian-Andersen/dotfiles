@@ -332,7 +332,9 @@ vim.pack.add({
 	"https://github.com/EdenEast/nightfox.nvim",
 	"https://github.com/miladggg/neonwave.nvim",
 	"https://github.com/keremimo/noctalia.nvim",
-})
+	-- `confirm = false`: install missing plugins without prompting, so the
+	-- first launch (including inside a fresh container) never blocks on input.
+}, { confirm = false })
 
 -- Tiny-cmdline (centered `:` prompt, powered by native ui2)
 vim.cmd.packadd("tiny-cmdline.nvim")
