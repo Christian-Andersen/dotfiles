@@ -336,6 +336,9 @@ vim.pack.add({
 
 -- Tiny-cmdline (centered `:` prompt, powered by native ui2)
 vim.cmd.packadd("tiny-cmdline.nvim")
+-- `setup()` deep-merges over its defaults, so a partial table is correct here;
+-- the plugin's Emmy annotations just don't mark the fields optional.
+---@diagnostic disable-next-line: missing-fields
 require("tiny-cmdline").setup({
 	on_reposition = require("tiny-cmdline").adapters.blink, -- keep blink.cmp menu aligned with the popup
 })
@@ -381,6 +384,9 @@ Snacks.dashboard.sections.frecency_recent = function(opts)
 				files[i] = {
 					file = file,
 					i = i, -- shada position, used as the tiebreak below
+					-- `get()` only reads `file`/`dir`/`info`/`recent`; `idx`/`score`/`text`
+					-- are never touched (snacks builds ad-hoc items the same way).
+					---@diagnostic disable-next-line: missing-fields
 					score = frecency:get({ file = file, recent = true }),
 				}
 			end
@@ -1037,6 +1043,10 @@ require("gitsigns").setup({
 		map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "git [s]tage hunk" })
 		map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "git [r]eset hunk" })
 		map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "git [S]tage buffer" })
+		-- `undo_stage_hunk` is deprecated in favor of `stage_hunk()` on staged signs,
+		-- but that toggles: on an unstaged hunk it would STAGE instead of undoing.
+		-- Kept deliberately; revisit if gitsigns removes the function.
+		---@diagnostic disable-next-line: deprecated
 		map("n", "<leader>hu", gitsigns.undo_stage_hunk, { desc = "git [u]ndo stage hunk" })
 		map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "git [R]eset buffer" })
 		map("n", "<leader>hp", gitsigns.preview_hunk, { desc = "git [p]review hunk" })
@@ -1116,6 +1126,8 @@ require("todo-comments").setup({})
 
 -- Filter ty hints before they reach the diagnostic store
 local original_diagnostic_set = vim.diagnostic.set
+-- Intentional monkey-patch: redefining the existing field is the whole point.
+---@diagnostic disable-next-line: duplicate-set-field
 vim.diagnostic.set = function(ns, bufnr, diagnostics, opts)
 	local filtered = vim.tbl_filter(function(d)
 		return not (d.source == "ty" and d.severity == vim.diagnostic.severity.HINT)
