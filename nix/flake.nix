@@ -42,7 +42,6 @@
       ];
     };
     huggingface-hub = pkgs.python3Packages.huggingface-hub;
-    debugpy = pkgs.python3Packages.debugpy;
     tools = with pkgs; [
       _7zz
       alejandra
@@ -65,7 +64,6 @@
       curl
       dash
       deadnix
-      debugpy
       delve
       deno
       direnv
