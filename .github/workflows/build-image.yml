@@ -27,7 +27,7 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
-            type=raw,value=dotfiles
+            type=raw,value=latest
             type=sha,format=short
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -42,7 +42,7 @@ jobs:
         working-directory: nix
         run: docker load --input result
       - name: Smoke test the image
-        run: docker run --rm dev:latest nvim --version
+        run: docker run --rm dotfiles:latest nvim --version
       - name: Tag and push
         # NOTE: meta.outputs.tags is newline-separated, which cannot feed a
         # `for ... in` list (bash doesn't continue word lists across newlines),
@@ -50,6 +50,6 @@ jobs:
         run: |
           while IFS= read -r tag; do
             [ -n "$tag" ] || continue
-            docker tag dev:latest "$tag"
+            docker tag dotfiles:latest "$tag"
             docker push "$tag"
           done <<< "${{ steps.meta.outputs.tags }}"
