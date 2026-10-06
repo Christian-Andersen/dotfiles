@@ -1248,7 +1248,8 @@ end
 
 -- Debug (DAP)
 require("dap-view").setup()
-require("dap-python").setup("uv")
+local dap_python = require("dap-python")
+dap_python.setup("uv")
 local dap = require("dap")
 local dap_view = require("dap-view")
 vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
@@ -1261,6 +1262,33 @@ vim.keymap.set("n", "<leader>dB", function()
 end, { desc = "Debug: Set Conditional Breakpoint" })
 vim.keymap.set("n", "<leader>dv", dap_view.toggle, { desc = "Debug: Toggle View" })
 vim.keymap.set("n", "<leader>dx", dap.terminate, { desc = "Debug: Terminate/Exit" })
+-- Extra Python configs beyond dap-python's defaults: run a module (`python -m`),
+-- pytest the current file, or attach to a picked process
+table.insert(dap.configurations.python, {
+	type = "python",
+	request = "launch",
+	name = "module",
+	module = function()
+		return vim.fn.input("Module: ")
+	end,
+	console = "integratedTerminal",
+})
+table.insert(dap.configurations.python, {
+	type = "python",
+	request = "launch",
+	name = "pytest: file",
+	module = "pytest",
+	args = { "${file}" },
+	console = "integratedTerminal",
+})
+table.insert(dap.configurations.python, {
+	type = "python",
+	request = "attach",
+	name = "attach: pick process",
+	processId = require("dap.utils").pick_process,
+})
+vim.keymap.set({ "n", "v" }, "<leader>dm", dap_python.test_method, { desc = "Debug: test [m]ethod" })
+vim.keymap.set({ "n", "v" }, "<leader>dC", dap_python.test_class, { desc = "Debug: test [C]lass" })
 dap.listeners.after.event_initialized["dap_view_config"] = function()
 	dap_view.open()
 end
@@ -1278,9 +1306,35 @@ dap.adapters.go = {
 dap.configurations.go = {
 	{
 		type = "go",
-		name = "Debug",
+		name = "Debug File",
 		request = "launch",
 		program = "${file}",
+		dlvToolPath = vim.fn.exepath("dlv"),
+	},
+	{
+		type = "go",
+		name = "Debug Package",
+		request = "launch",
+		program = "${fileDirname}",
+		dlvToolPath = vim.fn.exepath("dlv"),
+	},
+	{
+		type = "go",
+		name = "Debug Package Tests",
+		request = "launch",
+		mode = "test",
+		program = "${fileDirname}",
+		dlvToolPath = vim.fn.exepath("dlv"),
+	},
+	{
+		type = "go",
+		name = "Debug Test Function",
+		request = "launch",
+		mode = "test",
+		program = "${fileDirname}",
+		args = function()
+			return { "-test.run", vim.fn.input("Test function (regex): ", "^" .. vim.fn.expand("<cword>") .. "$") }
+		end,
 		dlvToolPath = vim.fn.exepath("dlv"),
 	},
 }
