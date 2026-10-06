@@ -86,9 +86,11 @@
       git
       git-lfs
       git-xet
+      gnutar
       go
       golangci-lint
       gopls
+      gzip
       harlequin
       huggingface-hub
       hyperfine
