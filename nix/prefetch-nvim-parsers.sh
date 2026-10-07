@@ -13,13 +13,14 @@ fi
 
 # Run from this script's directory (nix/) regardless of caller cwd.
 cd "$(dirname "$0")"
+HERE="$(pwd)"
 
 INIT="../home/dot-config/nvim/init.lua"
 OUTFILE="nvim-parsers.json"
 
 # Build the vendored nvim-treesitter to read install_info at exactly the
 # locked revision (cached after the first run).
-VENDOR="$(nix build --impure --expr 'let f = builtins.getFlake "path:/home/christian/dotfiles/nix"; pkgs = import f.inputs.nixpkgs { system = "x86_64-linux"; }; in import /home/christian/dotfiles/nix/nvim-plugins.nix { inherit pkgs; dotfilesSrc = /home/christian/dotfiles; }' --print-out-paths --no-link | tail -1)/opt/nvim-treesitter"
+VENDOR="$(nix build --impure --expr "let f = builtins.getFlake \"path:$HERE\"; pkgs = import f.inputs.nixpkgs { system = \"x86_64-linux\"; }; in import $HERE/nvim-plugins.nix { inherit pkgs; dotfilesSrc = $HERE/..; }" --print-out-paths --no-link | tail -1)/opt/nvim-treesitter"
 
 python3 - "$INIT" "$OUTFILE" "$REFRESH" "$VENDOR" <<'EOF'
 import json
@@ -82,11 +83,10 @@ except FileNotFoundError:
 parsers = {}
 for lang in sorted(info["langs"]):
     entry = info["langs"][lang]
-    url = entry["url"].removesuffix(".git")
+    # tarball URL is derived in nvim-parsers.nix; only pin what matters here.
     spec = {
         "url": entry["url"],
         "rev": entry["revision"],
-        "tarball": f"{url}/archive/{entry['revision']}.tar.gz",
     }
     if entry.get("location"):
         spec["location"] = entry["location"]
@@ -95,9 +95,10 @@ for lang in sorted(info["langs"]):
     if lang in previous and not refresh and previous[lang].get("sha256"):
         spec["sha256"] = previous[lang]["sha256"]
     else:
+        tarball = f"{entry['url'].removesuffix('.git')}/archive/{entry['revision']}.tar.gz"
         print(f"prefetching {lang} @ {entry['revision'][:12]}...", flush=True)
         out = subprocess.run(
-            ["nix-prefetch-url", "--unpack", spec["tarball"]],
+            ["nix-prefetch-url", "--unpack", tarball],
             capture_output=True,
             text=True,
             check=True,

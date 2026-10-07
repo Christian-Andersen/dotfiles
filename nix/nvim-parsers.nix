@@ -7,11 +7,13 @@
 {pkgs}: let
   data = builtins.fromJSON (builtins.readFile ./nvim-parsers.json);
   abi = toString data.abi;
-  buildOne = lang: spec:
+  buildOne = lang: spec: let
+    tarball = "${pkgs.lib.removeSuffix ".git" spec.url}/archive/${spec.rev}.tar.gz";
+  in
     pkgs.stdenv.mkDerivation {
       name = "nvim-ts-parser-${lang}";
       src = pkgs.fetchzip {
-        url = spec.tarball;
+        url = tarball;
         sha256 = spec.sha256;
       };
       nativeBuildInputs = [pkgs.tree-sitter];
