@@ -4,160 +4,134 @@
     "astro": {
       "rev": "213f6e6973d9b456c6e50e86f19f66877e7ef0ee",
       "sha256": "18asz2dsgkq4zj5frxigpzac00pgs4kvbp8l3x27z7yq6vgfr5af",
-      "tarball": "https://github.com/virchau13/tree-sitter-astro/archive/213f6e6973d9b456c6e50e86f19f66877e7ef0ee.tar.gz",
       "url": "https://github.com/virchau13/tree-sitter-astro"
     },
     "bash": {
       "rev": "a06c2e4415e9bc0346c6b86d401879ffb44058f7",
       "sha256": "0qglzigcy2sizpvpd3qik9lnnmh85dkhz5jl2aiias9p74p3bm1q",
-      "tarball": "https://github.com/tree-sitter/tree-sitter-bash/archive/a06c2e4415e9bc0346c6b86d401879ffb44058f7.tar.gz",
       "url": "https://github.com/tree-sitter/tree-sitter-bash"
     },
     "c": {
       "rev": "b780e47fc780ddc8da13afa35a3f4ed5c157823d",
       "sha256": "0rg2836lrb4zc3rah67dhl18j8ngaamxrd537y0b68whn7krzsr6",
-      "tarball": "https://github.com/tree-sitter/tree-sitter-c/archive/b780e47fc780ddc8da13afa35a3f4ed5c157823d.tar.gz",
       "url": "https://github.com/tree-sitter/tree-sitter-c"
     },
     "cpp": {
       "rev": "c009222808634c1014f82438d4883753516a2c24",
       "sha256": "0n908i6ixnzc2gq9gqrkjnaim5ddz9d5pcnrll0yh1qp53wjr029",
-      "tarball": "https://github.com/tree-sitter/tree-sitter-cpp/archive/c009222808634c1014f82438d4883753516a2c24.tar.gz",
       "url": "https://github.com/tree-sitter/tree-sitter-cpp"
     },
     "css": {
       "rev": "dda5cfc5722c429eaba1c910ca32c2c0c5bb1a3f",
       "sha256": "1qcl9j8hpmdz9hhwzg4byhs5z7ja3lq1fg5yxij3h5dy4h9jfnwc",
-      "tarball": "https://github.com/tree-sitter/tree-sitter-css/archive/dda5cfc5722c429eaba1c910ca32c2c0c5bb1a3f.tar.gz",
       "url": "https://github.com/tree-sitter/tree-sitter-css"
     },
     "dockerfile": {
       "rev": "971acdd908568b4531b0ba28a445bf0bb720aba5",
       "sha256": "04h89bylaa5qjjbbrkbm6bsvf2d7mshqqck2fhp5nssy66p7z4jq",
-      "tarball": "https://github.com/camdencheek/tree-sitter-dockerfile/archive/971acdd908568b4531b0ba28a445bf0bb720aba5.tar.gz",
       "url": "https://github.com/camdencheek/tree-sitter-dockerfile"
     },
     "go": {
       "rev": "2346a3ab1bb3857b48b29d779a1ef9799a248cd7",
       "sha256": "1bb1clm4nh8srgrvchdsd8l805qs2qy9fhcjj9xifcxnz4rx69vy",
-      "tarball": "https://github.com/tree-sitter/tree-sitter-go/archive/2346a3ab1bb3857b48b29d779a1ef9799a248cd7.tar.gz",
       "url": "https://github.com/tree-sitter/tree-sitter-go"
     },
     "html": {
       "rev": "73a3947324f6efddf9e17c0ea58d454843590cc0",
       "sha256": "062z2m175v464bvp3wg7ljcv67lgmza1r6q540pxl31h9qfijgsr",
-      "tarball": "https://github.com/tree-sitter/tree-sitter-html/archive/73a3947324f6efddf9e17c0ea58d454843590cc0.tar.gz",
       "url": "https://github.com/tree-sitter/tree-sitter-html"
     },
     "javascript": {
       "rev": "58404d8cf191d69f2674a8fd507bd5776f46cb11",
       "sha256": "0grm51ap493kc5xp8hwrbmbd27a2f27igmysshqa3kzagqsx7xpr",
-      "tarball": "https://github.com/tree-sitter/tree-sitter-javascript/archive/58404d8cf191d69f2674a8fd507bd5776f46cb11.tar.gz",
       "url": "https://github.com/tree-sitter/tree-sitter-javascript"
     },
     "json": {
       "rev": "254c42a6476413b776221e03982ac8ae159eeb72",
       "sha256": "0d80gw1xysjyh8m39rgf9bdzqaakzqhkv3ckvrmfkm6jsyw2rbl0",
-      "tarball": "https://github.com/tree-sitter/tree-sitter-json/archive/254c42a6476413b776221e03982ac8ae159eeb72.tar.gz",
       "url": "https://github.com/tree-sitter/tree-sitter-json"
     },
     "latex": {
       "generate": true,
       "rev": "fa8df448fc2c0192a8c2f8cfc97de53cb2b4ecb9",
       "sha256": "08cqr68qh40y4k6cgr5ykrd7wayfcvvz7dy7si9s7sj1anfdz5wq",
-      "tarball": "https://github.com/latex-lsp/tree-sitter-latex/archive/fa8df448fc2c0192a8c2f8cfc97de53cb2b4ecb9.tar.gz",
       "url": "https://github.com/latex-lsp/tree-sitter-latex"
     },
     "nix": {
       "rev": "17f290c8b5104d9aba8a1ba7383a2ca83c3d14c4",
       "sha256": "1g7kibfpwiz8kpvl3pg03klpni2zlfhxjvhsm9xprjrrrgydyrn9",
-      "tarball": "https://github.com/nix-community/tree-sitter-nix/archive/17f290c8b5104d9aba8a1ba7383a2ca83c3d14c4.tar.gz",
       "url": "https://github.com/nix-community/tree-sitter-nix"
     },
     "proto": {
       "rev": "6c878d18628ebbff3474479d2fdd6d8ba1954c3e",
       "sha256": "1cv3cwds4rji4wv243cpcw57x78xnqfvf2swnfalj5k4i4iakc9p",
-      "tarball": "https://github.com/coder3101/tree-sitter-proto/archive/6c878d18628ebbff3474479d2fdd6d8ba1954c3e.tar.gz",
       "url": "https://github.com/coder3101/tree-sitter-proto"
     },
     "python": {
       "rev": "v0.25.0",
       "sha256": "05kk1wlm5fgpgwqxw3m68sipkinw0gf2jq19cgq9cgp3agdwg58p",
-      "tarball": "https://github.com/tree-sitter/tree-sitter-python/archive/v0.25.0.tar.gz",
       "url": "https://github.com/tree-sitter/tree-sitter-python"
     },
     "regex": {
       "rev": "b2ac15e27fce703d2f37a79ccd94a5c0cbe9720b",
       "sha256": "0nhn94skvac3wid2xbxa456m1mgbi7h768imq280pxbm4klhl7bd",
-      "tarball": "https://github.com/tree-sitter/tree-sitter-regex/archive/b2ac15e27fce703d2f37a79ccd94a5c0cbe9720b.tar.gz",
       "url": "https://github.com/tree-sitter/tree-sitter-regex"
     },
     "rust": {
       "rev": "77a3747266f4d621d0757825e6b11edcbf991ca5",
       "sha256": "1ihdch4c6fxiywrpyc5qa1x5xf41s6g08x0cbc1k8p1il83svkif",
-      "tarball": "https://github.com/tree-sitter/tree-sitter-rust/archive/77a3747266f4d621d0757825e6b11edcbf991ca5.tar.gz",
       "url": "https://github.com/tree-sitter/tree-sitter-rust"
     },
     "scss": {
       "rev": "c478c6868648eff49eb04a4df90d703dc45b312a",
       "sha256": "15r3jiv36hzx2pmjmp63am3pbc01s52z36xfraa1aw4wlx7lqnq4",
-      "tarball": "https://github.com/serenadeai/tree-sitter-scss/archive/c478c6868648eff49eb04a4df90d703dc45b312a.tar.gz",
       "url": "https://github.com/serenadeai/tree-sitter-scss"
     },
     "sql": {
       "rev": "39fdb006403747241244326e8af3b3e96b85381c",
       "sha256": "1jpq356rhhvqzqq5ilcfc1arb2nai6h2kjyvrh0z4bj9p5297i1v",
-      "tarball": "https://github.com/derekstride/tree-sitter-sql/archive/39fdb006403747241244326e8af3b3e96b85381c.tar.gz",
       "url": "https://github.com/derekstride/tree-sitter-sql"
     },
     "svelte": {
       "rev": "ae5199db47757f785e43a14b332118a5474de1a2",
       "sha256": "0pm5hillspaj4xvqz3j5sxvn78sljw75abjp58xnq8lc5vp62zvh",
-      "tarball": "https://github.com/tree-sitter-grammars/tree-sitter-svelte/archive/ae5199db47757f785e43a14b332118a5474de1a2.tar.gz",
       "url": "https://github.com/tree-sitter-grammars/tree-sitter-svelte"
     },
     "toml": {
       "rev": "64b56832c2cffe41758f28e05c756a3a98d16f41",
       "sha256": "1j9fgy1hlsq6xqqnpjl65a2mmydlx91p8ss36k7vyf7284d6bm4v",
-      "tarball": "https://github.com/tree-sitter-grammars/tree-sitter-toml/archive/64b56832c2cffe41758f28e05c756a3a98d16f41.tar.gz",
       "url": "https://github.com/tree-sitter-grammars/tree-sitter-toml"
     },
     "tsx": {
       "location": "tsx",
       "rev": "75b3874edb2dc714fb1fd77a32013d0f8699989f",
       "sha256": "1sq3c11m9yjsr696m32bcwaz772kqdhpq0sy96jbgwqq38h3lhq3",
-      "tarball": "https://github.com/tree-sitter/tree-sitter-typescript/archive/75b3874edb2dc714fb1fd77a32013d0f8699989f.tar.gz",
       "url": "https://github.com/tree-sitter/tree-sitter-typescript"
     },
     "typescript": {
       "location": "typescript",
       "rev": "75b3874edb2dc714fb1fd77a32013d0f8699989f",
       "sha256": "1sq3c11m9yjsr696m32bcwaz772kqdhpq0sy96jbgwqq38h3lhq3",
-      "tarball": "https://github.com/tree-sitter/tree-sitter-typescript/archive/75b3874edb2dc714fb1fd77a32013d0f8699989f.tar.gz",
       "url": "https://github.com/tree-sitter/tree-sitter-typescript"
     },
     "typst": {
       "rev": "46cf4ded12ee974a70bf8457263b67ad7ee0379d",
       "sha256": "06a3hzmc5xa4vfpfrk77hq9j0n39jxhy450rx2qxisc06bf53zxk",
-      "tarball": "https://github.com/uben0/tree-sitter-typst/archive/46cf4ded12ee974a70bf8457263b67ad7ee0379d.tar.gz",
       "url": "https://github.com/uben0/tree-sitter-typst"
     },
     "vue": {
       "rev": "ce8011a414fdf8091f4e4071752efc376f4afb08",
       "sha256": "0ns0d2pgr34i9hjxdb9ayxlgk7697j1l1vqy4vlrf2li3c6k4am4",
-      "tarball": "https://github.com/tree-sitter-grammars/tree-sitter-vue/archive/ce8011a414fdf8091f4e4071752efc376f4afb08.tar.gz",
       "url": "https://github.com/tree-sitter-grammars/tree-sitter-vue"
     },
     "yaml": {
       "rev": "a1c4812a73ec5e089de8e441fdea3a921e8d5079",
       "sha256": "1ij891r899p8di3r3nn41ygv10ma1gblpfm6f9x2a3ydq7mwi213",
-      "tarball": "https://github.com/tree-sitter-grammars/tree-sitter-yaml/archive/a1c4812a73ec5e089de8e441fdea3a921e8d5079.tar.gz",
       "url": "https://github.com/tree-sitter-grammars/tree-sitter-yaml"
     },
     "zig": {
       "rev": "6479aa13f32f701c383083d8b28360ebd682fb7d",
       "sha256": "038zbh5mkkq87lzr2cc3kmgisiyx81rrdm2ppzwx3lkn2893mm2g",
-      "tarball": "https://github.com/tree-sitter-grammars/tree-sitter-zig/archive/6479aa13f32f701c383083d8b28360ebd682fb7d.tar.gz",
       "url": "https://github.com/tree-sitter-grammars/tree-sitter-zig"
     }
   }
