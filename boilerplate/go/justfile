@@ -16,8 +16,8 @@ test:
 build *args:
     go build {{ args }} ./...
 
-run *args:
-    go run . {{ args }}
-
 ci:
     prek run --stage manual --all-files
+
+run *args:
+    go run . {{ args }}
