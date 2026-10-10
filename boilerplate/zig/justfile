@@ -1,10 +1,5 @@
 set dotenv-load
 
-alias b := build
-alias c := check
-alias r := run
-alias t := test
-
 [private]
 default:
     @just --list
