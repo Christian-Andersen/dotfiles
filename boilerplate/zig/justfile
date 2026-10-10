@@ -13,8 +13,8 @@ test:
 build *args:
     zig build -Doptimize=ReleaseFast {{ args }}
 
-run *args:
-    zig build run {{ args }}
-
 ci:
     prek run --stage manual --all-files
+
+run *args:
+    zig build run {{ args }}

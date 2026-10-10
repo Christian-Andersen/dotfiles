@@ -13,8 +13,8 @@ audit:
 test:
     uv run -- prek run test --all-files --verbose
 
-run *args:
-    uv run -- main.py {{ args }}
-
 ci:
     uv run -- prek run --stage manual --all-files
+
+run *args:
+    uv run -- main.py {{ args }}
