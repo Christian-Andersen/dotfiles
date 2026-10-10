@@ -12,9 +12,6 @@ default:
 check:
     prek run --all-files
 
-manual:
-    prek run --stage manual --all-files
-
 test:
     prek run test --all-files --verbose
 
