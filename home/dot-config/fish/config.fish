@@ -297,6 +297,7 @@ if status is-interactive
     abbr -a j 'clear; just'
     abbr -a k 'kill -9 (jobs -p)'
     abbr -a lazypodman "DOCKER_HOST=unix://\$XDG_RUNTIME_DIR/podman/podman.sock lazydocker"
+    abbr -a lp "DOCKER_HOST=unix://\$XDG_RUNTIME_DIR/podman/podman.sock lazydocker"
     abbr -a l 'eza --long --header --group --git'
     abbr -a ls eza
     abbr -a la 'eza --all --long --header --group --git'
