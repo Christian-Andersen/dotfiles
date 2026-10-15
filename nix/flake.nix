@@ -59,6 +59,7 @@
       biome
       buf
       chafa
+      chromium
       clang-tools
       cmake-language-server
       curl
