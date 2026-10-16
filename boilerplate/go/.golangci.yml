@@ -1,0 +1,45 @@
+version: "2"
+
+formatters:
+  enable:
+    - gofumpt
+    - goimports
+  settings:
+    gofumpt:
+      extra:
+        # The three "extra rules" beyond standard gofumpt formatting.
+        group-params: true
+        clothe-returns: true
+        balance-calls: true
+    goimports:
+      local-prefixes:
+        - example.com/module
+
+linters:
+  default: all
+  disable:
+    # Deprecated — replaced by exhaustruct_v5
+    - exhaustruct
+    # Deprecated — replaced by gomodguard_v2
+    - gomodguard
+    # Deprecated — replaced by wsl_v5
+    - wsl
+
+    # These require project-specific allow/deny lists to be useful.
+    # Enable them per-project once you know your dependencies.
+    - depguard
+    - gomodguard_v2
+
+    # Domain-specific; not useful for general projects.
+    - arangolint
+    - clickhouselint
+    - ginkgolinter
+    - goheader
+    - gosmopolitan
+    - promlinter
+    - spancheck
+    - zerologlint
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
