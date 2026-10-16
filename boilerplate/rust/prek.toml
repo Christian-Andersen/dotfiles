@@ -34,7 +34,7 @@ id = "cargo-check"
 name = "cargo-check"
 language = "system"
 pass_filenames = false
-entry = "cargo clippy -- -D warnings"
+entry = "cargo clippy --all-targets --all-features -- -D warnings"
 
 [[repos.hooks]]
 id = "cargo-build"
