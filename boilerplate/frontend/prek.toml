@@ -27,7 +27,7 @@ id = "biome-check"
 name = "biome-check"
 language = "system"
 pass_filenames = false
-entry = "npx --no-install biome check --write src/"
+entry = "npx --no-install biome check --error-on-warnings --write src/"
 
 [[repos.hooks]]
 id = "tsc"
