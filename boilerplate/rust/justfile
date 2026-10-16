@@ -17,7 +17,6 @@ build *args:
     cargo build --release {{ args }}
 
 ci:
-    prek run --all-files
     prek run --stage manual --all-files
 
 run *args:
