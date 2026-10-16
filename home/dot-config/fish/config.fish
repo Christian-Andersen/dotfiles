@@ -45,7 +45,7 @@ function check_commands --description 'Check that all the commands I need are in
     end
 end
 
-function bp --description "Append language-specific config boilerplate to current directory"
+function bp --description "Copy or append language-specific config boilerplate to current directory"
     if test (count $argv) -eq 0
         echo "Error: Please specify a language (e.g., boilerplate python)"
         return 1
@@ -56,12 +56,17 @@ function bp --description "Append language-specific config boilerplate to curren
         echo "Error: No configuration directory found at $source_dir"
         return 1
     end
-    echo "Appending boilerplate for: $lang..."
+    echo "Applying boilerplate for: $lang..."
     for source_file in $source_dir/{.,}*
         if test -f $source_file
             set -l filename (basename $source_file)
-            cat $source_file >>./$filename
-            echo " -> Appended to ./$filename"
+            if not test -e ./$filename
+                cp $source_file ./$filename
+                echo " -> Created ./$filename"
+            else
+                cat $source_file >>./$filename
+                echo " -> Appended to ./$filename"
+            end
         end
     end
     echo "Done!"
@@ -117,7 +122,7 @@ end
 function para --description 'simple parallel over directories in this directory'
     set -l dirs */
     test -z "$dirs"; and return 0
-    parallel -j 8 'cd "{}" &&' $argv ::: $dirs
+    parallel -j 8 -- 'cd "{}" &&' $argv ::: $dirs
 end
 
 function notme --description "Find all files (including hidden/ignored) not owned by current user or group"
@@ -165,7 +170,7 @@ function tmp --description 'Create and cd into a temp directory'
     set -l tmp_dir (mktemp -d -t 'tmp-XXXXXX')
     if test -n "$tmp_dir"
         echo "Created and changing to: $tmp_dir"
-        cd "$tmp_dir"
+        builtin cd "$tmp_dir"
     else
         echo "Error: Could not create a temporary directory." >&2
         return 1
