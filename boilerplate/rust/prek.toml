@@ -27,7 +27,7 @@ id = "cargo-format"
 name = "cargo-format"
 language = "system"
 pass_filenames = false
-entry = "cargo fmt"
+entry = "cargo fmt --all -- --check"
 
 [[repos.hooks]]
 id = "cargo-check"
@@ -43,7 +43,7 @@ language = "system"
 pass_filenames = false
 always_run = true
 stages = ["manual"]
-entry = "cargo build --release"
+entry = "cargo build --release --all-targets --all-features"
 
 [[repos.hooks]]
 id = "audit"
@@ -61,4 +61,4 @@ language = "system"
 pass_filenames = false
 always_run = true
 stages = ["manual"]
-entry = "cargo test"
+entry = "cargo test --all-targets --all-features"
