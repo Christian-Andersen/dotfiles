@@ -286,7 +286,9 @@ if status is-interactive
     # --- Single Letter Abbreviations ---
     abbr -a a '. .venv/bin/activate.fish'
     abbr -a c 'clear; just check'
+    abbr -a cr 'clear; just check run'
     abbr -a ci 'clear; just ci'
+    abbr -a cir 'clear; just ci run'
     abbr -a d 'CUDA_VISIBLE_DEVICES='
     abbr -a d0 'CUDA_VISIBLE_DEVICES=0'
     abbr -a d1 'CUDA_VISIBLE_DEVICES=1'
