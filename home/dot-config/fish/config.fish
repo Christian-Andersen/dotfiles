@@ -10,6 +10,11 @@ set -gx UV_MANAGED_PYTHON true
 set -gx DE generic
 set -gx GOPATH $HOME/.local/share/go
 
+# Projects directory (xdg-user-dirs 0.20+). home-manager sets XDG_PROJECTS_DIR;
+# fall back to ~/Projects for shells without it (e.g. the dev container, which
+# has no home-manager). Projects live nested: <host>/<owner>/<repo>/<branch>.
+set -q XDG_PROJECTS_DIR; or set -gx XDG_PROJECTS_DIR $HOME/Projects
+
 # Add paths only if they exist to keep PATH clean
 set -l extra_paths \
     ~/.nix-profile/bin \
@@ -72,6 +77,28 @@ function bp --description "Copy or append language-specific config boilerplate t
     echo "Done!"
 end
 
+function projects-root --description 'Resolve the projects directory'
+    if set -q XDG_PROJECTS_DIR; and test -n "$XDG_PROJECTS_DIR"
+        echo $XDG_PROJECTS_DIR
+    else
+        echo $HOME/Projects
+    end
+end
+
+function project-dirs --description 'List git repo roots under the projects directory'
+    set -l root (projects-root)
+    test -d "$root"; or return 0
+    for gitdir in (fd --hidden --max-depth 6 --type d --type f '^\.git$' "$root" 2>/dev/null)
+        path dirname "$gitdir"
+    end
+end
+
+function project-session-name -a dir --description 'Unique zellij session name for a project path'
+    set -l root (projects-root)
+    set -l rel (string replace -- "$root/" '' -- "$dir")
+    string replace -ra '[^A-Za-z0-9_.-]' '-' -- "$rel" | string trim -c '-'
+end
+
 function git-repo-status -a clean --description 'Get git repo status'
     set -l dir "$clean/"
     git -C "$dir" fetch --quiet --all 2>/dev/null
@@ -103,10 +130,7 @@ end
 
 function git-check-sync --description 'Fetch and list repos that are un-synced or lack a remote'
     echo "Fetching remotes and checking status..."
-    set -l dirs
-    for dir in */
-        test -d "$dir/.git"; and set -a dirs (string trim -r -c '/' -- $dir)
-    end
+    set -l dirs (project-dirs)
     test -z "$dirs"; and return 0
     printf "%s\n" $dirs | parallel -j 8 'git-repo-status {}'
 end
@@ -245,7 +269,7 @@ function z --description "Zellij project session manager"
             echo "Error: '$argv[1]' is not a valid directory." >&2
             return 1
         end
-        set -l session_name (basename "$target_dir")
+        set -l session_name (project-session-name "$target_dir")
         zellij attach --create "$session_name" options --default-cwd "$target_dir"
         return
     end
@@ -255,19 +279,17 @@ function z --description "Zellij project session manager"
             set -a dirs "$d"
         end
     end
-    if test -d $HOME/c
-        for d in $HOME/c/*
-            if not contains -- "$d" $dirs
-                set -a dirs "$d"
-            end
+    for d in (project-dirs)
+        if not contains -- "$d" $dirs
+            set -a dirs "$d"
         end
     end
     set -l active_sessions (zellij list-sessions --short --no-formatting 2>/dev/null)
     set -l live_dirs
     set -l inactive_dirs
     for dir in $dirs
-        set -l dir_name (basename "$dir")
-        if contains -- "$dir_name" $active_sessions
+        set -l session_name (project-session-name "$dir")
+        if contains -- "$session_name" $active_sessions
             set -a live_dirs (set_color green)"● "(set_color normal)"$dir"
         else
             set -a inactive_dirs "  $dir"
@@ -280,7 +302,7 @@ function z --description "Zellij project session manager"
     end
     set -l target_dir (string replace -ra '\e\[[0-9;]*[a-zA-Z]' '' -- "$choice" | string trim)
     set -l target_dir (string replace -r '^[● ]{2}' '' -- "$target_dir" | string trim)
-    set -l session_name (basename "$target_dir")
+    set -l session_name (project-session-name "$target_dir")
     zellij attach --create "$session_name" options --default-cwd "$target_dir"
 end
 
@@ -310,8 +332,8 @@ if status is-interactive
     abbr -a l 'eza --long --header --group --git'
     abbr -a ls eza
     abbr -a la 'eza --all --long --header --group --git'
-    abbr -a cl 'clear; cd ~/c && eza --long --header --group --git --git-repos --sort=date'
-    abbr -a clg 'clear; cd ~/c && eza --long --header --group --git --git-repos --sort=date && git-check-sync'
+    abbr -a cl 'clear; cd $XDG_PROJECTS_DIR && eza --tree --level=4 --long --group --header --sort=date $XDG_PROJECTS_DIR'
+    abbr -a clg 'clear; cd $XDG_PROJECTS_DIR && eza --tree --level=4 --long --group --header --sort=date $XDG_PROJECTS_DIR && git-check-sync'
     abbr -a lsize 'eza --all --long --header --group --git --total-size --sort=size'
     abbr -a lt 'eza --tree --long --header --group --git --total-size --sort=size'
     abbr -a ndi 'nix develop -i --keep HOME --keep TERM --keep COLORTERM --keep LANG --keep USER'

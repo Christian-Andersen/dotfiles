@@ -15,7 +15,7 @@ os-update:
     nh os switch -u .
 
 run image="ghcr.io/christian-andersen/dotfiles:latest":
-    podman run --rm -it -v ~/c:/root/c {{image}}
+    podman run --rm -it -v ${XDG_PROJECTS_DIR:-$HOME/Projects}:/root/Projects {{image}}
 
 # Non-NixOS machines (Arch/Ubuntu): standalone home-manager
 [working-directory('nix')]
