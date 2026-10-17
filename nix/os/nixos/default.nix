@@ -36,6 +36,10 @@ in {
   services.tailscale.enable = true;
   services.tailscale.useRoutingFeatures = "client";
 
+  # MagicDNS only knows Tailscale node names, so alias the services hosted on
+  # the `server` node. Forgejo's ROOT_URL is http://forgejo:3000.
+  networking.hosts."100.71.44.108" = ["forgejo"];
+
   # Set your time zone.
   time.timeZone = "Australia/Canberra";
 
