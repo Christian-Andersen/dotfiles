@@ -18,5 +18,9 @@ in {
   # homeConfigurations.christian elsewhere.
   home.sessionVariables.NH_FLAKE = "/home/christian/dotfiles/nix";
 
+  # XDG Projects directory (xdg-user-dirs 0.20+): nested project checkouts
+  # (<host>/<owner>/<repo>/<branch>), consumed by the fish config.
+  home.sessionVariables.XDG_PROJECTS_DIR = "$HOME/Projects";
+
   home.stateVersion = "24.11";
 }

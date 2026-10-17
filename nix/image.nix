@@ -51,6 +51,7 @@ in
       Env = [
         "PATH=/bin"
         "HOME=/root"
+        "XDG_PROJECTS_DIR=/root/Projects"
         "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
         ''NIX_CONFIG=experimental-features = nix-command flakes
 build-users-group =''
