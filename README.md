@@ -6,18 +6,31 @@
 (mkdir -p ~/.config/fish && cd ~/dotfiles && stow --dotfiles home)
 ```
 
-## Prerequisites
-
-- Nix installed and the `nix-daemon` service running
-- `stow` installed via your system package manager
-
 ```sh
 # Clone
 git clone https://github.com/christian/dotfiles ~/dotfiles && cd ~/dotfiles
 
 # Stow configs (fish, etc.)
 just stow
+```
 
+## NixOS machines
+
+The system config lives in `nix/os/nixos` inside the same flake:
+rebuild with
+
+```sh
+just os
+just os-update   # update flake.lock + rebuild
+```
+
+(or `nh os switch` — the default flake is set via `NH_FLAKE`).
+`./nix/os/nixos/hardware-configuration.nix` is machine-specific; keep
+one `os/<hostname>/` directory per machine.
+
+## Non-NixOS machines (Arch/Ubuntu)
+
+```sh
 # First-time: build + activate without nh
 just nix-setup
 
