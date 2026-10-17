@@ -92,7 +92,6 @@
       golangci-lint
       gopls
       gzip
-      harlequin
       huggingface-hub
       hyperfine
       jj
