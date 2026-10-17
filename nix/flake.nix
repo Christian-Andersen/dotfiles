@@ -21,155 +21,40 @@
     ...
   }: let
     system = "x86_64-linux";
+    nixpkgs-settings = import ./nixpkgs.nix;
     pkgs = import nixpkgs {
       inherit system;
-      config = {
-        allowUnfree = true;
-      };
-      # TODO: remove once nixpkgs fixes sqlfmt's pname upstream
-      overlays = [
-        (_: prev: {
-          pythonPackagesExtensions =
-            (prev.pythonPackagesExtensions or [])
-            ++ [
-              (_: pyprev: {
-                sqlfmt = pyprev.sqlfmt.overridePythonAttrs (_: {
-                  pname = "shandy-sqlfmt";
-                });
-              })
-            ];
-        })
-      ];
+      config = nixpkgs-settings.config;
+      overlays = nixpkgs-settings.overlays;
     };
-    huggingface-hub = pkgs.python3Packages.huggingface-hub;
-    tools = with pkgs; [
-      _7zz
-      alejandra
-      antigravity-cli
-      aria2
-      bash
-      bash-language-server
-      bat
-      bat-extras.batdiff
-      bat-extras.batgrep
-      bat-extras.batman
-      bat-extras.batpipe
-      bat-extras.batwatch
-      bat-extras.prettybat
-      biome
-      buf
-      chafa
-      chromium
-      clang-tools
-      cmake-language-server
-      curl
-      dash
-      deadnix
-      delve
-      deno
-      direnv
-      dockerfile-language-server
-      dos2unix
-      dotenv-linter
-      dust
-      emmet-language-server
-      entr
-      eslint_d
-      eza
-      fastfetch
-      fd
-      fish
-      fish-lsp
-      fnm
-      fzf
-      gcc
-      gh
-      git
-      git-lfs
-      git-xet
-      gnutar
-      go
-      golangci-lint
-      gopls
-      gzip
-      huggingface-hub
-      hyperfine
-      jj
-      jq
-      just
-      just-lsp
-      lazydocker
-      lazygit
-      lldb
-      lua-language-server
-      markdownlint-cli
-      marksman
-      mermaid-cli
-      mesonlsp
-      neovim
-      nh
-      ninja
-      nix-direnv
-      nixd
-      nodejs
-      opencode
-      parallel
-      pi-coding-agent
-      prek
-      prettier
-      resvg
-      ripgrep
-      rsync
-      ruff
-      rust-analyzer
-      (lib.lowPrio rustup)
-      shellcheck
-      shfmt
-      sql-formatter
-      sqlite
-      starship
-      statix
-      stow
-      stylua
-      taplo
-      tea
-      tectonic
-      tlrc
-      tokei
-      tree-sitter
-      tuxedo
-      ty
-      unar
-      unzip
-      uv
-      vscode-css-languageserver
-      vscode-json-languageserver
-      vtsls
-      vue-language-server
-      watchexec
-      wget
-      wl-clipboard
-      xdg-utils
-      yaml-language-server
-      yamlfmt
-      yazi
-      yq-go
-      zellij
-      zig
-      zls
-      zoxide
-    ];
+    tools = import ./tools.nix {inherit pkgs;};
+    home-module = import ./home-manager/home.nix;
   in {
     formatter.${system} = pkgs.alejandra;
-    homeConfigurations = {
-      christian = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [
-          ./home.nix
-        ];
-        extraSpecialArgs = {inherit tools;};
-      };
+
+    # Standalone home-manager, used on non-NixOS machines (Arch/Ubuntu):
+    #   nh home switch .
+    homeConfigurations.christian = home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+      modules = [home-module];
     };
+
+    # The NixOS system (home machine; hostname "nixos"): rebind with
+    #   sudo nixos-rebuild switch --flake ~/dotfiles/nix#nixos
+    # (or `nh os switch ~/dotfiles/nix`).
+    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+      inherit system;
+      modules = [
+        ./os/nixos/default.nix
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.christian.imports = [home-module];
+        }
+      ];
+    };
+
     packages.${system} = {
       christian = import ./image.nix {
         inherit pkgs tools;
