@@ -49,6 +49,10 @@ in {
   services.getty.autologinUser = "christian";
   environment.loginShellInit = ''
     if [ -z "''${WAYLAND_DISPLAY-}" ] && [ "$(tty)" = "/dev/tty1" ]; then
+      # The autologin path never sets SHELL, so the /bin/sh (bash) start-umbriel
+      # wrapper stamps it with its own path and the whole graphical session
+      # inherits bash (nvim's :terminal, etc.). Pin it to the login shell first.
+      export SHELL=${config.users.users.christian.shell}/bin/fish
       exec start-umbriel
     fi
   '';
