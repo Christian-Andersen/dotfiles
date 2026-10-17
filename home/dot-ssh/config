@@ -1,0 +1,5 @@
+# Host aliases.
+# `forgejo` is the self-hosted Forgejo running on the Tailscale node `server`,
+# so ssh/git can address it by a short, stable name.
+Host forgejo
+    HostName server
