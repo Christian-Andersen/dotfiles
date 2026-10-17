@@ -3,7 +3,7 @@ default:
     just --list
 
 stow:
-    mkdir -p ~/.config/fish && stow --dotfiles home
+    mkdir -p ~/.config/fish && stow --dotfiles -t "$HOME" home
 
 # NixOS machines: rebuild the system from the flake
 [working-directory('nix')]
