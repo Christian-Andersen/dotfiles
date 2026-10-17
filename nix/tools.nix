@@ -2,6 +2,9 @@
 # (Arch/Ubuntu), the NixOS system's home-manager user, and the dev-container
 # image (image.nix). System-only packages stay in os/nixos/default.nix.
 {pkgs}:
+let
+  huggingface-hub = pkgs.python3Packages.huggingface-hub;
+in
 with pkgs; [
   _7zz
   alejandra
