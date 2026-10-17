@@ -12,7 +12,8 @@ set -gx GOPATH $HOME/.local/share/go
 
 # Projects directory (xdg-user-dirs 0.20+). home-manager sets XDG_PROJECTS_DIR;
 # fall back to ~/Projects for shells without it (e.g. the dev container, which
-# has no home-manager). Projects live nested: <host>/<owner>/<repo>/<branch>.
+# has no home-manager). Layout: <host>/<owner>/<repo>, one checkout per repo;
+# extra branches, only when needed, as sibling <repo>@<branch> worktrees.
 set -q XDG_PROJECTS_DIR; or set -gx XDG_PROJECTS_DIR $HOME/Projects
 
 # Add paths only if they exist to keep PATH clean
