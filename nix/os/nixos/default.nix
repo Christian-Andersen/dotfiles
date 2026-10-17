@@ -30,6 +30,12 @@ in {
   # Configure network connections interactively with nmcli or nmtui.
   networking.networkmanager.enable = true;
 
+  # Tailscale mesh VPN. `client` routing features set loose reverse-path
+  # filtering so exit nodes / subnet routes work; authenticate with
+  # `sudo tailscale up`.
+  services.tailscale.enable = true;
+  services.tailscale.useRoutingFeatures = "client";
+
   # Set your time zone.
   time.timeZone = "Australia/Canberra";
 
