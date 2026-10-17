@@ -14,5 +14,9 @@ in {
 
   home.packages = (import ../tools.nix {inherit pkgs;}) ++ [symlinks];
 
+  # Default flake for `nh`: the NixOS system on NixOS machines,
+  # homeConfigurations.christian elsewhere.
+  home.sessionVariables.NH_FLAKE = "/home/christian/dotfiles/nix";
+
   home.stateVersion = "24.11";
 }

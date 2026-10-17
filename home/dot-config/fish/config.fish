@@ -178,7 +178,9 @@ function tmp --description 'Create and cd into a temp directory'
 end
 
 function u --description 'Update by automatically checking for different package managers'
-    if command -v paru >/dev/null
+    if command -v nixos-rebuild >/dev/null
+        sudo nixos-rebuild switch --upgrade --flake ~/dotfiles/nix
+    else if command -v paru >/dev/null
         PATH=/usr/local/bin:/usr/bin paru -Syu --noconfirm
     else if command -v yay >/dev/null
         yay -Syu --noconfirm

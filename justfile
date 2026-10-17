@@ -5,9 +5,19 @@ default:
 stow:
     mkdir -p ~/.config/fish && stow --dotfiles home
 
+# NixOS machines: rebuild the system from the flake
+[working-directory('nix')]
+os:
+    nh os switch .
+
+[working-directory('nix')]
+os-update:
+    nh os switch -u .
+
 run image="ghcr.io/christian-andersen/dotfiles:latest":
     podman run --rm -it -v ~/c:/root/c {{image}}
 
+# Non-NixOS machines (Arch/Ubuntu): standalone home-manager
 [working-directory('nix')]
 nix-setup:
     nix build --out-link /tmp/dotfiles-activation '.#homeConfigurations.christian.activationPackage'
