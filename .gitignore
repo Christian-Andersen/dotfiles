@@ -1,0 +1,4 @@
+# vim.pack rewrites this per machine (rev bumps) and we don't pin plugin
+# versions: the dev image seeds plugins from nixpkgs vimPlugins instead
+# (see nix/nvim-plugins.nix). Keep it local.
+home/dot-config/nvim/nvim-pack-lock.json
