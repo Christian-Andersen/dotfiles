@@ -41,21 +41,9 @@
       "rev": "f916635dc5ae2f479fbb9ab8184bb9444b62e86c",
       "src": "https://github.com/echasnovski/mini.icons"
     },
-    "neonwave.nvim": {
-      "rev": "2697cf71a4fcc3a30d20616bd45e95072e620701",
-      "src": "https://github.com/miladggg/neonwave.nvim"
-    },
     "nightfox.nvim": {
       "rev": "4dacd3f0185a2227bdf3b6c0975a8f0bf87cac9a",
       "src": "https://github.com/EdenEast/nightfox.nvim"
-    },
-    "nightingale.nvim": {
-      "rev": "0da6ebfaa68d06339647824e96a3bdb1325dbfd3",
-      "src": "https://github.com/xeind/nightingale.nvim"
-    },
-    "noctalia.nvim": {
-      "rev": "2d8d2519b8088817ddc45b644ffaf5052acdadfb",
-      "src": "https://github.com/keremimo/noctalia.nvim"
     },
     "nvim-autopairs": {
       "rev": "3172f40c16563db871a58f20d205c710ad782311",

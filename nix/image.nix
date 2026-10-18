@@ -3,8 +3,9 @@
   tools,
   dotfilesSrc,
 }: let
-  # Pre-seeded vim.pack plugins (pinned by nvim-pack-lock.json) so the first
-  # launch inside the image needs no network. See ./nvim-plugins.nix.
+  # Pre-seeded vim.pack plugins (set from nvim-pack-lock.json, sourced from
+  # nixpkgs' vimPlugins) so the first launch inside the image needs no network.
+  # See ./nvim-plugins.nix.
   nvimPlugins = import ./nvim-plugins.nix {inherit pkgs dotfilesSrc;};
   symlinks = import ./symlinks.nix {inherit pkgs;};
   # Prebuilt tree-sitter parsers (see ./nvim-parsers.nix).
