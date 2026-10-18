@@ -70,6 +70,10 @@ in {
 
   programs.firefox.enable = true;
 
+  # Steam needs system-level udev rules and 32-bit graphics; the module
+  # wires those up for us.
+  programs.steam.enable = true;
+
   # User-level CLI tools and apps are NOT declared here: they come from the
   # shared home-manager module (../tools.nix via home-manager/home.nix),
   # identical to the non-NixOS machines and the dev image.
