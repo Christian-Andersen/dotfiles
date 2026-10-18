@@ -81,6 +81,7 @@ in
     opencode
     parallel
     pi-coding-agent
+    podman-compose
     prek
     prettier
     resvg
