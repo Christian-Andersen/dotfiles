@@ -13,12 +13,15 @@
     {
       devShells.${system}.default = pkgs.mkShell {
         packages = with pkgs; [
+          cargo
+          cargo-audit
+          clippy
           git
           just
           prek
           rust-analyzer
-          rustup
-          cargo-audit
+          rustc
+          rustfmt
         ];
       };
     };
