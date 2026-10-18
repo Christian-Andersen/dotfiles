@@ -74,6 +74,10 @@ in {
   # wires those up for us.
   programs.steam.enable = true;
 
+  # Rootless containers. The module provides the `podman` binary and sets up
+  # the unprivileged user namespaces; `podman-compose` comes from tools.nix.
+  virtualisation.podman.enable = true;
+
   # User-level CLI tools and apps are NOT declared here: they come from the
   # shared home-manager module (../tools.nix via home-manager/home.nix),
   # identical to the non-NixOS machines and the dev image.
