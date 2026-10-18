@@ -3,10 +3,9 @@
   tools,
   dotfilesSrc,
 }: let
-  # Pre-seeded vim.pack plugins (set from nvim-pack-lock.json, sourced from
-  # nixpkgs' vimPlugins) so the first launch inside the image needs no network.
-  # See ./nvim-plugins.nix.
-  nvimPlugins = import ./nvim-plugins.nix {inherit pkgs dotfilesSrc;};
+  # Pre-seeded vim.pack plugins (sourced from nixpkgs' vimPlugins) so the first
+  # launch inside the image needs no network. See ./nvim-plugins.nix.
+  nvimPlugins = import ./nvim-plugins.nix {inherit pkgs;};
   symlinks = import ./symlinks.nix {inherit pkgs;};
   # Prebuilt tree-sitter parsers (see ./nvim-parsers.nix).
   nvimParsers = import ./nvim-parsers.nix {inherit pkgs;};
@@ -54,8 +53,8 @@ in
         "HOME=/root"
         "XDG_PROJECTS_DIR=/root/Projects"
         "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
-        ''NIX_CONFIG=experimental-features = nix-command flakes
-build-users-group =''
+        ''          NIX_CONFIG=experimental-features = nix-command flakes
+          build-users-group =''
       ];
       WorkingDir = "/root";
     };

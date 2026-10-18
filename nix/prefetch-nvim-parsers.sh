@@ -20,7 +20,7 @@ OUTFILE="nvim-parsers.json"
 
 # Build the vendored nvim-treesitter to read install_info at exactly the
 # locked revision (cached after the first run).
-VENDOR="$(nix build --impure --expr "let f = builtins.getFlake \"path:$HERE\"; pkgs = import f.inputs.nixpkgs { system = \"x86_64-linux\"; }; in import $HERE/nvim-plugins.nix { inherit pkgs; dotfilesSrc = $HERE/..; }" --print-out-paths --no-link | tail -1)/opt/nvim-treesitter"
+VENDOR="$(nix build --impure --expr "let f = builtins.getFlake \"path:$HERE\"; pkgs = import f.inputs.nixpkgs { system = \"x86_64-linux\"; }; in import $HERE/nvim-plugins.nix { inherit pkgs; }" --print-out-paths --no-link | tail -1)/opt/nvim-treesitter"
 
 python3 - "$INIT" "$OUTFILE" "$REFRESH" "$VENDOR" <<'EOF'
 import json
