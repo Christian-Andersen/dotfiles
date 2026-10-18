@@ -204,7 +204,7 @@ end
 
 function u --description 'Update by automatically checking for different package managers'
     if command -v nixos-rebuild >/dev/null
-        sudo nixos-rebuild switch --upgrade --flake ~/dotfiles/nix
+        nh os switch -u ~/dotfiles/nix
     else if command -v paru >/dev/null
         PATH=/usr/local/bin:/usr/bin paru -Syu --noconfirm
     else if command -v yay >/dev/null
