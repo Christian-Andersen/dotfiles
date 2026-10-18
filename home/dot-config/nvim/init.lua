@@ -328,10 +328,7 @@ vim.pack.add({
 	"https://github.com/rebelot/kanagawa.nvim",
 	{ src = "https://github.com/rose-pine/neovim", name = "rose-pine" },
 	"https://github.com/sainnhe/gruvbox-material",
-	"https://github.com/xeind/nightingale.nvim",
 	"https://github.com/EdenEast/nightfox.nvim",
-	"https://github.com/miladggg/neonwave.nvim",
-	"https://github.com/keremimo/noctalia.nvim",
 	-- `confirm = false`: install missing plugins without prompting, so the
 	-- first launch (including inside a fresh container) never blocks on input.
 }, { confirm = true })
@@ -1377,11 +1374,7 @@ vim.fn.sign_define("DapStopped", { text = "▶️", texthl = "", linehl = "", nu
 
 -- Theme
 local oled = vim.env.NVIM_OLED == "1"
-require("neonwave").setup({
-	intensity = "neon",
-	background = "dark",
-})
-local theme = vim.env.NVIM_THEME or "neonwave"
+local theme = vim.env.NVIM_THEME or "tokyonight"
 if not pcall(vim.cmd.colorscheme, theme) then
 	vim.notify("Failed to load theme: " .. theme, vim.log.levels.WARN)
 end
