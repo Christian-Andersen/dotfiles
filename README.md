@@ -8,7 +8,7 @@
 
 ```sh
 # Clone
-git clone https://github.com/christian/dotfiles ~/dotfiles && cd ~/dotfiles
+git clone https://github.com/Christian-Andersen/dotfiles ~/dotfiles && cd ~/dotfiles
 
 # Stow configs (fish, etc.)
 just stow
@@ -48,5 +48,5 @@ nix build ~/dotfiles/nix#christian --out-link /tmp/dotfiles-image && podman load
 
 podman run --rm -it \
   -v "${XDG_PROJECTS_DIR:-$HOME/Projects}":/root/Projects \
-  dev
+  dotfiles:latest
 ```
