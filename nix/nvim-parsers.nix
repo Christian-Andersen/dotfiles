@@ -14,7 +14,7 @@
       name = "nvim-ts-parser-${lang}";
       src = pkgs.fetchzip {
         url = tarball;
-        sha256 = spec.sha256;
+        inherit (spec) sha256;
       };
       nativeBuildInputs = [pkgs.tree-sitter];
       buildPhase = ''

@@ -101,7 +101,7 @@ end
 function project-session-name -a dir --description 'Unique zellij session name for a project path'
     set -l root (projects-root)
     set -l rel (string replace -- "$root/" '' -- "$dir")
-    string replace -ra '[^A-Za-z0-9_.-]' '-' -- "$rel" | string trim -c '-'
+    string replace -ra '[^A-Za-z0-9_.-]' - -- "$rel" | string trim -c -
 end
 
 function git-repo-status -a clean --description 'Get git repo status'

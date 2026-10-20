@@ -8,7 +8,7 @@ set -euo pipefail
 
 REFRESH=0
 if [[ "${1:-}" == "--refresh" ]]; then
-  REFRESH=1
+	REFRESH=1
 fi
 
 # Run from this script's directory (nix/) regardless of caller cwd.

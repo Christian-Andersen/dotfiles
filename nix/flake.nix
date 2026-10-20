@@ -24,13 +24,35 @@
     nixpkgs-settings = import ./nixpkgs.nix;
     pkgs = import nixpkgs {
       inherit system;
-      config = nixpkgs-settings.config;
-      overlays = nixpkgs-settings.overlays;
+      inherit (nixpkgs-settings) config;
+      inherit (nixpkgs-settings) overlays;
     };
     tools = import ./tools.nix {inherit pkgs;};
     home-module = import ./home-manager/home.nix;
   in {
     formatter.${system} = pkgs.alejandra;
+
+    # Minimal tool set for `prek` hooks, including in CI before the image build.
+    devShells.${system}.lint = pkgs.mkShell {
+      packages = with pkgs; [
+        alejandra
+        bash
+        deadnix
+        fish
+        git
+        go
+        just
+        markdownlint-cli
+        prek
+        ruff
+        shellcheck
+        shfmt
+        statix
+        stylua
+        taplo
+        yamlfmt
+      ];
+    };
 
     # Standalone home-manager, used on non-NixOS machines (Arch/Ubuntu):
     #   nh home switch .
