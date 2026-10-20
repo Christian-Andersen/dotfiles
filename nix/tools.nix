@@ -19,6 +19,7 @@ in
     bat-extras.batwatch
     bat-extras.prettybat
     biome
+    btop
     buf
     cargo
     chafa
@@ -79,6 +80,8 @@ in
     nodejs
     noctalia
     opencode
+    openssh
+    openssl
     parallel
     pi-coding-agent
     podman-compose
