@@ -88,7 +88,34 @@ in {
   hardware.nvidia = {
     modesetting.enable = true;
     open = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+
+    # Workaround for nixpkgs#576412 / patchelf#674: the nvidia-x11 builder
+    # patches its blob binaries with a *combined* patchelf invocation
+    # (`--interpreter … --set-rpath …`), and since patchelf 0.19.2 that
+    # produces overlapping PT_LOAD segments — .dynamic ends up mapped
+    # read-only and ld.so dies writing DT_DEBUG when starting nvidia-smi
+    # (SEGV_ACCERR in dl_main). The unpatched originals ship next to the
+    # patched binaries (`origBin/`), so re-patch them here with the two
+    # operations as separate patchelf calls, which comes out healthy.
+    # Drop once builder.sh in the locked nixpkgs splits the invocation.
+    package = let
+      base = config.boot.kernelPackages.nvidiaPackages.stable;
+    in
+      base.overrideAttrs (old: {
+        nativeBuildInputs = (old.nativeBuildInputs or []) ++ [pkgs.patchelf];
+        postFixup =
+          (old.postFixup or "")
+          + ''
+            for i in nvidia-cuda-mps-control nvidia-cuda-mps-server nvidia-smi nvidia-debugdump nvidia-powerd; do
+              if [ -e "$bin/origBin/$i" ]; then
+                cp "$bin/origBin/$i" "$bin/bin/$i"
+                chmod +w "$bin/bin/$i"
+                patchelf --set-rpath "$out/lib:$libPath" "$bin/bin/$i"
+                patchelf --interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" "$bin/bin/$i"
+              fi
+            done
+          '';
+      });
   };
 
   # User-level CLI tools and apps are NOT declared here: they come from the
