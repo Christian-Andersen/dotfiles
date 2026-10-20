@@ -10,7 +10,8 @@
   # Prebuilt tree-sitter parsers (see ./nvim-parsers.nix).
   nvimParsers = import ./nvim-parsers.nix {inherit pkgs;};
   homeDir = pkgs.runCommand "setup-dotfiles" {buildInputs = [pkgs.stow];} ''
-    mkdir -p $out/root/dotfiles $out/tmp $out/etc
+    mkdir -p $out/root/dotfiles $out/tmp $out/etc $out/usr/bin
+    ln -s ${pkgs.coreutils}/bin/env $out/usr/bin/env
     echo "root:x:0:0::/root:${pkgs.fish}/bin/fish" > $out/etc/passwd
     echo "root:x:0:" > $out/etc/group
     cp -r ${dotfilesSrc}/. $out/root/dotfiles/
