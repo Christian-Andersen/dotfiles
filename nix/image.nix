@@ -11,6 +11,10 @@
   nvimParsers = import ./nvim-parsers.nix {inherit pkgs;};
   homeDir = pkgs.runCommand "setup-dotfiles" {buildInputs = [pkgs.stow];} ''
     mkdir -p $out/root/dotfiles $out/tmp $out/etc $out/usr/bin
+    # Keep stow from folding ~/.local into the dotfiles tree: the nvim
+    # plugin/parser seeds below would otherwise write into the source copy and
+    # dockerTools would duplicate that tree in the image.
+    mkdir -p $out/root/.local
     ln -s ${pkgs.coreutils}/bin/env $out/usr/bin/env
     echo "root:x:0:0::/root:${pkgs.fish}/bin/fish" > $out/etc/passwd
     echo "root:x:0:" > $out/etc/group
