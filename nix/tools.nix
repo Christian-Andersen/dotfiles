@@ -19,6 +19,7 @@ in
     bat-extras.batwatch
     bat-extras.prettybat
     biome
+    brightnessctl
     btop
     buf
     cargo
@@ -56,6 +57,7 @@ in
     gnutar
     go
     golangci-lint
+    grim
     gopls
     gzip
     huggingface-hub
@@ -66,6 +68,7 @@ in
     just-lsp
     lazydocker
     lazygit
+    libnotify
     lldb
     lua-language-server
     markdownlint-cli
@@ -87,6 +90,7 @@ in
     podman-compose
     prek
     prettier
+    pulseaudio
     (python3.withPackages (ps: [ps.pyyaml]))
     resvg
     ripgrep
@@ -97,12 +101,16 @@ in
     rustfmt
     shellcheck
     shfmt
+    slurp
+    spotify-player
     sql-formatter
     sqlite
     starship
     statix
     stow
     stylua
+    swaybg
+    swayidle
     taplo
     tea
     tectonic
