@@ -983,6 +983,8 @@ vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()
 end, { desc = "Format and Save" })
 
 -- Lint
+-- dotenv-linter: skip UnorderedKey (no alphabetization requirement)
+require("lint").linters.dotenv_linter.args = { "check", "--quiet", "--ignore-checks", "UnorderedKey" }
 require("lint").linters_by_ft = {
 	javascript = { "eslint_d", "biomejs" },
 	typescript = { "eslint_d", "biomejs" },
