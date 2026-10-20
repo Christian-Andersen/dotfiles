@@ -16,6 +16,10 @@ set -gx GOPATH $HOME/.local/share/go
 # extra branches, only when needed, as sibling <repo>@<branch> worktrees.
 set -q XDG_PROJECTS_DIR; or set -gx XDG_PROJECTS_DIR $HOME/Projects
 
+# Default flake for `nh`. home-manager sets NH_FLAKE for login shells, but fish
+# only reads this stowed config, so set it here too (override to use another).
+set -q NH_FLAKE; or set -gx NH_FLAKE $HOME/dotfiles/nix
+
 # Add paths only if they exist to keep PATH clean
 set -l extra_paths \
     ~/.nix-profile/bin \

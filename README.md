@@ -24,7 +24,7 @@ just os
 just os-update   # update flake.lock + rebuild
 ```
 
-(or `nh os switch` — the default flake is set via `NH_FLAKE`).
+(or `nh os switch` — `NH_FLAKE` points at `~/dotfiles/nix`).
 `./nix/os/nixos/hardware-configuration.nix` is machine-specific; keep
 one `os/<hostname>/` directory per machine.
 
