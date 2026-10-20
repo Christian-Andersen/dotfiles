@@ -13,8 +13,10 @@
     mkdir -p $out/root/dotfiles $out/tmp $out/etc $out/usr/bin
     # Keep stow from folding ~/.local into the dotfiles tree: the nvim
     # plugin/parser seeds below would otherwise write into the source copy and
-    # dockerTools would duplicate that tree in the image.
-    mkdir -p $out/root/.local
+    # dockerTools would duplicate that tree in the image. A real
+    # ~/.config/nvim also lets us drop the generated lockfile in beside the
+    # stowed init.lua.
+    mkdir -p $out/root/.local $out/root/.config/nvim
     ln -s ${pkgs.coreutils}/bin/env $out/usr/bin/env
     echo "root:x:0:0::/root:${pkgs.fish}/bin/fish" > $out/etc/passwd
     echo "root:x:0:" > $out/etc/group
@@ -22,6 +24,7 @@
     chmod -R u+w $out/root/dotfiles
     cd $out/root/dotfiles
     stow --dotfiles home
+    cp ${nvimPlugins.lock} $out/root/.config/nvim/nvim-pack-lock.json
     mkdir -p $out/root/.local/share/nvim/site/pack/core
     cp -r ${nvimPlugins}/opt $out/root/.local/share/nvim/site/pack/core/opt
     mkdir -p $out/root/.local/share/nvim/site
