@@ -53,6 +53,7 @@ in
       Env = [
         "PATH=/bin"
         "HOME=/root"
+        "SHELL=${pkgs.fish}/bin/fish"
         "XDG_PROJECTS_DIR=/root/Projects"
         "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
         ''          NIX_CONFIG=experimental-features = nix-command flakes
