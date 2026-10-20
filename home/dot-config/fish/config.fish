@@ -86,7 +86,7 @@ function projects-root --description 'Resolve the projects directory'
     end
 end
 
-function project-dirs --description 'List git repo roots under the projects directory'
+function projects --description 'List git repo roots under the projects directory'
     set -l root (projects-root)
     test -d "$root"; or return 0
     for gitdir in (fd --hidden --max-depth 6 --type d --type f '^\.git$' "$root" 2>/dev/null)
@@ -131,7 +131,7 @@ end
 
 function git-check-sync --description 'Fetch and list repos that are un-synced or lack a remote'
     echo "Fetching remotes and checking status..."
-    set -l dirs (project-dirs)
+    set -l dirs (projects)
     test -z "$dirs"; and return 0
     printf "%s\n" $dirs | parallel -j 8 'git-repo-status {}'
 end
@@ -142,12 +142,6 @@ end
 
 function ?? --description 'Search Google AI with a query'
     xdg-open "https://www.google.com/search?udm=50&q="(string escape --style=url "$argv")
-end
-
-function para --description 'simple parallel over directories in this directory'
-    set -l dirs */
-    test -z "$dirs"; and return 0
-    parallel -j 8 -- 'cd "{}" &&' $argv ::: $dirs
 end
 
 function notme --description "Find all files (including hidden/ignored) not owned by current user or group"
@@ -280,7 +274,7 @@ function z --description "Zellij project session manager"
             set -a dirs "$d"
         end
     end
-    for d in (project-dirs)
+    for d in (projects)
         if not contains -- "$d" $dirs
             set -a dirs "$d"
         end
