@@ -32,6 +32,8 @@ in
 
     copyToRoot = pkgs.buildEnv {
       name = "image-root";
+      # ncurses and ghostty both ship share/terminfo/g/ghostty.
+      ignoreCollisions = true;
       paths =
         tools
         ++ [symlinks]
