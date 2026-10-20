@@ -77,6 +77,20 @@ in {
   # the unprivileged user namespaces; `podman-compose` comes from tools.nix.
   virtualisation.podman.enable = true;
 
+  # NVIDIA RTX 3090: proprietary driver on the open kernel modules
+  # (supported for Turing and newer; GA102 is Ampere). This is what
+  # provides nvidia-smi and puts the driver libs (libnvidia-ml for NVML,
+  # Vulkan, EGL, ...) into /run/opengl-driver, where they are on the
+  # system's ld.so cache — so user-level tools like btop dlopen them fine
+  # even though btop itself builds from the shared tools.nix without a
+  # driver dependency.
+  services.xserver.videoDrivers = ["nvidia"];
+  hardware.nvidia = {
+    modesetting.enable = true;
+    open = true;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+
   # User-level CLI tools and apps are NOT declared here: they come from the
   # shared home-manager module (../tools.nix via home-manager/home.nix),
   # identical to the non-NixOS machines and the dev image.
