@@ -44,7 +44,8 @@ just nix-update
 ## Dev Container
 
 ```sh
-nix build ~/dotfiles/nix#christian --out-link /tmp/dotfiles-image && podman load < /tmp/dotfiles-image
+nix build ~/dotfiles/nix#christian --out-link /tmp/dotfiles-image \
+  && podman load < /tmp/dotfiles-image
 
 podman run --rm -it \
   -v "${XDG_PROJECTS_DIR:-$HOME/Projects}":/root/Projects \

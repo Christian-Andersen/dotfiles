@@ -1,6 +1,18 @@
 [private]
 default:
-    just --list
+    @just --list
+
+check:
+    prek run --all-files --show-diff-on-failure \
+        --skip boilerplate/frontend \
+        --skip boilerplate/go \
+        --skip boilerplate/python \
+        --skip boilerplate/rust \
+        --skip boilerplate/zig
+
+# CI also fails if a fixing hook had to rewrite anything.
+ci: check
+    git diff --exit-code
 
 stow:
     mkdir -p ~/.config/fish && stow --dotfiles -t "$HOME" home
@@ -15,7 +27,7 @@ os-update:
     nh os switch -u .
 
 run image="ghcr.io/christian-andersen/dotfiles:latest":
-    podman run --rm -it -v ${XDG_PROJECTS_DIR:-$HOME/Projects}:/root/Projects {{image}}
+    podman run --rm -it -v ${XDG_PROJECTS_DIR:-$HOME/Projects}:/root/Projects {{ image }}
 
 # Non-NixOS machines (Arch/Ubuntu): standalone home-manager
 [working-directory('nix')]

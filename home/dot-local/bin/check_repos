@@ -226,7 +226,9 @@ def load_structured(
 def check_required_files(repo: Repo) -> list[Violation]:
     """Every repo carries the shared skeleton."""
     return [
-        Violation("required-files", f"missing {name}") for name in REQUIRED_FILES if not (repo.path / name).is_file()
+        Violation("required-files", f"missing {name}")
+        for name in REQUIRED_FILES
+        if not (repo.path / name).is_file()
     ]
 
 
@@ -236,7 +238,11 @@ def check_justfile(repo: Repo) -> list[Violation]:
     if text is None:
         return []
     found = set(JUST_RECIPE_RE.findall(text)) | set(JUST_ALIAS_RE.findall(text))
-    return [Violation("justfile", f"no '{recipe}' recipe") for recipe in REQUIRED_JUST_RECIPES if recipe not in found]
+    return [
+        Violation("justfile", f"no '{recipe}' recipe")
+        for recipe in REQUIRED_JUST_RECIPES
+        if recipe not in found
+    ]
 
 
 def check_renovate(repo: Repo) -> list[Violation]:
@@ -262,7 +268,9 @@ def check_renovate(repo: Repo) -> list[Violation]:
 
     present = set(iter_keys(config))
     out.extend(
-        Violation("renovate-keys", f"forbidden key '{key}'") for key in FORBIDDEN_RENOVATE_KEYS if key in present
+        Violation("renovate-keys", f"forbidden key '{key}'")
+        for key in FORBIDDEN_RENOVATE_KEYS
+        if key in present
     )
 
     out.extend(check_managers(repo, config))
@@ -333,7 +341,9 @@ def check_uses(relative: str, document: object) -> list[Violation]:
         if not sep:
             name, ref = uses, ""
         if FORBIDDEN_ACTION_RE.match(name):
-            out.append(Violation("actions", f"{relative}: '{uses}' duplicates the flake"))
+            out.append(
+                Violation("actions", f"{relative}: '{uses}' duplicates the flake")
+            )
             continue
         for suffix, expected in PINNED_ACTIONS:
             if not name.endswith(suffix):
@@ -379,7 +389,11 @@ def check_prek(repo: Repo) -> list[Violation]:
     if config is None:
         return []
     found = set(iter_strings_under(config, "id"))
-    return [Violation("prek-hooks", f"missing hook '{hook}'") for hook in REQUIRED_PREK_HOOKS if hook not in found]
+    return [
+        Violation("prek-hooks", f"missing hook '{hook}'")
+        for hook in REQUIRED_PREK_HOOKS
+        if hook not in found
+    ]
 
 
 CHECKS: tuple[Any, ...] = (
