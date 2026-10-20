@@ -84,6 +84,7 @@ in
     podman-compose
     prek
     prettier
+    (python3.withPackages (ps: [ps.pyyaml]))
     resvg
     ripgrep
     rsync
