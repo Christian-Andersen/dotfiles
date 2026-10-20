@@ -15,7 +15,8 @@ in {
   home.packages = (import ../tools.nix {inherit pkgs;}) ++ [symlinks];
 
   # Default flake for `nh`: the NixOS system on NixOS machines,
-  # homeConfigurations.christian elsewhere.
+  # homeConfigurations.christian elsewhere. Fish sets this in its stowed
+  # config too, because home-manager session vars aren't sourced by fish.
   home.sessionVariables.NH_FLAKE = "/home/christian/dotfiles/nix";
 
   # XDG Projects directory (xdg-user-dirs 0.20+): one checkout per repo
