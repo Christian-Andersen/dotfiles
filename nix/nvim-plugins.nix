@@ -95,4 +95,6 @@
       sources;
   });
 in
-  package // {inherit lock;}
+  assert pkgs.lib.assertMsg (pkgs.lib.attrNames plugins == pkgs.lib.attrNames sources)
+  "nvim-plugins.nix: every plugin needs a matching source URL for the lockfile";
+    package // {inherit lock;}
