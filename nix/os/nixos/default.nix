@@ -42,6 +42,12 @@ in {
   # Set your time zone.
   time.timeZone = "Australia/Canberra";
 
+  # uv's downloaded CPython builds are dynamically linked against generic
+  # glibc and can't run on NixOS; python interpreters come from tools.nix
+  # instead. NixOS-only: the standalone home-manager env (work) and the dev
+  # image keep uv's auto-download.
+  environment.variables.UV_PYTHON_DOWNLOADS = "never";
+
   # Launch Umbriel on boot without a display manager: autologin on tty1 and
   # exec the compositor from the login shell.
   programs.umbriel.enable = true;
