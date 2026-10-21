@@ -91,6 +91,13 @@ in
     prettier
     pulseaudio
     (python3.withPackages (ps: [ps.pyyaml]))
+    # Extra interpreters for uv on NixOS, where UV_PYTHON_DOWNLOADS is off
+    # (downloaded CPython builds are dynamically linked and won't run).
+    python314
+    python315
+    # Free-threaded ("t", GIL-less) builds.
+    (python314.override {enableGIL = false;})
+    (python315.override {enableGIL = false;})
     resvg
     ripgrep
     rsync
