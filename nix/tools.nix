@@ -20,7 +20,6 @@ in
     bat-extras.prettybat
     biome
     brightnessctl
-    btop
     buf
     cargo
     chafa

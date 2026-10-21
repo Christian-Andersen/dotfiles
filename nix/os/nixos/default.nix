@@ -118,6 +118,10 @@ in {
       });
   };
 
+  # btop lives at system level (user asked to test this): gets its runtime
+  # NVML runpath via the btop overlay in nixpkgs.nix either way.
+  environment.systemPackages = [pkgs.btop];
+
   # User-level CLI tools and apps are NOT declared here: they come from the
   # shared home-manager module (../tools.nix via home-manager/home.nix),
   # identical to the non-NixOS machines and the dev image.
