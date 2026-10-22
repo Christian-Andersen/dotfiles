@@ -247,6 +247,12 @@ function remove-project --description 'Audited rm -rf replacement for a repo che
         return 1
     end
 
+    # Don't be sitting inside the tree when it goes away: a deleted cwd
+    # breaks every subsequent command in the running shell.
+    builtin cd (path dirname "$target"); or begin
+        echo "Error: could not leave the target directory." >&2
+        return 1
+    end
     echo "Removing $target ..."
     rm -rf -- "$target"
     echo "Removed."
