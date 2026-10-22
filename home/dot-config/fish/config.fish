@@ -329,8 +329,8 @@ if status is-interactive
     abbr -a l 'eza --long --header --group --git'
     abbr -a ls eza
     abbr -a la 'eza --all --long --header --group --git'
-    abbr -a cl 'clear; cd $XDG_PROJECTS_DIR && eza --tree --level=1 --long --group --header --sort=date $XDG_PROJECTS_DIR'
-    abbr -a clg 'clear; cd $XDG_PROJECTS_DIR && eza --tree --level=1 --long --group --header --sort=date $XDG_PROJECTS_DIR && git-check-sync'
+    abbr -a cl 'clear; cd $XDG_PROJECTS_DIR && eza --long --group --header --git-repos --sort=date $XDG_PROJECTS_DIR'
+    abbr -a clg 'clear; cd $XDG_PROJECTS_DIR && eza --long --group --header --git-repos --sort=date $XDG_PROJECTS_DIR && git-check-sync'
     abbr -a lsize 'eza --all --long --header --group --git --total-size --sort=size'
     abbr -a lt 'eza --tree --long --header --group --git --total-size --sort=size'
     abbr -a ndi 'nix develop -i --keep HOME --keep TERM --keep COLORTERM --keep LANG --keep USER'
