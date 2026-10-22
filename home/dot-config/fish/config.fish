@@ -12,8 +12,8 @@ set -gx GOPATH $HOME/.local/share/go
 
 # Projects directory (xdg-user-dirs 0.20+). home-manager sets XDG_PROJECTS_DIR;
 # fall back to ~/Projects for shells without it (e.g. the dev container, which
-# has no home-manager). Layout: <host>/<owner>/<repo>, one checkout per repo;
-# extra branches, only when needed, as sibling <repo>@<branch> worktrees.
+# has no home-manager). Layout: flat <repo> dirs, one checkout per repo; extra
+# branches, only when needed, as sibling <repo>@<branch> worktrees.
 set -q XDG_PROJECTS_DIR; or set -gx XDG_PROJECTS_DIR $HOME/Projects
 
 # Default flake for `nh`. home-manager sets NH_FLAKE for login shells, but fish
@@ -90,11 +90,9 @@ function projects-root --description 'Resolve the projects directory'
     end
 end
 
-function projects --description 'List git repo roots under the projects directory'
-    set -l root (projects-root)
-    test -d "$root"; or return 0
-    for gitdir in (fd --hidden --max-depth 6 --type d --type f '^\.git$' "$root" 2>/dev/null)
-        path dirname "$gitdir"
+function projects --description 'List git repos sitting directly in the current directory'
+    for dir in */
+        test -e "$dir.git"; and echo (path resolve "$dir")
     end
 end
 
@@ -133,7 +131,7 @@ function git-repo-status -a clean --description 'Get git repo status'
     end
 end
 
-function git-check-sync --description 'Fetch and list repos that are un-synced or lack a remote'
+function git-check-sync --description 'Fetch and list repos in the current directory that are un-synced or lack a remote'
     echo "Fetching remotes and checking status..."
     set -l dirs (projects)
     test -z "$dirs"; and return 0
@@ -331,8 +329,8 @@ if status is-interactive
     abbr -a l 'eza --long --header --group --git'
     abbr -a ls eza
     abbr -a la 'eza --all --long --header --group --git'
-    abbr -a cl 'clear; cd $XDG_PROJECTS_DIR && eza --tree --level=3 --long --group --header --sort=date $XDG_PROJECTS_DIR'
-    abbr -a clg 'clear; cd $XDG_PROJECTS_DIR && eza --tree --level=3 --long --group --header --sort=date $XDG_PROJECTS_DIR && git-check-sync'
+    abbr -a cl 'clear; cd $XDG_PROJECTS_DIR && eza --tree --level=1 --long --group --header --sort=date $XDG_PROJECTS_DIR'
+    abbr -a clg 'clear; cd $XDG_PROJECTS_DIR && eza --tree --level=1 --long --group --header --sort=date $XDG_PROJECTS_DIR && git-check-sync'
     abbr -a lsize 'eza --all --long --header --group --git --total-size --sort=size'
     abbr -a lt 'eza --tree --long --header --group --git --total-size --sort=size'
     abbr -a ndi 'nix develop -i --keep HOME --keep TERM --keep COLORTERM --keep LANG --keep USER'
