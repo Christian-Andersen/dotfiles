@@ -90,8 +90,9 @@ function projects-root --description 'Resolve the projects directory'
     end
 end
 
-function projects --description 'List git repos sitting directly in the current directory'
-    for dir in */
+function projects --description 'List git repos in the projects directory, from any cwd'
+    set -l root (projects-root)
+    for dir in $root/*/
         test -e "$dir.git"; and echo (path resolve "$dir")
     end
 end
@@ -131,7 +132,7 @@ function git-repo-status -a clean --description 'Get git repo status'
     end
 end
 
-function git-check-sync --description 'Fetch and list repos in the current directory that are un-synced or lack a remote'
+function git-check-sync --description 'Fetch and list project repos that are un-synced or lack a remote (the -j 8 caps concurrent fetches)'
     echo "Fetching remotes and checking status..."
     set -l dirs (projects)
     test -z "$dirs"; and return 0
