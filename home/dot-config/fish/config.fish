@@ -10,11 +10,11 @@ set -gx UV_MANAGED_PYTHON true
 set -gx DE generic
 set -gx GOPATH $HOME/.local/share/go
 
-# Projects directory (xdg-user-dirs 0.20+). home-manager sets XDG_PROJECTS_DIR;
-# fall back to ~/Projects for shells without it (e.g. the dev container, which
-# has no home-manager). Layout: flat <repo> dirs, one checkout per repo; extra
-# branches, only when needed, as sibling <repo>@<branch> worktrees.
-set -q XDG_PROJECTS_DIR; or set -gx XDG_PROJECTS_DIR $HOME/Projects
+# Projects directory. home-manager sets XDG_PROJECTS_DIR; fall back to ~/c
+# for shells that don't get it (envs without home-manager, e.g. the dev image).
+# Layout: flat <repo> dirs, one checkout per repo; extra branches, only when
+# needed, as sibling <repo>@<branch> worktrees.
+set -q XDG_PROJECTS_DIR; or set -gx XDG_PROJECTS_DIR $HOME/c
 
 # Default flake for `nh`. home-manager sets NH_FLAKE for login shells, but fish
 # only reads this stowed config, so set it here too (override to use another).

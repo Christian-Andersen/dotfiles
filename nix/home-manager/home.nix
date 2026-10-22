@@ -19,9 +19,9 @@ in {
   # config too, because home-manager session vars aren't sourced by fish.
   home.sessionVariables.NH_FLAKE = "/home/christian/dotfiles/nix";
 
-  # XDG Projects directory (xdg-user-dirs 0.20+): one checkout per repo
-  # (<host>/<owner>/<repo>), consumed by the fish config.
-  home.sessionVariables.XDG_PROJECTS_DIR = "$HOME/Projects";
+  # XDG Projects directory (xdg-user-dirs 0.20+): one flat checkout per
+  # repo (<repo>), consumed by the fish config.
+  home.sessionVariables.XDG_PROJECTS_DIR = "$HOME/c";
 
   home.stateVersion = "24.11";
 }
