@@ -129,7 +129,7 @@ in {
   environment.systemPackages = [pkgs.btop];
 
   # User-level CLI tools and apps are NOT declared here: they come from the
-  # shared home-manager module (../tools.nix via home-manager/home.nix),
+  # shared home-manager module (../../tools.nix via ../../home-manager/home.nix),
   # identical to the non-NixOS machines and the dev image.
 
   # Enable the OpenSSH daemon.
