@@ -139,6 +139,119 @@ function git-check-sync --description 'Fetch and list project repos that are un-
     printf "%s\n" $dirs | parallel -j 8 'git-repo-status {}'
 end
 
+function remove-project --description 'Audited rm -rf replacement for a repo checkout: refuses anything unsaved, interactive git clean, then removes'
+    if test (count $argv) -ne 1
+        echo "Usage: remove-project <path>" >&2
+        return 1
+    end
+    set -l target (path resolve -- $argv[1] 2>/dev/null)
+    if test -z "$target"; or not test -d "$target"
+        echo "Error: '$argv[1]' is not a directory." >&2
+        return 1
+    end
+    if not test -e "$target/.git"
+        echo "Error: '$target' has no .git here - refusing to remove a non-repo." >&2
+        return 1
+    end
+    set -l root (path normalize (projects-root))
+    if test (path dirname "$target") != "$root"
+        echo "Error: '$target' is not directly under $root." >&2
+        return 1
+    end
+
+    # Everything below refuses on any sign of unsaved data. A remote and an
+    # upstream branch must exist so "backed up" is provable at all.
+    set -l remotes (git -C "$target" remote)
+    if test (count $remotes) -eq 0
+        echo "Error: no remote - nothing proves this checkout is backed up." >&2
+        return 1
+    end
+    if test -z (git -C "$target" rev-parse --abbrev-ref '@{u}' 2>/dev/null)
+        echo "Error: no upstream tracking branch." >&2
+        return 1
+    end
+
+    # Linked worktrees counting this repo
+    set -l wt_count (git -C "$target" worktree list --porcelain | string match --regex '^worktree ' | count)
+    if test -d "$target/.git"; and test "$wt_count" -gt 1
+        echo "Error: sibling worktrees reference this repo - remove them first." >&2
+        return 1
+    end
+
+    # Uncommitted changes to tracked files (untracked/ignored are handled by
+    # the interactive git clean below, not refused here)
+    set -l dirty (git -C "$target" status --porcelain --untracked-files=no | count)
+    if test "$dirty" -ne 0
+        echo "Error: $dirty tracked file(s) with uncommitted changes." >&2
+        return 1
+    end
+
+    # Stashes
+    if test (count (git -C "$target" stash list)) -ne 0
+        echo "Error: stash list is not empty." >&2
+        return 1
+    end
+
+    # Commits unreachable from any remote ref, across all local branches.
+    # Squash-merged branches show up here as false positives - eyeball the
+    # sample and handle by hand if that's the case.
+    set -l local (git -C "$target" rev-list --branches --not --remotes 2>/dev/null)
+    set -l local_count (count $local)
+    if test "$local_count" -gt 0
+        echo "Error: $local_count local-only commit(s) - not on any remote:" >&2
+        git -C "$target" log --branches --not --remotes --oneline | head -5 >&2
+        return 1
+    end
+
+    # Tags whose targets only exist locally
+    set -l tags (git -C "$target" tag)
+    if test (count $tags) -gt 0
+        set -l rtags
+        for r in $remotes
+            set -a rtags (git -C "$target" ls-remote --tags "$r" | string replace -r '.*refs/tags/' '' | string match -v -- '*^{*}')
+        end
+        for t in $tags
+            if not contains -- "$t" $rtags
+                echo "Error: tag '$t' is not on any remote." >&2
+                return 1
+            end
+        end
+    end
+
+    # Submodules (their content may be nowhere else)
+    if test (count (git -C "$target" submodule status 2>/dev/null)) -ne 0
+        echo "Error: submodules present - their content is not proven safe." >&2
+        return 1
+    end
+
+    # Nested git repos (vendored checkouts): creation histories not pushed to
+    # any remote, and git's clean dry-run silently skips them
+    set -l inner_gits (find "$target" -mindepth 2 -name .git | head -5)
+    if test (count $inner_gits) -ne 0
+        echo "Error: nested git repository(ies) inside:" >&2
+        printf '%s\n' $inner_gits >&2
+        return 1
+    end
+
+    # Audit passed. git clean interactively is the confirmation layer; only if
+    # it empties the worktree (ignored files included) does the rm happen.
+    cd "$target"; or return 1
+    git clean -dxi
+    # The gate is two-source conservative: git's clean dry-run lists plain
+    # untracked/ignored leftovers, git status catches nested-repo skips too.
+    set -l leftover (git clean -xdn)
+    set -l status_left (git status --porcelain --ignored)
+    if test (count $leftover) -gt 0; or test (count $status_left) -gt 0
+        echo "Error: refused to remove - worktree is not empty:" >&2
+        printf '%s\n' $leftover $status_left >&2
+        return 1
+    end
+
+    echo "Removing $target ..."
+    rm -rf -- "$target"
+    echo "Removed."
+end
+
 function ? --description 'Search Google with a query'
     xdg-open "https://www.google.com/search?q="(string escape --style=url "$argv")
 end
