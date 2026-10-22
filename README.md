@@ -48,6 +48,6 @@ nix build ~/dotfiles/nix#christian --out-link /tmp/dotfiles-image \
   && podman load < /tmp/dotfiles-image
 
 podman run --rm -it \
-  -v "${XDG_PROJECTS_DIR:-$HOME/Projects}":/root/Projects \
+  -v "${XDG_PROJECTS_DIR:-$HOME/c}":/root/c \
   dotfiles:latest
 ```
