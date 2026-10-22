@@ -86,7 +86,7 @@ function projects-root --description 'Resolve the projects directory'
     if set -q XDG_PROJECTS_DIR; and test -n "$XDG_PROJECTS_DIR"
         echo $XDG_PROJECTS_DIR
     else
-        echo $HOME/Projects
+        echo $HOME/c
     end
 end
 
