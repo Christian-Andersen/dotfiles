@@ -1,2 +1,9 @@
 # nix-direnv is wired up by home-manager via ~/.config/direnv/lib/
 # (sourced automatically by direnv). This file stays for future additions.
+#
+# Dev-container image only (no HM): the image's buildEnv merges nix-direnv
+# into /share, so load it from there. HM machines never have this path, so
+# the guard skips them.
+if [ -e /share/nix-direnv/direnvrc ]; then
+  source /share/nix-direnv/direnvrc
+fi
