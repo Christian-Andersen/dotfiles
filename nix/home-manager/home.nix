@@ -23,5 +23,13 @@ in {
   # repo (<repo>), consumed by the fish config.
   home.sessionVariables.XDG_PROJECTS_DIR = "$HOME/c";
 
+  # nix-direnv: HM drops its share/nix-direnv from the user env (not in
+  # pathsToLink), and ~/.nix-profile is dangling on NixOS, so the old
+  # `source ~/.nix-profile/...` in the stowed direnvrc never worked. The HM
+  # module installs the file to ~/.config/direnv/lib/ which direnv sources
+  # automatically, without touching the stowed direnvrc.
+  programs.direnv.enable = true;
+  programs.direnv.nix-direnv.enable = true;
+
   home.stateVersion = "24.11";
 }

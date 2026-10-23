@@ -1,1 +1,2 @@
-source ~/.nix-profile/share/nix-direnv/direnvrc
+# nix-direnv is wired up by home-manager via ~/.config/direnv/lib/
+# (sourced automatically by direnv). This file stays for future additions.
