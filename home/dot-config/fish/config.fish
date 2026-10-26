@@ -6,7 +6,6 @@
 # ==============================================================================
 set -gx EDITOR nvim
 set -gx VISUAL nvim
-set -gx UV_MANAGED_PYTHON true
 set -gx DE generic
 set -gx GOPATH $HOME/.local/share/go
 
