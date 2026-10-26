@@ -48,6 +48,12 @@ in {
   # image keep uv's auto-download.
   environment.variables.UV_PYTHON_DOWNLOADS = "never";
 
+  # Run dynamically linked executables from pip/uv-installed wheels (e.g.
+  # `.venv/bin/ty`) and other generic Linux binaries: shim the standard
+  # /lib64 ld-linux path onto nixpkgs glibc. Extra shared libs a binary
+  # dlopens may need to be added to programs.nix-ld.libraries case by case.
+  programs.nix-ld.enable = true;
+
   # Launch Umbriel on boot without a display manager: autologin on tty1 and
   # exec the compositor from the login shell.
   programs.umbriel.enable = true;
