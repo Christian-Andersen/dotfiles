@@ -50,9 +50,13 @@ in {
 
   # Run dynamically linked executables from pip/uv-installed wheels (e.g.
   # `.venv/bin/ty`) and other generic Linux binaries: shim the standard
-  # /lib64 ld-linux path onto nixpkgs glibc. Extra shared libs a binary
-  # dlopens may need to be added to programs.nix-ld.libraries case by case.
-  programs.nix-ld.enable = true;
+  # /lib64 ld-linux path onto nixpkgs glibc. cc.cc.lib provides the gcc
+  # runtime (libstdc++.so.6, libgcc_s.so.1) that manylinux wheels assume
+  # from the host — e.g. torch._C — instead of bundling it.
+  programs.nix-ld = {
+    enable = true;
+    libraries = [pkgs.stdenv.cc.cc.lib];
+  };
 
   # Launch Umbriel on boot without a display manager: autologin on tty1 and
   # exec the compositor from the login shell.
