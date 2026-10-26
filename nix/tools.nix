@@ -46,6 +46,7 @@ in
     fish
     fish-lsp
     fnm
+    foot
     fzf
     gcc
     gh
