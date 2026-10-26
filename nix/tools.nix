@@ -76,7 +76,6 @@ in
     mermaid-cli
     mesonlsp
     neovim
-    nerd-fonts.symbols-only
     nh
     ninja
     nix-direnv
