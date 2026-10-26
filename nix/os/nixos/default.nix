@@ -49,10 +49,9 @@ in {
   environment.variables.UV_PYTHON_DOWNLOADS = "never";
 
   # Run dynamically linked executables from pip/uv-installed wheels (e.g.
-  # `.venv/bin/ty`) and other generic Linux binaries: shim the standard
-  # /lib64 ld-linux path onto nixpkgs glibc. cc.cc.lib provides the gcc
-  # runtime (libstdc++.so.6, libgcc_s.so.1) that manylinux wheels assume
-  # from the host — e.g. torch._C — instead of bundling it.
+  # `.venv/bin/ty`): nix-ld shims the standard /lib64 ld-linux path onto
+  # nixpkgs glibc; cc.cc.lib adds the gcc runtime (libstdc++.so.6,
+  # libgcc_s.so.1) for wheels that assume it from the host.
   programs.nix-ld = {
     enable = true;
     libraries = [pkgs.stdenv.cc.cc.lib];
