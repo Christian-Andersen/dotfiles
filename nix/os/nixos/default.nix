@@ -135,7 +135,7 @@ in {
 
   # btop lives at system level (user asked to test this): gets its runtime
   # NVML runpath via the btop overlay in nixpkgs.nix either way.
-  environment.systemPackages = [pkgs.btop];
+  environment.systemPackages = [pkgs.btop pkgs.llama-cpp-cuda];
 
   # User-level CLI tools and apps are NOT declared here: they come from the
   # shared home-manager module (../../tools.nix via ../../home-manager/home.nix),
