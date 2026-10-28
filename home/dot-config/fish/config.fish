@@ -15,13 +15,8 @@ set -gx GOPATH $HOME/.local/share/go
 # needed, as sibling <repo>@<branch> worktrees.
 set -q XDG_PROJECTS_DIR; or set -gx XDG_PROJECTS_DIR $HOME/c
 
-# Default flake for `nh`. home-manager sets NH_FLAKE for login shells, but fish
-# only reads this stowed config, so set it here too (override to use another).
-set -q NH_FLAKE; or set -gx NH_FLAKE $HOME/dotfiles/nix
-
 # Add paths only if they exist to keep PATH clean
 set -l extra_paths \
-    ~/.nix-profile/bin \
     ~/.local/bin \
     ~/.cargo/bin \
     $GOPATH/bin
@@ -46,7 +41,7 @@ end
 # ==============================================================================
 
 function check_commands --description 'Check that all the commands I need are installed'
-    set -l commands_to_check nvim unzip eza fd fzf bat cargo uv uvx zoxide starship lazygit git deno fnm gh go hf jj lazydocker opencode rsync rustc zig prek just btop xdg-open zellij tldr python3 wget curl aria2c ssh scp fastfetch rg dos2unix npm openssl dust tokei hyperfine yazi 7z jq resvg chafa gcc ninja stow parallel
+    set -l commands_to_check nvim eza fd fzf bat uv uvx zoxide starship lazygit git lazydocker prek just btop xdg-open zellij tldr python3 curl rg openssl hyperfine yazi gcc ninja stow parallel
     for cmd in $commands_to_check
         if not type -q $cmd
             echo "**✗ FAILURE**: Command '$cmd' NOT found in your \$PATH."
@@ -269,14 +264,6 @@ function notme --description "Find all files (including hidden/ignored) not owne
     fd -H -I --owner "!"(id -un)":!"(id -gn) $argv
 end
 
-function ns --description 'Launch a nix shell into fish without typing nixpkgs#'
-    set -l pkgs
-    for pkg in $argv
-        set pkgs $pkgs "nixpkgs#$pkg"
-    end
-    nix shell $pkgs --command fish
-end
-
 function b
     set tmp (mktemp -t "yazi-cwd.XXXXXX")
     command yazi $argv --cwd-file="$tmp"
@@ -318,10 +305,8 @@ function tmp --description 'Create and cd into a temp directory'
 end
 
 function u --description 'Update by automatically checking for different package managers'
-    if command -v nixos-rebuild >/dev/null
-        nh os switch -u ~/dotfiles/nix
-    else if command -v paru >/dev/null
-        PATH=/usr/local/bin:/usr/bin paru -Syu --noconfirm
+    if command -v paru >/dev/null
+        paru -Syu --noconfirm
     else if command -v yay >/dev/null
         yay -Syu --noconfirm
     else if command -v pacman >/dev/null
@@ -452,7 +437,6 @@ if status is-interactive
     abbr -a clg 'clear; cd $XDG_PROJECTS_DIR && eza --long --group --header --git-repos --sort=date $XDG_PROJECTS_DIR && git-check-sync'
     abbr -a lsize 'eza --all --long --header --group --git --total-size --sort=size'
     abbr -a lt 'eza --tree --long --header --group --git --total-size --sort=size'
-    abbr -a ndi 'nix develop -i --keep HOME --keep TERM --keep COLORTERM --keep LANG --keep USER'
     abbr -a n 'ss -tulpn'
     abbr -a p 'uv run --'
     abbr -a q exit
@@ -471,5 +455,4 @@ if status is-interactive
     # Sourced directly, assuming these commands are always present.
     zoxide init fish --cmd cd | source
     starship init fish | source
-    direnv hook fish | source
 end
