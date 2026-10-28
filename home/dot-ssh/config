@@ -1,8 +1,0 @@
-# Host aliases.
-# `forgejo` is the self-hosted Forgejo running on the Tailscale node `server`,
-# so `git clone forgejo:owner/repo` works via the Forgejo SSH daemon (port
-# 2222, `git` user).
-Host forgejo
-    HostName server
-    User git
-    Port 2222
