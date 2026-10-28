@@ -33,8 +33,7 @@ honor_restored_maximize = false
 # ─────────────────────────────── Outputs ────────────────────────────────────
 # sway: output DP-1 mode 2560x1440@359.979Hz
 
-[output.DP-1]
-enabled = true
+[output."Dell Inc. AW2725DF 98F2ZZ3"]
 mode = "2560x1440@360"
 # workspaces = 10        # Fixed slots — mirrors sway's workspace number 1-10
 
@@ -371,9 +370,6 @@ duration_ms = 250
 curve = "easeout"
 dim = 0.5
 blur = false
-scale = 0.0
-maximize = false
-fullscreen = false
 
 [animation.border]
 enabled = false
