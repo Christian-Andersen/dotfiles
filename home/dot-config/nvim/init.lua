@@ -5,6 +5,11 @@
 -- It contains core settings, keybindings, and plugin configuration.
 -- ============================================================================
 
+vim.g.loaded_node_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
+
 -- Set <space> as the leader key
 -- The leader key is used as a prefix for custom keybindings (e.g., <leader>f for format)
 -- See `:help mapleader`
@@ -311,7 +316,6 @@ vim.pack.add({
 	"https://github.com/mfussenegger/nvim-dap",
 	"https://github.com/igorlfs/nvim-dap-view",
 	"https://github.com/mfussenegger/nvim-dap-python",
-
 	-- Misc
 	"https://github.com/rachartier/tiny-cmdline.nvim",
 	"https://github.com/windwp/nvim-autopairs",
@@ -329,9 +333,41 @@ vim.pack.add({
 	{ src = "https://github.com/rose-pine/neovim", name = "rose-pine" },
 	"https://github.com/sainnhe/gruvbox-material",
 	"https://github.com/EdenEast/nightfox.nvim",
+	-- Mason
+	"https://github.com/mason-org/mason.nvim",
+	"https://github.com/mason-org/mason-lspconfig.nvim",
+	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
 	-- `confirm = false`: install missing plugins without prompting, so the
 	-- first launch (including inside a fresh container) never blocks on input.
 }, { confirm = false })
+
+require("mason").setup()
+require("mason-tool-installer").setup({
+	ensure_installed = {
+		-- Formatters
+		"oxfmt",
+		"oxlint",
+		"buf",
+		"clang-format",
+		"markdownlint-cli2",
+		"shfmt",
+		"sql-formatter",
+		"stylua",
+		"yamlfmt",
+
+		-- Linters
+		"shellcheck",
+		"dotenv-linter",
+		"statix",
+		"golangci-lint",
+
+		-- Debuggers
+		"delve",
+		"debugpy",
+	},
+	auto_update = false,
+	run_on_start = true,
+})
 
 -- Tiny-cmdline (centered `:` prompt, powered by native ui2)
 vim.cmd.packadd("tiny-cmdline.nvim")
@@ -696,7 +732,7 @@ local snacks_keys = {
 		desc = "Go to [D]eclaration",
 	},
 	{
-		"gr",
+		"grr",
 		function()
 			Snacks.picker.lsp_references()
 		end,
@@ -871,7 +907,9 @@ vim.keymap.set("n", "<leader>ji", function()
 end, { desc = "[j]ust c[i]" })
 
 -- Render Markdown (in-editor markdown rendering)
-require("render-markdown").setup({})
+require("render-markdown").setup({
+	latex = { enabled = false },
+})
 
 -- Treesitter (v1.0+: no more nvim-treesitter.configs, highlight/indent are automatic)
 require("nvim-treesitter").setup({})
@@ -894,7 +932,6 @@ require("nvim-treesitter").install({
 	"c",
 	"cpp",
 	"bash",
-	"nix",
 	"sql",
 	"proto",
 	-- Data & Docs
@@ -942,26 +979,25 @@ require("conform").setup({
 	notify_on_error = false,
 	formatters_by_ft = {
 		lua = { "stylua" },
-		javascript = { "biome" },
-		typescript = { "biome" },
-		javascriptreact = { "biome" },
-		typescriptreact = { "biome" },
-		json = { "biome" },
-		css = { "biome" },
-		scss = { "biome" },
-		html = { "biome" },
-		astro = { "biome" },
-		svelte = { "biome" },
-		vue = { "biome" },
+		javascript = { "oxfmt" },
+		typescript = { "oxfmt" },
+		javascriptreact = { "oxfmt" },
+		typescriptreact = { "oxfmt" },
+		json = { "oxfmt" },
+		css = { "oxfmt" },
+		scss = { "oxfmt" },
+		html = { "oxfmt" },
+		astro = { "oxfmt" },
+		svelte = { "oxfmt" },
+		vue = { "oxfmt" },
 		sh = { "shfmt" },
 		bash = { "shfmt" },
 		c = { "clang-format" },
 		cpp = { "clang-format" },
 		sql = { "sql_formatter" },
-		nix = { "alejandra" },
 		toml = { "taplo" },
 		yaml = { "yamlfmt" },
-		markdown = { "markdownlint" },
+		markdown = { "markdownlint-cli2" },
 		proto = { "buf" },
 	},
 	formatters = {
@@ -986,14 +1022,13 @@ end, { desc = "Format and Save" })
 -- dotenv-linter: skip UnorderedKey (no alphabetization requirement)
 require("lint").linters.dotenv_linter.args = { "check", "--quiet", "--ignore-checks", "UnorderedKey" }
 require("lint").linters_by_ft = {
-	javascript = { "eslint_d", "biomejs" },
-	typescript = { "eslint_d", "biomejs" },
-	javascriptreact = { "eslint_d", "biomejs" },
-	typescriptreact = { "eslint_d", "biomejs" },
+	javascript = { "oxlint" },
+	typescript = { "oxlint" },
+	javascriptreact = { "oxlint" },
+	typescriptreact = { "oxlint" },
 	sh = { "shellcheck" },
 	env = { "dotenv_linter" },
-	nix = { "statix", "deadnix" },
-	markdown = { "markdownlint" },
+	markdown = { "markdownlint-cli2" },
 	go = { "golangcilint" },
 }
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
@@ -1173,15 +1208,8 @@ local servers = {
 					globalPlugins = {
 						{
 							name = "@vue/typescript-plugin",
-							location = (function()
-								local bin = vim.fn.exepath("vue-language-server")
-								return bin ~= ""
-										and bin:gsub(
-											"/bin/vue%-language%-server$",
-											"/lib/node_modules/@vue/language-server"
-										)
-									or ""
-							end)(),
+							location = vim.fn.stdpath("data")
+								.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
 							languages = { "vue" },
 							configNamespace = "typescript",
 							enableForWorkspaceTypeScriptVersions = true,
@@ -1190,7 +1218,13 @@ local servers = {
 				},
 			},
 		},
-		filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+		filetypes = {
+			"typescript",
+			"javascript",
+			"javascriptreact",
+			"typescriptreact",
+			"vue",
+		},
 	},
 	["dockerls"] = {},
 	["yamlls"] = {},
@@ -1235,22 +1269,26 @@ local servers = {
 			enable_build_on_save = true,
 		},
 	},
-	["nixd"] = {},
 	["taplo"] = {},
 	["marksman"] = {},
 	["mesonlsp"] = {},
 	["cmake"] = {},
 }
+
 for name, config in pairs(servers) do
 	config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
-	vim.lsp.config[name] = config
-	vim.lsp.enable(name)
+	vim.lsp.config(name, config)
 end
+
+require("mason-lspconfig").setup({
+	ensure_installed = vim.tbl_keys(servers),
+	automatic_enable = true,
+})
 
 -- Debug (DAP)
 require("dap-view").setup()
 local dap_python = require("dap-python")
-dap_python.setup("uv")
+dap_python.setup(vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python")
 local dap = require("dap")
 local dap_view = require("dap-view")
 vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
