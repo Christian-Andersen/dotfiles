@@ -1,7 +1,7 @@
 # dotfiles
 
 ```sh
-sudo pacman --noconfirm -Syyu \
+sudo pacman --needed --noconfirm -Syyu \
 base \
 base-devel \
 bat \
