@@ -18,6 +18,7 @@ set -q XDG_PROJECTS_DIR; or set -gx XDG_PROJECTS_DIR $HOME/c
 # Add paths only if they exist to keep PATH clean
 set -l extra_paths \
     ~/.local/bin \
+    ~/.local/share/pnpm/bin \
     ~/.cargo/bin \
     $GOPATH/bin
 
