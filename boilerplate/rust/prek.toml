@@ -42,7 +42,7 @@ name = "cargo-build"
 language = "system"
 pass_filenames = false
 always_run = true
-stages = ["manual"]
+groups = ["slow"]
 entry = "cargo build --release --all-targets --all-features"
 
 [[repos.hooks]]
@@ -51,7 +51,7 @@ name = "audit"
 language = "system"
 pass_filenames = false
 always_run = true
-stages = ["manual"]
+groups = ["slow"]
 entry = "cargo audit"
 
 [[repos.hooks]]
@@ -60,5 +60,5 @@ name = "test"
 language = "system"
 pass_filenames = false
 always_run = true
-stages = ["manual"]
+groups = ["slow"]
 entry = "cargo test --all-targets --all-features"

@@ -42,7 +42,7 @@ name = "audit"
 language = "system"
 pass_filenames = false
 always_run = true
-stages = ["manual"]
+groups = ["slow"]
 entry = "govulncheck ./..."
 
 [[repos.hooks]]
@@ -51,5 +51,5 @@ name = "test"
 language = "system"
 pass_filenames = false
 always_run = true
-stages = ["manual"]
+groups = ["slow"]
 entry = "go test ./..."
