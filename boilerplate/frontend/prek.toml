@@ -23,11 +23,18 @@ hooks = [
 repo = "local"
 
 [[repos.hooks]]
-id = "biome-check"
-name = "biome-check"
+id = "oxlint"
+name = "oxlint"
 language = "system"
 pass_filenames = false
-entry = "pnx --no-install biome check --error-on-warnings --write src/"
+entry = "pnx --no-install oxlint --fix --deny-warnings src/"
+
+[[repos.hooks]]
+id = "oxfmt"
+name = "oxfmt"
+language = "system"
+pass_filenames = false
+entry = "pnx --no-install oxfmt src/"
 
 [[repos.hooks]]
 id = "tsc"
@@ -42,7 +49,7 @@ name = "build"
 language = "system"
 pass_filenames = false
 always_run = true
-stages = ["manual"]
+groups = ["slow"]
 entry = "npm run build"
 
 [[repos.hooks]]
@@ -51,7 +58,7 @@ name = "audit"
 language = "system"
 pass_filenames = false
 always_run = true
-stages = ["manual"]
+groups = ["slow"]
 entry = "npm audit"
 
 [[repos.hooks]]
@@ -60,5 +67,5 @@ name = "test"
 language = "system"
 pass_filenames = false
 always_run = true
-stages = ["manual"]
+groups = ["slow"]
 entry = "npm test"
