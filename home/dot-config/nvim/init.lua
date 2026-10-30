@@ -1,19 +1,16 @@
--- ============================================================================
--- NEOVIM CONFIGURATION
--- ============================================================================
--- This is the main initialization file for Neovim.
--- It contains core settings, keybindings, and plugin configuration.
--- ============================================================================
+-- Neovim 0.12, vim.pack, everything eager (nothing is lazy-loaded).
+-- Load order matters: leader -> ui2 -> pack.add -> plugin setup. blink before
+-- LSP capabilities, mason before mason-lspconfig, colorscheme before lualine,
+-- dashboard section before snacks.setup(), diagnostic patch before LSP output.
+
+-- [[ BOOTSTRAP ]] ------------------------------------------------------------
 
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
 
--- Set <space> as the leader key
--- The leader key is used as a prefix for custom keybindings (e.g., <leader>f for format)
--- See `:help mapleader`
--- NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+-- Must precede plugin setup: which-key and <leader> maps read it at define time.
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
@@ -27,17 +24,13 @@ vim.filetype.add({
 	},
 })
 
--- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
 
--- Enable UI2: no more press Enter
+-- Floating cmdline. targets = "msg" keeps :w output out of the cmdline/pager
+-- window, where <CR> could drop the cursor into it (neovim/neovim#40282).
 require("vim._core.ui2").enable({
 	enable = true,
 	msg = {
-		-- Route messages to the 'msg' window (bottom-right, auto-dismisses,
-		-- non-focusable) instead of 'cmd', so pressing <CR> after e.g. :w
-		-- can't dump the cursor into the message/pager window. See
-		-- neovim/neovim#40282.
 		targets = "msg",
 		cmd = { height = 0.5 },
 		dialog = { height = 0.5 },
@@ -46,16 +39,8 @@ require("vim._core.ui2").enable({
 	},
 })
 
--- ============================================================================
--- [[ EDITOR OPTIONS ]]
--- ============================================================================
--- Configure core editor behavior and visual settings
--- For more information, see `:help vim.o` and `:help option-list`
--- NOTE: Most options are configured here using vim.o, which sets global options.
--- Use vim.opt for options that work with tables.
--- ============================================================================
+-- [[ OPTIONS ]] --------------------------------------------------------------
 
--- Make W also write command because of accidentally holding shift
 vim.api.nvim_create_user_command("W", "write <args>", {
 	bang = true,
 	nargs = "*",
@@ -63,156 +48,54 @@ vim.api.nvim_create_user_command("W", "write <args>", {
 	desc = "Alias for :w",
 })
 
--- Make line numbers default (shows absolute line numbers on the left)
 vim.o.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
 vim.o.relativenumber = true
-
--- Enforce truecolor; required by colorschemes and plugins like nvim-colorizer.
--- Neovim only defaults this to on when the terminal advertises truecolor, so
--- force it to be safe in every environment (tmux, ssh, headless, ...).
 vim.o.termguicolors = true
-
--- Enable mouse mode for all vim modes ('a')
--- This allows you to interact with the editor using a mouse:
--- - Click to position cursor
--- - Scroll to navigate
--- - Drag to select
--- - Resize split windows
+vim.o.signcolumn = "yes"
+vim.o.cursorline = true
+vim.o.winborder = "rounded"
+vim.o.cmdheight = 0 -- ui2/tiny-cmdline draw the cmdline in a float
 vim.o.mouse = "a"
-
--- Enable break indent
--- When a line is visually broken/wrapped, the continuation lines are indented
--- to align with the first line
 vim.o.breakindent = true
+vim.o.smoothscroll = true
+vim.o.scrolloff = 10
+vim.o.splitkeep = "screen"
+vim.o.list = true
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
--- Save undo history to a file
--- This persists the undo history even after closing and reopening a file
--- Allows you to undo changes from previous editing sessions
 vim.o.undofile = true
-
--- Case-insensitive searching by default
--- However, if the search pattern contains uppercase letters, the search becomes case-sensitive
--- This is called "smart case" - it provides the best of both worlds
--- Examples:
---   /foo      -> finds 'foo', 'Foo', 'FOO' (case-insensitive)
---   /Foo      -> finds only 'Foo' (case-sensitive)
 vim.o.ignorecase = true
 vim.o.smartcase = true
+vim.o.inccommand = "split"
+vim.o.confirm = true
 
--- Keep the sign column always visible on the left
--- The sign column is used by various plugins to display:
--- - LSP diagnostics (errors, warnings, info)
--- - Git changes (added, modified, deleted lines)
--- - Breakpoints (for debugging)
--- Setting to 'yes' reserves space even when there are no signs
-vim.o.signcolumn = "yes"
-
--- Decrease update time (in milliseconds)
--- Affects how quickly plugins respond to text changes
--- Lower value = more responsive but slightly higher CPU usage
--- Used by features like:
--- - Vim CursorHold events (document highlighting)
--- - Linting and diagnostic updates
-vim.o.updatetime = 250
-
--- Decrease the timeout for mapped key sequences (in milliseconds)
--- When you press a key that starts a mapping, Neovim waits this long for more keys
--- Lower value means less wait time but faster perceived response
--- Relevant for:
--- - Leader key sequences (e.g., <leader>f)
--- - Multi-key commands
-vim.o.timeoutlen = 300
-
--- Configure how new split windows should be opened
--- splitright: new vertical splits appear on the right (instead of left)
--- splitbelow: new horizontal splits appear below (instead of above)
 vim.o.splitright = true
 vim.o.splitbelow = true
 
--- Keep visible text stationary when opening splits (less viewport jumping)
-vim.o.splitkeep = "screen"
--- Scroll wrapped lines by display line instead of jumping whole logical lines
-vim.o.smoothscroll = true
--- One border style for ALL floating windows (completion docs, which-key,
--- LSP hover, pickers, ...) so the UI feels cohesive
-vim.o.winborder = "rounded"
+vim.o.updatetime = 250
+vim.o.timeoutlen = 300
 
--- Display whitespace characters as visible symbols
--- This helps identify trailing whitespace, tabs, and non-breaking spaces
--- See `:help 'list'` and `:help 'listchars'` for more details
---
--- Note: listchars is set using `vim.opt` instead of `vim.o` because it's a table option
--- vim.opt provides a convenient interface for manipulating table-based options
--- See `:help lua-options` and `:help lua-options-guide` for more info
-vim.o.list = true
--- Configure which whitespace characters to show and their symbols:
---   tab = '» '    : displays tabs as '» ' (double-width for clarity)
---   trail = '·'   : shows trailing whitespace as middle dots
---   nbsp = '␣'    : indicates non-breaking spaces
-vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+-- Neovim's runtime lua ftplugin sets no indent options, so removing this makes
+-- Lua buffers 8-wide. ftplugins still override per filetype.
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
 
--- Preview substitutions live as you type
--- When using the substitute command (e.g., :%s/old/new/), shows a preview in a split window
--- Allows you to see the changes before confirming with Enter
-vim.o.inccommand = "split"
+-- cmdheight=0 hides pending keys and macro recording; lualine renders %S instead.
+vim.o.showcmd = true
+vim.o.showcmdloc = "statusline"
 
--- Highlight the entire line where the cursor is located
--- Makes it easier to see where you are in the file at a glance
-vim.o.cursorline = true
+-- [[ KEYMAPS ]] --------------------------------------------------------------
 
--- Minimal number of screen lines to keep visible above and below the cursor
--- When scrolling, ensures there's always context around the cursor
--- Value of 10 means at least 10 lines before and after the cursor are visible
-vim.o.scrolloff = 10
-
--- Prompt for confirmation on operations that would fail due to unsaved changes
--- Instead of just failing with an error, shows a dialog:
---   "Save changes to ...? [Y]es [N]o [C]ancel"
--- Applies to commands like `:q` (quit), `:e` (edit), `:wq` (write and quit)
--- This prevents accidental loss of work
--- See `:help 'confirm'`
-vim.o.confirm = true
-
--- Hide the classic cmdline bar; ui2 renders it in a floating window instead
--- (also required for tiny-cmdline to center the `:` prompt)
-vim.o.cmdheight = 0
-
--- ============================================================================
--- [[ KEYBINDINGS ]]
--- ============================================================================
--- Define custom key mappings for common operations
--- See `:help vim.keymap.set()` for more details on the mapping API
--- ============================================================================
-
--- Clear search highlights when pressing <Esc> in normal mode
--- When you search with `/pattern`, Neovim highlights all matches
--- This binding clears those highlights for a cleaner view
--- See `:help hlsearch`
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-
--- Open diagnostic quickfix list
--- <leader>q : displays all diagnostics (errors, warnings, info) in a quickfix window
--- Useful for reviewing all issues in the buffer at once
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [q]uickfix list" })
-
--- Navigate between splits with Ctrl+h/j/k/l
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostic location list" })
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to upper window" })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
-
--- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
--- Go to last buffer (alternate file)
 vim.keymap.set("n", "<leader>b", "<C-^>", { desc = "Go to last [b]uffer" })
 
--- Yank the entire buffer into the unnamed (`"`) and system clipboard (`+`) registers
 vim.keymap.set("n", "<leader>y", function()
 	local view = vim.fn.winsaveview()
 	vim.cmd("silent %yank +")
@@ -221,7 +104,7 @@ vim.keymap.set("n", "<leader>y", function()
 	vim.notify("Yanked " .. vim.api.nvim_buf_line_count(0) .. " lines to clipboard (+)", vim.log.levels.INFO)
 end, { desc = "[y]ank whole buffer to clipboard" })
 
--- Google AI Search
+-- Visual selection is sent as a fenced code block tagged with the filetype.
 local function google_ai_search()
 	local code_block = ""
 	local mode = vim.api.nvim_get_mode().mode
@@ -255,19 +138,150 @@ local function google_ai_search()
 end
 vim.keymap.set({ "n", "v" }, "<leader><CR>", google_ai_search, { desc = "Search Google AI with Prompt" })
 
--- ============================================================================
--- [[ AUTOCOMMANDS ]]
--- ============================================================================
--- Automatically run code when specific events occur
--- See `:help lua-guide-autocommands` for more details
--- Autocommands are organized into augroups to prevent duplicates
--- ============================================================================
+-- [[ FILE SLOTS ]] -----------------------------------------------------------
 
--- Highlight the text that was just yanked (copied)
--- When you copy text using `y` (e.g., `yap` to yank a paragraph), the copied region
--- is temporarily highlighted, providing visual feedback that the copy was successful
--- Try it with `yap` in normal mode to select and copy a paragraph
--- See `:help vim.hl.on_yank()`
+-- Number -> file slots ("marks for files"), persisted in stdpath("state") and
+-- scoped to the git root (so main.rs can hold slot 1 in every project).
+local slots_path = vim.fn.stdpath("state") .. "/file-slots.json"
+local slots = {}
+do
+	local f = io.open(slots_path, "r")
+	if f then
+		-- luanil: JSON null decodes to nil. The key rewrite only matters for files
+		-- from older versions, which stored numeric slot keys.
+		local ok, data = pcall(vim.json.decode, f:read("*a"), { luanil = { object = true, array = true } })
+		f:close()
+		if ok and type(data) == "table" then
+			for project, project_slots in pairs(data) do
+				data[project] = {}
+				for n, file in pairs(project_slots) do
+					data[project][tostring(n)] = file
+				end
+			end
+			slots = data
+		end
+	end
+end
+
+-- Current project: git root of the current buffer, else cwd.
+local function slots_project()
+	local name = vim.api.nvim_buf_get_name(0)
+	return (name ~= "" and vim.fs.root(name, ".git")) or vim.fn.getcwd()
+end
+
+local function slots_save()
+	local f = io.open(slots_path, "w")
+	if not f then
+		vim.notify("Cannot write " .. slots_path, vim.log.levels.WARN)
+		return
+	end
+	f:write(vim.json.encode(slots))
+	f:close()
+end
+
+local function slot_delete(project, n)
+	slots[project][tostring(n)] = nil
+	if next(slots[project]) == nil then
+		slots[project] = nil
+	end
+	slots_save()
+end
+
+local function slot_set(n)
+	local name = vim.api.nvim_buf_get_name(0)
+	if name == "" or vim.bo.buftype ~= "" then
+		vim.notify("Not a file buffer", vim.log.levels.WARN)
+		return
+	end
+	local project = slots_project()
+	slots[project] = slots[project] or {}
+	slots[project][tostring(n)] = name
+	slots_save()
+	vim.notify(("slot %d = %s"):format(n, vim.fn.fnamemodify(name, ":~:.")), vim.log.levels.INFO)
+end
+
+-- Unmark the current file.
+local function slot_unset()
+	local project = slots_project()
+	local name = vim.api.nvim_buf_get_name(0)
+	for n, file in pairs(slots[project] or {}) do
+		if file == name then
+			slot_delete(project, n)
+			vim.notify(("slot %s cleared"):format(n), vim.log.levels.INFO)
+			return
+		end
+	end
+	vim.notify("Current file is not pinned", vim.log.levels.WARN)
+end
+
+local function slot_goto(n)
+	local project = slots_project()
+	local name = slots[project] and slots[project][tostring(n)]
+	if not name then
+		vim.notify("slot " .. n .. " is empty", vim.log.levels.WARN)
+		return
+	end
+	if vim.fn.filereadable(name) == 0 then
+		slot_delete(project, n)
+		vim.notify(("slot %d target is gone, slot cleared"):format(n), vim.log.levels.WARN)
+		return
+	end
+	local buf = vim.fn.bufadd(name)
+	vim.fn.bufload(buf)
+	-- Prefer an existing window in this tabpage, else reuse the current one.
+	for _, win in ipairs(vim.fn.win_findbuf(buf)) do
+		if vim.api.nvim_win_get_tabpage(win) == vim.api.nvim_get_current_tabpage() then
+			vim.api.nvim_set_current_win(win)
+			return
+		end
+	end
+	vim.api.nvim_win_set_buf(0, buf)
+end
+
+-- Snacks picker: <CR> opens, typing filters. Deleting lives on <leader>md.
+local function slot_list()
+	local project = slots_project()
+	local items = {}
+	for n = 1, 9 do
+		local file = slots[project] and slots[project][tostring(n)]
+		if file then
+			items[#items + 1] = {
+				slot = n,
+				file = file, -- enables the file preview
+				pos = { 1, 0 },
+				text = ("%d  %s"):format(n, (file:gsub("^" .. vim.pesc(project) .. "/", ""))),
+			}
+		end
+	end
+	if #items == 0 then
+		vim.notify("No file slots in " .. vim.fn.fnamemodify(project, ":~"), vim.log.levels.INFO)
+		return
+	end
+	require("snacks").picker.pick({
+		title = "File Slots",
+		items = items,
+		format = "text",
+		confirm = function(picker, item)
+			if item then
+				picker:close()
+				slot_goto(item.slot)
+			end
+		end,
+	})
+end
+for n = 1, 9 do
+	vim.keymap.set("n", "<leader>" .. n, function()
+		slot_goto(n)
+	end, { desc = "Go to file slot " .. n })
+	vim.keymap.set("n", "<leader>m" .. n, function()
+		slot_set(n)
+	end, { desc = "Mark file as slot " .. n })
+end
+vim.keymap.set("n", "<leader>ml", slot_list, { desc = "List file slots" })
+vim.keymap.set("n", "<leader>md", slot_unset, { desc = "Delete this file's slot" })
+
+-- [[ AUTOCOMMANDS ]] ---------------------------------------------------------
+
 vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "Highlight when yanking (copying) text",
 	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
@@ -276,11 +290,9 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- ============================================================================
--- [[ PLUGINS (vim.pack — Neovim 0.12 built-in) ]]
--- ============================================================================
+-- [[ PLUGIN SPEC ]] ----------------------------------------------------------
 
--- Build hooks via PackChanged events
+-- On update the plugin may not be loaded yet; packadd first or :TSUpdate is nil.
 vim.api.nvim_create_autocmd("PackChanged", {
 	callback = function(ev)
 		if ev.data.spec.name == "nvim-treesitter" and ev.data.kind == "update" then
@@ -292,11 +304,12 @@ vim.api.nvim_create_autocmd("PackChanged", {
 	end,
 })
 
--- Enable builtin undo tree and diff tool (Neovim 0.12+)
+-- Bundled opt packages, not managed by vim.pack.
 vim.cmd.packadd("nvim.undotree")
 vim.cmd.packadd("nvim.difftool")
 
--- Register and load all plugins
+-- add() also packadds everything during startup, so no per-plugin packadd below.
+-- confirm = false: never prompt, safe in a fresh container. Lockfile is untracked.
 vim.pack.add({
 	-- Core
 	"https://github.com/folke/snacks.nvim",
@@ -305,6 +318,8 @@ vim.pack.add({
 	"https://github.com/lewis6991/gitsigns.nvim",
 	"https://github.com/folke/which-key.nvim",
 	"https://github.com/folke/lazydev.nvim",
+	-- Both icon providers are needed: snacks prefers mini.icons, lualine's
+	-- filetype component hard-codes an nvim-web-devicons fallback.
 	"https://github.com/echasnovski/mini.icons",
 	"https://github.com/nvim-tree/nvim-web-devicons",
 	-- Completion
@@ -320,8 +335,8 @@ vim.pack.add({
 	"https://github.com/rachartier/tiny-cmdline.nvim",
 	"https://github.com/windwp/nvim-autopairs",
 	"https://github.com/nvim-lualine/lualine.nvim",
-	"https://github.com/akinsho/bufferline.nvim",
 	"https://github.com/folke/todo-comments.nvim",
+	-- Indirect dependency of todo-comments' search (:TodoQuickFix).
 	"https://github.com/nvim-lua/plenary.nvim",
 	"https://github.com/MeanderingProgrammer/render-markdown.nvim",
 	"https://github.com/NvChad/nvim-colorizer.lua",
@@ -337,10 +352,11 @@ vim.pack.add({
 	"https://github.com/mason-org/mason.nvim",
 	"https://github.com/mason-org/mason-lspconfig.nvim",
 	"https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
-	-- `confirm = false`: install missing plugins without prompting, so the
-	-- first launch (including inside a fresh container) never blocks on input.
 }, { confirm = false })
 
+-- [[ MASON ]] ---------------------------------------------------------------
+
+-- taplo is absent on purpose: the taplo LSP package provides the binary conform uses.
 require("mason").setup()
 require("mason-tool-installer").setup({
 	ensure_installed = {
@@ -369,36 +385,21 @@ require("mason-tool-installer").setup({
 	run_on_start = true,
 })
 
--- Tiny-cmdline (centered `:` prompt, powered by native ui2)
-vim.cmd.packadd("tiny-cmdline.nvim")
--- `setup()` deep-merges over its defaults, so a partial table is correct here;
--- the plugin's Emmy annotations just don't mark the fields optional.
+-- [[ TINY-CMDLINE ]] ---------------------------------------------------------
+
+-- setup() deep-merges over defaults. on_reposition keeps blink's menu aligned.
 ---@diagnostic disable-next-line: missing-fields
 require("tiny-cmdline").setup({
-	on_reposition = require("tiny-cmdline").adapters.blink, -- keep blink.cmp menu aligned with the popup
+	on_reposition = require("tiny-cmdline").adapters.blink,
 })
 
--- Snacks
--- Dashboard "Recent", ordered by frecency (visit frequency + recency) instead of
--- shada's plain MRU.
---
--- `picker.matcher.frecency` below only re-ranks matches *inside pickers*; it has
--- no effect on the dashboard. The stock `recent_files` section walks
--- `vim.v.oldfiles` in pure MRU order and accepts only `limit` / `cwd` / `filter`
--- -- there is no frecency option for it. So we reuse snacks' own file list (same
--- `cwd` + stdpath filtering, same `uv.fs_stat` existence check) and only change
--- the ordering.
---
--- Registered before `setup()` because dashboard sections are resolved by *name*
--- (`Snacks.dashboard.sections[section]`), at render time.
---
--- Calling `.new()` here also installs the `BufWinEnter` tracker, so frecency
--- starts accumulating from the first dashboard render rather than the first time
--- you happen to open a picker.
---
--- NOTE: must go through `require("snacks")`, not the `Snacks` global -- the global
--- is only set once `snacks/init.lua` has run (which also defines `svim`, used
--- below via `Snacks.dashboard.oldfiles`).
+-- [[ SNACKS ]] ---------------------------------------------------------------
+
+-- Dashboard "Recent" by frecency. WHY custom: the stock recent_files section walks
+-- vim.v.oldfiles in MRU order and has no frecency option; picker.matcher.frecency
+-- only re-ranks picker matches. This reuses snacks' own filtered file list and
+-- changes only the ordering. Must be registered before setup(): sections are
+-- resolved by name at render time. `.new()` also installs the BufWinEnter tracker.
 local Snacks = require("snacks")
 
 Snacks.dashboard.sections.frecency_recent = function(opts)
@@ -411,16 +412,12 @@ Snacks.dashboard.sections.frecency_recent = function(opts)
 		local files = {}
 		for file in Snacks.dashboard.oldfiles(oldfiles_opts) do
 			if not opts.filter or opts.filter(file) then
-				-- `recent = true` is required: untracked files are only allowed to
-				-- fall back to a decayed mtime seed if the probe looks like a
-				-- recent file. Without it every score is 0 on a fresh install and
-				-- the order degrades back to plain MRU.
 				local i = #files + 1
 				files[i] = {
 					file = file,
-					i = i, -- shada position, used as the tiebreak below
-					-- `get()` only reads `file`/`dir`/`info`/`recent`; `idx`/`score`/`text`
-					-- are never touched (snacks builds ad-hoc items the same way).
+					i = i, -- shada position, tiebreak below
+					-- recent = true is required: without it untracked files score 0
+					-- on a fresh install and the order degrades to plain MRU.
 					---@diagnostic disable-next-line: missing-fields
 					score = frecency:get({ file = file, recent = true }),
 				}
@@ -440,7 +437,7 @@ Snacks.dashboard.sections.frecency_recent = function(opts)
 				file = file,
 				icon = "file",
 				action = ":e " .. vim.fn.fnameescape(file),
-				autokey = true, -- keep the `1`–`0` bindings working
+				autokey = true, -- keeps the 1-0 dashboard bindings working
 			}
 		end
 		return ret
@@ -448,14 +445,7 @@ Snacks.dashboard.sections.frecency_recent = function(opts)
 end
 
 require("snacks").setup({
-	-- Default dashboard (auto-opens on a bare `nvim`): ASCII header, default
-	-- quick keys, and the files you use most in the current project (`1`–`0`
-	-- open them), ranked by frecency -- see `frecency_recent` above. The stock
-	-- default also ships a `startup` section that hard-requires lazy.nvim
-	-- (`require("lazy.stats")`), which this vim.pack setup doesn't have, so we
-	-- keep header + keys + recent files instead.
-	-- `pane = 2` renders Recent in the right column, beside the keys (in a
-	-- snug terminal it gracefully folds underneath them).
+	-- The stock dashboard ships a `startup` section that requires lazy.nvim.
 	dashboard = {
 		sections = {
 			{ section = "header" },
@@ -475,9 +465,7 @@ require("snacks").setup({
 		sources = {
 			explorer = {
 				auto_close = true,
-				-- Show hidden files (dotfiles) in the explorer,
-				-- but keep respecting .gitignore for everything else
-				hidden = true,
+				hidden = true, -- dotfiles visible, .gitignore still respected
 			},
 		},
 	},
@@ -490,14 +478,9 @@ require("snacks").setup({
 	git = { enabled = true },
 	gitbrowse = {
 		enabled = true,
-		-- Open the repo root page by default (matches <leader>gB expectation)
 		what = "repo",
-		-- NOTE: `remote_patterns` is a LIST, so it *replaces* snacks' defaults.
-		-- Reproduced here in full, with our Forgejo rewrite appended last so the
-		-- generic ssh/https/port-strip rules run first.
-		-- Forgejo: internal ssh host `forgejo` (port 2222) maps to the web UI on
-		-- `server:3000`. kosher here as https:// because snacks normalizes to
-		-- https:// at the end of the pipeline; the scheme is fixed in `open`.
+		-- remote_patterns REPLACES snacks' defaults (it is a list); generic rules
+		-- are reproduced in full and the Forgejo rewrites come last.
 		remote_patterns = {
 			{ "^(https?://.*)%.git$", "%1" },
 			{ "^git@(.+):(.+)%.git$", "https://%1/%2" },
@@ -512,14 +495,10 @@ require("snacks").setup({
 			{ "^git@(.*)", "https://%1" },
 			{ ":%d+", "" },
 			{ "%.git$", "" },
-			-- Forgejo remotes in any of the common styles:
-			--   ssh://git@forgejo:2222/org/repo.git   (ssh URL w/ port)
-			--   forgejo:org/repo.git                  (scp-style, port via ~/.ssh/config)
-			--   https://forgejo/org/repo.git          (https)
+			-- Forgejo: ssh forgejo:2222 -> web UI on server:3000.
 			{ "^forgejo:(.+)$", "https://server:3000/%1" },
 			{ "^https://forgejo/", "https://server:3000/" },
 		},
-		-- Gitea/Forgejo URL scheme for the local server
 		url_patterns = {
 			["server:3000"] = {
 				branch = "/src/branch/{branch}",
@@ -528,8 +507,7 @@ require("snacks").setup({
 				commit = "/commit/{commit}",
 			},
 		},
-		-- snacks normalizes remotes to https://; the local Forgejo web UI is
-		-- plain http on :3000, so downgrade the scheme for our server only
+		-- snacks normalizes to https; the local Forgejo UI is plain http.
 		open = function(url)
 			vim.ui.open((url:gsub("^https://server:3000", "http://server:3000")))
 		end,
@@ -538,7 +516,8 @@ require("snacks").setup({
 	image = { enabled = true },
 	toggle = { enabled = true },
 })
--- Snacks debug helpers
+
+-- Deferred: the snacks global is not available at require time.
 vim.schedule(function()
 	_G.dd = function(...)
 		Snacks.debug.inspect(...)
@@ -546,9 +525,11 @@ vim.schedule(function()
 	_G.bt = function()
 		Snacks.debug.backtrace()
 	end
-	vim.print = _G.dd
+	vim.print = _G.dd -- intentional override
 end)
--- Snacks keymaps
+
+-- Table-driven. mode defaults to "n"; desc doubles as the which-key label;
+-- nowait is only needed where a longer mapping shares a prefix (grr).
 local snacks_keys = {
 	{
 		"<leader><space>",
@@ -560,8 +541,6 @@ local snacks_keys = {
 	{
 		"<leader>sf",
 		function()
-			-- Show hidden files (dotfiles) in the file search,
-			-- but keep respecting .gitignore for everything else
 			Snacks.picker.files({ hidden = true })
 		end,
 		desc = "Search [f]iles",
@@ -882,9 +861,10 @@ for _, key in ipairs(snacks_keys) do
 	vim.keymap.set(mode, key[1], key[2], { desc = key.desc, nowait = key.nowait })
 end
 
--- Just (task runner fullscreen, equivalent to `:term just <recipe>`)
--- Opens in Normal mode so output can be yanked right away; press `i` to
--- interact with the job, `<Esc><Esc>` (same as snacks terminals) to go back.
+-- [[ JUST ]] -----------------------------------------------------------------
+
+-- Starts in Normal mode so output can be yanked; <Esc><Esc> leaves (snacks
+-- terminal convention). The t-mode map is buffer-local.
 local function just_term(recipe)
 	vim.cmd("terminal just" .. (recipe and recipe ~= "" and " " .. recipe or ""))
 	vim.cmd("stopinsert")
@@ -906,12 +886,15 @@ vim.keymap.set("n", "<leader>ji", function()
 	just_term("ci")
 end, { desc = "[j]ust c[i]" })
 
--- Render Markdown (in-editor markdown rendering)
+-- [[ MARKDOWN ]] -------------------------------------------------------------
+
 require("render-markdown").setup({
 	latex = { enabled = false },
 })
 
--- Treesitter (v1.0+: no more nvim-treesitter.configs, highlight/indent are automatic)
+-- [[ TREESITTER ]] -----------------------------------------------------------
+
+-- v1: highlight and indent are automatic, no nvim-treesitter.configs.
 require("nvim-treesitter").setup({})
 require("nvim-treesitter").install({
 	-- Core & Web
@@ -944,22 +927,23 @@ require("nvim-treesitter").install({
 	"typst",
 })
 
--- Colorizer (inline color previews: #hex, rgb(), hsl(), named colors)
-vim.cmd.packadd("nvim-colorizer.lua")
+-- [[ COLORIZER ]] ------------------------------------------------------------
+
 require("colorizer").setup({
 	user_default_options = {
 		mode = "background",
 		rgb = true,
 		rrggbb = true,
-		rrggbbaa = true, -- #rgba / #rrggbbaa
+		rrggbbaa = true,
 	},
 })
 
--- Rainbow delimiters (treesitter-based nesting colors, palette from theme)
--- NOTE: no setup() — works out of the box with the treesitter highlight engine
-vim.cmd.packadd("rainbow-delimiters.nvim")
+-- rainbow-delimiters needs no setup(): the plugin/ file loaded by vim.pack.add
+-- is enough and colors come from the theme.
 
--- Blink.cmp
+-- [[ COMPLETION ]] -----------------------------------------------------------
+
+-- fuzzy = "lua" avoids the Rust binary.
 require("blink.cmp").setup({
 	keymap = { preset = "default" },
 	appearance = { nerd_font_variant = "mono" },
@@ -974,7 +958,10 @@ require("blink.cmp").setup({
 	signature = { enabled = true },
 })
 
--- Conform (formatting)
+-- [[ FORMAT ]] ---------------------------------------------------------------
+
+-- markdown goes through the linter in --fix mode; taplo's binary comes from the
+-- taplo LSP package, hence the extra args.
 require("conform").setup({
 	notify_on_error = false,
 	formatters_by_ft = {
@@ -1008,7 +995,8 @@ require("conform").setup({
 })
 vim.keymap.set({ "n", "v" }, "<leader>f", function()
 	require("conform").format({ async = true, lsp_format = "fallback" })
-end, { desc = "[F]ormat buffer" })
+end, { desc = "[f]ormat buffer" })
+-- Sync on purpose: the write must happen after formatting completes.
 vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()
 	require("conform").format({
 		async = false,
@@ -1018,8 +1006,9 @@ vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()
 	end)
 end, { desc = "Format and Save" })
 
--- Lint
--- dotenv-linter: skip UnorderedKey (no alphabetization requirement)
+-- [[ LINT ]] -----------------------------------------------------------------
+
+-- No alphabetization requirement for env files.
 require("lint").linters.dotenv_linter.args = { "check", "--quiet", "--ignore-checks", "UnorderedKey" }
 require("lint").linters_by_ft = {
 	javascript = { "oxlint" },
@@ -1040,7 +1029,8 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 	end,
 })
 
--- Gitsigns
+-- [[ GIT ]] ------------------------------------------------------------------
+
 require("gitsigns").setup({
 	signs = {
 		add = { text = "+" },
@@ -1079,9 +1069,7 @@ require("gitsigns").setup({
 		map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "git [s]tage hunk" })
 		map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "git [r]eset hunk" })
 		map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "git [S]tage buffer" })
-		-- `undo_stage_hunk` is deprecated in favor of `stage_hunk()` on staged signs,
-		-- but that toggles: on an unstaged hunk it would STAGE instead of undoing.
-		-- Kept deliberately; revisit if gitsigns removes the function.
+		-- stage_hunk() toggles on staged signs, so it cannot undo a stage.
 		---@diagnostic disable-next-line: deprecated
 		map("n", "<leader>hu", gitsigns.undo_stage_hunk, { desc = "git [u]ndo stage hunk" })
 		map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "git [R]eset buffer" })
@@ -1096,7 +1084,9 @@ require("gitsigns").setup({
 	end,
 })
 
--- Which-key
+-- [[ WHICH-KEY ]] ------------------------------------------------------------
+
+-- spec only declares group labels; descriptions come from each keymap's desc.
 require("which-key").setup({
 	delay = 0,
 	icons = {
@@ -1139,6 +1129,7 @@ require("which-key").setup({
 		{ "<leader>h", group = "Git [h]unk", mode = { "n", "v" } },
 		{ "<leader>g", group = "[g]it" },
 		{ "<leader>j", group = "[j]ust" },
+		{ "<leader>m", group = "[m]ark file slot" },
 		{ "<leader>f", desc = "[f]ormat" },
 		{ "<leader>q", desc = "[q]uickfix" },
 		{ "g", group = "[g]oto / LSP" },
@@ -1146,23 +1137,27 @@ require("which-key").setup({
 	},
 })
 
--- LazyDev
+-- [[ LAZYDEV ]] --------------------------------------------------------------
+
 require("lazydev").setup({
 	library = {
 		{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
 	},
 })
 
--- Autopairs
+-- [[ AUTOPAIRS ]] ------------------------------------------------------------
+
 require("nvim-autopairs").setup({})
 
--- Todo Comments
-vim.cmd.packadd("todo-comments.nvim")
+-- [[ TODO-COMMENTS ]] --------------------------------------------------------
+
+-- <leader>st / <leader>sT drive :TodoQuickFix; search needs plenary.
 require("todo-comments").setup({})
 
--- Filter ty hints before they reach the diagnostic store
+-- [[ LSP ]] ------------------------------------------------------------------
+
+-- ty emits hint-level notes that duplicate real diagnostics; filter them out.
 local original_diagnostic_set = vim.diagnostic.set
--- Intentional monkey-patch: redefining the existing field is the whole point.
 ---@diagnostic disable-next-line: duplicate-set-field
 vim.diagnostic.set = function(ns, bufnr, diagnostics, opts)
 	local filtered = vim.tbl_filter(function(d)
@@ -1171,7 +1166,7 @@ vim.diagnostic.set = function(ns, bufnr, diagnostics, opts)
 	original_diagnostic_set(ns, bufnr, filtered, opts)
 end
 
--- LSP Configuration
+-- goto/refs are global snacks maps (gd, gD, grr, gI, gy); only per-buffer maps here.
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 	callback = function(event)
@@ -1197,6 +1192,9 @@ vim.diagnostic.config({
 	} or {},
 	virtual_text = { source = "if_many", spacing = 2 },
 })
+
+-- mason-lspconfig installs and enables these (automatic_enable), so no
+-- vim.lsp.enable() call is needed. Capabilities are merged from blink below.
 local servers = {
 	["bashls"] = {},
 	["clangd"] = {},
@@ -1285,7 +1283,8 @@ require("mason-lspconfig").setup({
 	automatic_enable = true,
 })
 
--- Debug (DAP)
+-- [[ DAP ]] ------------------------------------------------------------------
+
 require("dap-view").setup()
 local dap_python = require("dap-python")
 dap_python.setup(vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python")
@@ -1301,8 +1300,7 @@ vim.keymap.set("n", "<leader>dB", function()
 end, { desc = "Debug: Set Conditional Breakpoint" })
 vim.keymap.set("n", "<leader>dv", dap_view.toggle, { desc = "Debug: Toggle View" })
 vim.keymap.set("n", "<leader>dx", dap.terminate, { desc = "Debug: Terminate/Exit" })
--- Extra Python configs beyond dap-python's defaults: run a module (`python -m`),
--- pytest the current file, or attach to a picked process
+
 table.insert(dap.configurations.python, {
 	type = "python",
 	request = "launch",
@@ -1328,12 +1326,16 @@ table.insert(dap.configurations.python, {
 })
 vim.keymap.set({ "n", "v" }, "<leader>dm", dap_python.test_method, { desc = "Debug: test [m]ethod" })
 vim.keymap.set({ "n", "v" }, "<leader>dC", dap_python.test_class, { desc = "Debug: test [C]lass" })
+
+-- Listener keys are arbitrary but unique per event.
 dap.listeners.after.event_initialized["dap_view_config"] = function()
 	dap_view.open()
 end
 dap.listeners.after.event_initialized["dap_exception_config"] = function()
 	dap.set_exception_breakpoints({ "uncaught" })
 end
+
+-- Go: delve speaks DAP over a socket; ${port} is expanded by nvim-dap.
 dap.adapters.go = {
 	type = "server",
 	port = "${port}",
@@ -1377,6 +1379,8 @@ dap.configurations.go = {
 		dlvToolPath = vim.fn.exepath("dlv"),
 	},
 }
+
+-- Rust and Zig share the lldb-dap adapter table; only configurations differ.
 dap.adapters.rust = {
 	type = "executable",
 	command = "lldb-dap",
@@ -1412,7 +1416,9 @@ dap.configurations.zig = {
 vim.fn.sign_define("DapBreakpoint", { text = "🛑", texthl = "", linehl = "", numhl = "" })
 vim.fn.sign_define("DapStopped", { text = "▶️", texthl = "", linehl = "", numhl = "" })
 
--- Theme
+-- [[ UI ]] -------------------------------------------------------------------
+
+-- NVIM_THEME picks the colorscheme; NVIM_OLED=1 forces a black Normal background.
 local oled = vim.env.NVIM_OLED == "1"
 local theme = vim.env.NVIM_THEME or "tokyonight"
 if not pcall(vim.cmd.colorscheme, theme) then
@@ -1422,13 +1428,8 @@ if oled then
 	vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
 end
 
--- Lualine (statusline)
--- Restores the pending-key (showcmd) and macro-recording indicators that
--- cmdheight=0 / tiny-cmdline hides in the idle cmdline window.
--- See tiny-cmdline README "Troubleshooting" for why these are needed.
-vim.cmd.packadd("lualine.nvim")
-vim.o.showcmd = true
-vim.o.showcmdloc = "statusline" -- render showcmd into the %S statusline item
+-- %S renders showcmd/showcmdloc; macro_recording() restores what cmdheight=0
+-- hides. theme = "auto" resolves against the colorscheme loaded above.
 local function macro_recording()
 	local reg = vim.fn.reg_recording()
 	if reg == "" then
@@ -1451,41 +1452,10 @@ require("lualine").setup({
 	},
 })
 
--- Bufferline (tab-style buffer list at the top, themable to match lualine)
-vim.cmd.packadd("bufferline.nvim")
-require("bufferline").setup({
-	options = {
-		mode = "buffers",
-		themable = true,
-		diagnostics = "nvim_lsp",
-		separator_style = "thin",
-		show_buffer_close_icons = false,
-		show_close_icon = false,
-		always_show_bufferline = true,
-		offsets = {
-			{
-				filetype = "snacks_dashboard",
-				highlight = "Directory",
-				text = "Dashboard",
-			},
-		},
-	},
-})
-vim.keymap.set({ "n", "t" }, "<C-Tab>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next buffer" })
-vim.keymap.set({ "n", "t" }, "<C-S-Tab>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Previous buffer" })
--- Insert mode: drop back to normal after switching, so you don't keep typing
--- into the new buffer (mode is preserved by <Cmd> otherwise)
-vim.keymap.set("i", "<C-Tab>", "<C-\\><C-n><cmd>BufferLineCycleNext<CR>", { desc = "Next buffer (from insert)" })
-vim.keymap.set("i", "<C-S-Tab>", "<C-\\><C-n><cmd>BufferLineCyclePrev<CR>", { desc = "Previous buffer (from insert)" })
--- Visual mode: exit the selection (it dies on buffer switch anyway) then cycle
-vim.keymap.set("v", "<C-Tab>", "<Esc><cmd>BufferLineCycleNext<CR>", { desc = "Next buffer (from visual)" })
-vim.keymap.set("v", "<C-S-Tab>", "<Esc><cmd>BufferLineCyclePrev<CR>", { desc = "Previous buffer (from visual)" })
-
--- ============================================================================
--- The line below is a vim modeline that sets editor options for this specific file
--- It tells Vim to use 2-space indentation and expand tabs to spaces
--- See `:help modeline` for more information about modelines
-vim.opt.tabstop = 2 -- Tab width for display
-vim.opt.softtabstop = 2 -- Spaces for soft tabs
-vim.opt.shiftwidth = 2 -- Spaces for auto-indentation
-vim.opt.expandtab = true -- Expand tabs to spaces
+-- Insert/visual variants drop to Normal first: <Cmd> preserves the mode.
+vim.keymap.set({ "n", "t" }, "<C-Tab>", "<cmd>bnext<CR>", { desc = "Next buffer" })
+vim.keymap.set({ "n", "t" }, "<C-S-Tab>", "<cmd>bprevious<CR>", { desc = "Previous buffer" })
+vim.keymap.set("i", "<C-Tab>", "<C-\\><C-n><cmd>bnext<CR>", { desc = "Next buffer (from insert)" })
+vim.keymap.set("i", "<C-S-Tab>", "<C-\\><C-n><cmd>bprevious<CR>", { desc = "Previous buffer (from insert)" })
+vim.keymap.set("v", "<C-Tab>", "<Esc><cmd>bnext<CR>", { desc = "Next buffer (from visual)" })
+vim.keymap.set("v", "<C-S-Tab>", "<Esc><cmd>bprevious<CR>", { desc = "Previous buffer (from visual)" })
