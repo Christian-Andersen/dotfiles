@@ -376,6 +376,9 @@ require("mason-tool-installer").setup({
 		"dotenv-linter",
 		"statix",
 		"golangci-lint",
+		-- Also installed as an LSP by mason-lspconfig, which only ensures
+		-- presence; listing it here makes :U update it.
+		"ty",
 
 		-- Debuggers
 		"delve",
@@ -384,6 +387,17 @@ require("mason-tool-installer").setup({
 	auto_update = false,
 	run_on_start = true,
 })
+
+-- Tools are separate from plugins: auto_update=false only installs missing
+-- tools on start. This forces an update of the tools above, then updates the
+-- plugins without the review buffer (force=true applies immediately).
+-- :MasonUpdate only refreshes registries; LSP servers not listed above need
+-- :Mason + U.
+-- :restart afterwards picks up the new plugin code.
+vim.api.nvim_create_user_command("U", function()
+	require("mason-tool-installer").check_install(true)
+	vim.pack.update(nil, { force = true })
+end, { desc = "Update Mason tools and vim.pack plugins" })
 
 -- [[ TINY-CMDLINE ]] ---------------------------------------------------------
 
