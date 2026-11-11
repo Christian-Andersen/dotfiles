@@ -1,8 +1,5 @@
 set dotenv-load
-
-[private]
-default:
-    @just --list
+set default-list
 
 check:
     uv run -- prek run --all-files --no-group slow
