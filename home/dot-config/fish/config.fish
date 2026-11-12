@@ -315,6 +315,9 @@ function u --description 'Update by automatically checking for different package
     else if command -v apt >/dev/null
         sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get autoremove -y
     end
+    if command -v rustup >/dev/null
+        rustup update
+    end
 end
 
 function e --description 'Open in file explorer'
