@@ -31,11 +31,9 @@ honor_restored_maximize = false
 # lid_open  = "notify-send 'The laptop lid is open'"
 
 # ─────────────────────────────── Outputs ────────────────────────────────────
-# sway: output DP-1 mode 2560x1440@359.979Hz
 
 [output."Dell Inc. AW2725DF 98F2ZZ3"]
 mode = "2560x1440@360"
-# workspaces = 10        # Fixed slots — mirrors sway's workspace number 1-10
 
 # ────────────────────────────── Workspaces ──────────────────────────────────
 
@@ -70,11 +68,10 @@ empty_above = false
 # badge               = "#7AA3FFFF"
 
 # ───────────────────────────── Appearance ───────────────────────────────────
-# sway: default_border none / default_floating_border none
 
 [appearance]
 prefer_no_csd = true
-border_width = 0       # no borders — matches sway default_border none
+border_width = 0
 outer_border_width = 0
 corner_radius = 10
 drag_opacity = 0.75
@@ -136,26 +133,18 @@ follows_mouse = false
 [keybinds]
 
 # ── Applications and session ──────────────────────────────────────────────────
-# sway: bindsym $mod+Return exec ghostty
-"Mod+Return" = "spawn:ghostty"
-# sway: bindsym $mod+Backslash exec firefox
+"Mod+Return" = "spawn:zellij terminal"
 "Mod+Backslash" = "spawn:firefox"
-# sway: bindsym $mod+Shift+q kill
 "Mod+Shift+Q" = "window-close"
-# sway: bindsym $mod+Shift+c reload
 "Mod+Shift+C" = "config-reload"
-# sway: bindsym $mod+Shift+e exec swaynag … exit
 "Mod+Shift+E" = "session-quit"
 
 # Emergency escape when a client has inhibited shortcuts
 "Mod+Shift+Escape" = { action = "shortcuts-inhibit-toggle", allow_when_inhibited = true, repeat = false }
 
 # ── Noctalia shell integration ────────────────────────────────────────────────
-# sway: bindsym $mod+space  exec noctalia msg panel-toggle launcher
 "Mod+Space" = "spawn:noctalia msg panel-toggle launcher"
-# sway: bindsym $mod+n      exec noctalia msg panel-toggle control-center
 "Mod+N" = "spawn:noctalia msg panel-toggle control-center"
-# sway: bindsym $mod+m      exec noctalia msg panel-toggle control-center media
 "Mod+M" = "spawn:noctalia msg panel-toggle control-center media"
 # Windows+L-ish: blank the displays (DPMS off) instead of suspending.
 # The OLED sees the panel "not in use" and runs its refresh; the system stays
@@ -163,12 +152,10 @@ follows_mouse = false
 "Mod+L" = "dpms-off"
 
 # ── Focus navigation ──────────────────────────────────────────────────────────
-# sway: bindsym $mod+Left/Down/Up/Right focus …
 "Mod+Left" = "window-focus-left"
 "Mod+Down" = "window-focus-down"
 "Mod+Up" = "window-focus-up"
 "Mod+Right" = "window-focus-right"
-# sway: set $left h / $down j / $up k / $right l
 "Mod+H" = "window-focus-left"
 "Mod+J" = "window-focus-down"
 "Mod+K" = "window-focus-up"
@@ -179,27 +166,21 @@ follows_mouse = false
 "Alt+Shift+Tab" = "window-focus-previous"
 
 # ── Window movement ───────────────────────────────────────────────────────────
-# sway: bindsym $mod+Shift+Left/Down/Up/Right move …
 "Mod+Shift+Left" = "column-move-left"
 "Mod+Shift+Down" = "window-move-down"
 "Mod+Shift+Up" = "window-move-up"
 "Mod+Shift+Right" = "column-move-right"
 
 # ── Window state ──────────────────────────────────────────────────────────────
-# sway: bindsym $mod+f fullscreen
 "Mod+F" = "window-toggle-fullscreen"
-# sway: bindsym $mod+v floating toggle
 "Mod+V" = "window-toggle-floating"
-# sway: bindsym $mod+e layout toggle split
 "Mod+E" = "workspace-set-layout:toggle"
 
 # Overview (umbriel-native)
 "Mod+O" = { action = "overview-toggle", repeat = false }
 
-# ── Resize submap — mirrors sway's resize mode exactly ───────────────────────
-# sway: bindsym $mod+r mode "resize"
+# ── Resize submap ───────────────────────
 "Mod+R" = { action = "submap:resize", repeat = false }
-# sway resize: $left/$right shrink/grow width, $up/$down shrink/grow height
 "submap[resize],H" = "window-modify-primary-extent:-0.05"
 "submap[resize],L" = "window-modify-primary-extent:0.05"
 "submap[resize],K" = "window-modify-secondary-extent:-0.05"
@@ -212,7 +193,6 @@ follows_mouse = false
 "submap[resize],Escape" = "submap:reset"
 
 # ── Workspaces ────────────────────────────────────────────────────────────────
-# sway: bindsym $mod+1-9 workspace number N  /  $mod+0 → 10
 "Mod+1" = "workspace-switch:1"
 "Mod+2" = "workspace-switch:2"
 "Mod+3" = "workspace-switch:3"
@@ -223,7 +203,6 @@ follows_mouse = false
 "Mod+8" = "workspace-switch:8"
 "Mod+9" = "workspace-switch:9"
 "Mod+0" = "workspace-switch:10"
-# sway: bindsym $mod+Shift+1-9 move container to workspace number N
 "Mod+Shift+1" = "window-move-to-workspace:1"
 "Mod+Shift+2" = "window-move-to-workspace:2"
 "Mod+Shift+3" = "window-move-to-workspace:3"
@@ -240,30 +219,20 @@ follows_mouse = false
 "Mod+Ctrl+Space" = "window-restore-from-scratchpad"
 "Mod+Tab" = "scratchpad-focus-next"
 
-# ── Media keys — allow_when_locked mirrors sway's --locked flag ───────────────
-# sway: bindsym --locked XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+# ── Media keys ───────────────
 "XF86AudioMute" = { action = "spawn:pactl set-sink-mute @DEFAULT_SINK@ toggle", allow_when_locked = true }
-# sway: bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 "XF86AudioLowerVolume" = { action = "spawn:pactl set-sink-volume @DEFAULT_SINK@ -5%", allow_when_locked = true }
-# sway: bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 "XF86AudioRaiseVolume" = { action = "spawn:pactl set-sink-volume @DEFAULT_SINK@ +5%", allow_when_locked = true }
-# sway: bindsym --locked XF86AudioPlay exec spotify_player playback play-pause
 "XF86AudioPlay" = { action = "spawn:spotify_player playback play-pause", allow_when_locked = true }
-# sway: bindsym --locked XF86AudioPrev exec spotify_player playback previous
 "XF86AudioPrev" = { action = "spawn:spotify_player playback previous", allow_when_locked = true }
-# sway: bindsym --locked XF86AudioNext exec spotify_player playback next
 "XF86AudioNext" = { action = "spawn:spotify_player playback next", allow_when_locked = true }
-# sway: bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
 "XF86MonBrightnessDown" = { action = "spawn:brightnessctl set 5%-", allow_when_locked = true }
-# sway: bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 "XF86MonBrightnessUp" = { action = "spawn:brightnessctl set 5%+", allow_when_locked = true }
 
 # ── Screenshot ────────────────────────────────────────────────────────────────
-# sway: bindsym $mod+Shift+s exec grim -g "$(slurp)" - | wl-copy
 "Mod+Shift+S" = "spawn:sh -c 'grim -g \"$(slurp)\" - | wl-copy'"
 
 # ─────────────────────────────── Layout ─────────────────────────────────────
-# dwindle is the closest equivalent to sway's tiling layout
 
 [layout]
 mode = "dwindle"

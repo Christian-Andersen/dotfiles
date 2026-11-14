@@ -41,7 +41,6 @@ id = "audit"
 name = "audit"
 language = "system"
 pass_filenames = false
-always_run = true
 groups = ["slow"]
 entry = "govulncheck ./..."
 
@@ -50,6 +49,5 @@ id = "test"
 name = "test"
 language = "system"
 pass_filenames = false
-always_run = true
 groups = ["slow"]
 entry = "go test ./..."

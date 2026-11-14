@@ -157,3 +157,8 @@ pane_frames false
 session_serialization false
 show_release_notes false
 show_startup_tips false
+terminal {
+    font "SpaceMono Nerd Font"
+    font_size 16
+    cursor_style "bar"
+}

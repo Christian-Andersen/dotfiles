@@ -48,7 +48,6 @@ id = "audit"
 name = "audit"
 language = "system"
 pass_filenames = false
-always_run = true
 groups = ["slow"]
 entry = "uv audit"
 
@@ -57,6 +56,5 @@ id = "test"
 name = "test"
 language = "system"
 pass_filenames = false
-always_run = true
 groups = ["slow"]
 entry = "uv run -- pytest"
