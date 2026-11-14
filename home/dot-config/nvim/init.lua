@@ -89,12 +89,16 @@ vim.o.showcmdloc = "statusline"
 -- [[ KEYMAPS ]] --------------------------------------------------------------
 
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostic location list" })
+-- Fill the window loclist, then render it with Trouble instead of :lopen.
+vim.keymap.set("n", "<leader>q", function()
+	vim.diagnostic.setloclist({ open = false })
+	require("trouble").toggle("loclist")
+end, { desc = "Diagnostic location list" })
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to upper window" })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
-vim.keymap.set("n", "<leader>b", "<C-^>", { desc = "Go to last [b]uffer" })
+vim.keymap.set("n", "<leader>bl", "<C-^>", { desc = "Go to [l]ast buffer" })
 
 vim.keymap.set("n", "<leader>y", function()
 	local view = vim.fn.winsaveview()
@@ -333,6 +337,7 @@ vim.pack.add({
 	"https://github.com/mfussenegger/nvim-dap-python",
 	-- Misc
 	"https://github.com/rachartier/tiny-cmdline.nvim",
+	"https://github.com/folke/trouble.nvim",
 	"https://github.com/windwp/nvim-autopairs",
 	"https://github.com/nvim-lualine/lualine.nvim",
 	"https://github.com/folke/todo-comments.nvim",
@@ -840,11 +845,11 @@ local snacks_keys = {
 		desc = "[S]elect scratch buffer",
 	},
 	{
-		"<leader>x",
+		"<leader>bd",
 		function()
 			Snacks.bufdelete()
 		end,
-		desc = "Close buffer [x]",
+		desc = "[d]elete buffer",
 	},
 	{
 		"<leader>cR",
@@ -1011,14 +1016,109 @@ vim.keymap.set({ "n", "v" }, "<leader>f", function()
 	require("conform").format({ async = true, lsp_format = "fallback" })
 end, { desc = "[f]ormat buffer" })
 -- Sync on purpose: the write must happen after formatting completes.
+-- In Normal mode <C-s> then advances to the next diagnostic, so the loop is
+-- fix -> save -> read the next issue. vim.diagnostic.jump() only walks the
+-- current buffer, so walk the diagnostics of all loaded buffers instead.
+local function diag_jump(count)
+	local diags = vim.diagnostic.get(nil)
+	if #diags == 0 then
+		return
+	end
+	local function key(d)
+		return { vim.api.nvim_buf_get_name(d.bufnr), d.lnum, d.col }
+	end
+	local function less(a, b)
+		if a[1] ~= b[1] then
+			return a[1] < b[1]
+		end
+		if a[2] ~= b[2] then
+			return a[2] < b[2]
+		end
+		return a[3] < b[3]
+	end
+	table.sort(diags, function(a, b)
+		return less(key(a), key(b))
+	end)
+
+	-- Strictly after the cursor, so the diagnostic just fixed is skipped even
+	-- if the server has not republished yet.
+	local cursor = vim.api.nvim_win_get_cursor(0)
+	local cur = { vim.api.nvim_buf_get_name(0), cursor[1] - 1, cursor[2] }
+	local target
+	for _, d in ipairs(diags) do
+		if count > 0 and less(cur, key(d)) then
+			target = target or d
+		elseif count < 0 and less(key(d), cur) then
+			target = d
+		end
+	end
+	target = target or (count > 0 and diags[1] or diags[#diags])
+
+	if target.bufnr ~= vim.api.nvim_get_current_buf() then
+		vim.api.nvim_win_set_buf(0, target.bufnr)
+	end
+	-- Clamp: a diagnostic can briefly outlive the lines it points at.
+	local row = math.min(target.lnum + 1, vim.api.nvim_buf_line_count(0))
+	vim.api.nvim_win_set_cursor(0, { row, target.col })
+end
+
+-- Diagnostics are republished asynchronously, so advance on the saved buffer's
+-- next DiagnosticChanged (fallback: 250ms) instead of the stale list.
+local advance = { buf = nil, timer = nil }
+
+local function advance_cancel()
+	if advance.timer then
+		vim.fn.timer_stop(advance.timer)
+		advance.timer = nil
+	end
+	advance.buf = nil
+end
+
+local function advance_ready(buf)
+	return buf and vim.api.nvim_get_current_buf() == buf and vim.api.nvim_get_mode().mode == "n"
+end
+
+vim.api.nvim_create_autocmd("DiagnosticChanged", {
+	group = vim.api.nvim_create_augroup("diagnostic-advance", { clear = true }),
+	callback = function(ev)
+		if advance.buf ~= ev.buf then
+			return
+		end
+		local buf = advance.buf
+		advance_cancel()
+		if advance_ready(buf) then
+			vim.schedule(function()
+				diag_jump(1)
+			end)
+		end
+	end,
+})
+
+local function advance_after_save()
+	advance_cancel()
+	advance.buf = vim.api.nvim_get_current_buf()
+	advance.timer = vim.fn.timer_start(250, function()
+		advance.timer = nil
+		local buf = advance.buf
+		advance.buf = nil
+		if advance_ready(buf) then
+			diag_jump(1)
+		end
+	end)
+end
+
 vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()
+	local normal = vim.api.nvim_get_mode().mode == "n"
 	require("conform").format({
 		async = false,
 		lsp_format = "fallback",
 	}, function()
 		vim.cmd("w")
+		if normal then
+			advance_after_save()
+		end
 	end)
-end, { desc = "Format and Save" })
+end, { desc = "Format, save, next diagnostic" })
 
 -- [[ LINT ]] -----------------------------------------------------------------
 
@@ -1137,15 +1237,17 @@ require("which-key").setup({
 		},
 	},
 	spec = {
+		{ "<leader>b", group = "[b]uffer" },
 		{ "<leader>s", group = "[s]earch" },
 		{ "<leader>t", group = "[t]oggle" },
+		{ "<leader>c", group = "[c]ode" },
 		{ "<leader>d", group = "[d]ebug" },
 		{ "<leader>h", group = "Git [h]unk", mode = { "n", "v" } },
 		{ "<leader>g", group = "[g]it" },
 		{ "<leader>j", group = "[j]ust" },
 		{ "<leader>m", group = "[m]ark file slot" },
 		{ "<leader>f", desc = "[f]ormat" },
-		{ "<leader>q", desc = "[q]uickfix" },
+		{ "<leader>x", group = "[x] diagnostics / lists" },
 		{ "g", group = "[g]oto / LSP" },
 		{ "gr", group = "[r]ename / Ref" },
 	},
@@ -1167,6 +1269,28 @@ require("nvim-autopairs").setup({})
 
 -- <leader>st / <leader>sT drive :TodoQuickFix; search needs plenary.
 require("todo-comments").setup({})
+
+-- [[ TROUBLE ]] --------------------------------------------------------------
+
+-- Pretty lists for diagnostics, symbols, LSP results, quickfix and loclist.
+-- Upstream bindings; <leader>x is free because bufdelete moved to <leader>bd.
+-- auto_close: the window disappears once the last item is fixed.
+require("trouble").setup({ auto_close = true })
+local trouble_keys = {
+	{ "<leader>xx", "<cmd>Trouble diagnostics toggle<CR>", desc = "[x] diagnostics" },
+	{ "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", desc = "[X] buffer diagnostics" },
+	{ "<leader>cs", "<cmd>Trouble symbols toggle focus=false<CR>", desc = "[s]ymbols" },
+	{
+		"<leader>cl",
+		"<cmd>Trouble lsp toggle focus=false win.position=right<CR>",
+		desc = "[l]SP definitions / references",
+	},
+	{ "<leader>xL", "<cmd>Trouble loclist toggle<CR>", desc = "[L]ocation list" },
+	{ "<leader>xQ", "<cmd>Trouble qflist toggle<CR>", desc = "[Q]uickfix list" },
+}
+for _, key in ipairs(trouble_keys) do
+	vim.keymap.set("n", key[1], key[2], { desc = key.desc })
+end
 
 -- [[ LSP ]] ------------------------------------------------------------------
 
