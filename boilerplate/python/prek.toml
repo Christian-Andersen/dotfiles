@@ -41,7 +41,7 @@ id = "ty-check"
 name = "ty-check"
 language = "system"
 pass_filenames = false
-entry = "uv run -- ty check"
+entry = "uv run -- ty check --fix"
 
 [[repos.hooks]]
 id = "audit"
