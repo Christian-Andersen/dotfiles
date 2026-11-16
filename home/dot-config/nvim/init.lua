@@ -114,8 +114,15 @@ local function google_ai_search()
 	local mode = vim.api.nvim_get_mode().mode
 
 	if mode == "v" or mode == "V" or mode == "\22" then
-		vim.cmd('noau normal! "vy"')
-		local selected = vim.fn.getreg("v"):match("^%s*(.-)%s*$")
+		-- getregion() avoids clobbering a register and re-entering Normal mode.
+		local selected = table
+			.concat(
+				vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), {
+					type = mode,
+				}),
+				"\n"
+			)
+			:match("^%s*(.-)%s*$")
 		local ft = vim.bo.filetype
 		if ft ~= "" then
 			code_block = "```" .. ft .. "\n" .. selected .. "\n```\n"
@@ -137,7 +144,7 @@ local function google_ai_search()
 			end)
 			:gsub(" ", "+")
 		local url = "https://www.google.com/search?udm=50&q=" .. encoded
-		vim.fn.jobstart({ "xdg-open", url }, { detach = true })
+		vim.ui.open(url)
 	end)
 end
 vim.keymap.set({ "n", "v" }, "<leader><CR>", google_ai_search, { desc = "Search Google AI with Prompt" })
@@ -894,7 +901,7 @@ end
 local function just_term(recipe)
 	vim.cmd("terminal just" .. (recipe and recipe ~= "" and " " .. recipe or ""))
 	vim.cmd("stopinsert")
-	vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { buffer = vim.api.nvim_get_current_buf() })
+	vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { buf = vim.api.nvim_get_current_buf() })
 end
 vim.keymap.set("n", "<leader>jj", function()
 	just_term()
@@ -1164,7 +1171,7 @@ require("gitsigns").setup({
 		local gitsigns = require("gitsigns")
 		local function map(mode, l, r, opts)
 			opts = opts or {}
-			opts.buffer = bufnr
+			opts.buf = bufnr
 			vim.keymap.set(mode, l, r, opts)
 		end
 		map("n", "]c", function()
@@ -1317,7 +1324,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(event)
 		local map = function(keys, func, desc, mode)
 			mode = mode or "n"
-			vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+			vim.keymap.set(mode, keys, func, { buf = event.buf, desc = "LSP: " .. desc })
 		end
 		map("gra", vim.lsp.buf.code_action, "[g]oto code [a]ction", { "n", "x" })
 		map("grD", vim.lsp.buf.declaration, "[g]oto [D]eclaration")
@@ -1418,8 +1425,10 @@ local servers = {
 	["cmake"] = {},
 }
 
+-- Global capabilities for every client; per-server keys below merge over this.
+vim.lsp.config("*", { capabilities = require("blink.cmp").get_lsp_capabilities() })
+
 for name, config in pairs(servers) do
-	config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
 	vim.lsp.config(name, config)
 end
 
