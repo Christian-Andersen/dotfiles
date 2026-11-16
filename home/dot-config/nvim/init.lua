@@ -1613,3 +1613,46 @@ vim.keymap.set("i", "<C-Tab>", "<C-\\><C-n><cmd>bnext<CR>", { desc = "Next buffe
 vim.keymap.set("i", "<C-S-Tab>", "<C-\\><C-n><cmd>bprevious<CR>", { desc = "Previous buffer (from insert)" })
 vim.keymap.set("v", "<C-Tab>", "<Esc><cmd>bnext<CR>", { desc = "Next buffer (from visual)" })
 vim.keymap.set("v", "<C-S-Tab>", "<Esc><cmd>bprevious<CR>", { desc = "Previous buffer (from visual)" })
+
+-- [[ NEOVIDE ]] --------------------------------------------------------------
+
+-- GUI-only polish; terminal Neovim is untouched. guifont is deliberately left
+-- alone: JetBrainsMono Nerd Font is not installed, so Neovim's default chain
+-- (Source Code Pro -> DejaVu Sans Mono -> monospace) applies.
+if vim.g.neovide then
+	-- Breathing room: padding around the grid plus roomier lines.
+	vim.o.linespace = 4
+	vim.g.neovide_padding_top = 16
+	vim.g.neovide_padding_bottom = 16
+	vim.g.neovide_padding_left = 20
+	vim.g.neovide_padding_right = 20
+
+	-- Whole-window glass rather than colorscheme-level transparency.
+	vim.g.neovide_opacity = 0.96
+	vim.g.neovide_normal_opacity = 0.96
+
+	-- Windows-only (WSL at work): blend the title bar into the theme. Do not use
+	-- "transparent": csscolorparser accepts it, but Neovide drops the alpha and
+	-- the bar turns black. These globals are ignored on Linux.
+	local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+	if normal.bg then
+		vim.g.neovide_title_background_color = ("#%06x"):format(normal.bg)
+	end
+	if normal.fg then
+		vim.g.neovide_title_text_color = ("#%06x"):format(normal.fg)
+	end
+
+	-- Floats: blurred backdrop, drop shadow, corners matching winborder=rounded.
+	-- winblend stays 0, so plugins keep their own float backgrounds; the blur
+	-- shows through wherever a float is translucent (opacity < 1).
+	vim.g.neovide_floating_blur_amount_x = 6.0
+	vim.g.neovide_floating_blur_amount_y = 6.0
+	vim.g.neovide_floating_shadow = true
+	vim.g.neovide_floating_corner_radius = 0.5
+
+	-- Cursor and scroll physics. Pixiedust uses its default 0.7 density.
+	vim.g.neovide_scroll_animation_length = 0.2
+	vim.g.neovide_cursor_animation_length = 0.08
+	vim.g.neovide_cursor_trail_size = 0.4
+	vim.g.neovide_cursor_vfx_mode = "pixiedust"
+end
