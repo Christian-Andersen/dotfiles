@@ -7,6 +7,7 @@
         base \
         base-devel \
         bat \
+        bat-extras \
         btop \
         cargo-audit \
         chromium \
