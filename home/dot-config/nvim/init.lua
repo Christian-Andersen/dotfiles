@@ -1029,12 +1029,24 @@ require("conform").setup({
 vim.keymap.set({ "n", "v" }, "<leader>f", function()
 	require("conform").format({ async = true, lsp_format = "fallback" })
 end, { desc = "[f]ormat buffer" })
--- Sync on purpose: the write must happen after formatting completes.
--- In Normal mode <C-s> then advances to the next diagnostic, so the loop is
--- fix -> save -> read the next issue. vim.diagnostic.jump() only walks the
--- current buffer, so walk the diagnostics of all loaded buffers instead.
+-- Diagnostics from toolchain sources (rust-src, Zig's std) are not actionable
+-- here; scope both the auto-jump and the Trouble filter below to the cwd.
+local function in_cwd(name)
+	if name == "" then
+		return false
+	end
+	local cwd = vim.fs.normalize(vim.uv.cwd())
+	local prefix = cwd:sub(-1) == "/" and cwd or cwd .. "/"
+	return vim.startswith(vim.fs.normalize(name), prefix)
+end
+
+-- Cross-file because vim.diagnostic.jump() only walks the current buffer.
+-- Hints are skipped: they are usually suggestions, not something to fix.
 local function diag_jump(count)
-	local diags = vim.diagnostic.get(nil)
+	local diags = vim.diagnostic.get(nil, { severity = { min = vim.diagnostic.severity.INFO } })
+	diags = vim.tbl_filter(function(d)
+		return in_cwd(vim.api.nvim_buf_get_name(d.bufnr))
+	end, diags)
 	if #diags == 0 then
 		return
 	end
@@ -1121,6 +1133,7 @@ local function advance_after_save()
 	end)
 end
 
+-- Sync on purpose: the write must happen after formatting completes.
 vim.keymap.set({ "n", "i", "x" }, "<C-s>", function()
 	local normal = vim.api.nvim_get_mode().mode == "n"
 	require("conform").format({
@@ -1289,7 +1302,26 @@ require("todo-comments").setup({})
 -- Pretty lists for diagnostics, symbols, LSP results, quickfix and loclist.
 -- Upstream bindings; <leader>x is free because bufdelete moved to <leader>bd.
 -- auto_close: the window disappears once the last item is fixed.
-require("trouble").setup({ auto_close = true })
+-- Diagnostics are published for every loaded buffer, including toolchain
+-- sources that rust-analyzer/zls analyze (rust-src, Zig's std). Keep the
+-- workspace view local: current buffer, or any file under the cwd. The filter
+-- syntax is from the upstream examples (there is no built-in cwd option).
+-- https://github.com/folke/trouble.nvim/blob/main/docs/examples.md
+require("trouble").setup({
+	auto_close = true,
+	modes = {
+		diagnostics = {
+			filter = {
+				any = {
+					buf = 0, -- current buffer
+					function(item)
+						return in_cwd(item.filename)
+					end,
+				},
+			},
+		},
+	},
+})
 local trouble_keys = {
 	{ "<leader>xx", "<cmd>Trouble diagnostics toggle<CR>", desc = "[x] diagnostics" },
 	{ "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", desc = "[X] buffer diagnostics" },
