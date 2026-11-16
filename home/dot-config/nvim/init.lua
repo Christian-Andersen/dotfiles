@@ -852,6 +852,13 @@ local snacks_keys = {
 		desc = "[d]elete buffer",
 	},
 	{
+		"<C-q>",
+		function()
+			Snacks.bufdelete()
+		end,
+		desc = "Close buffer",
+	},
+	{
 		"<leader>cR",
 		function()
 			Snacks.rename.rename_file()
