@@ -428,6 +428,31 @@ require("tiny-cmdline").setup({
 -- resolved by name at render time. `.new()` also installs the BufWinEnter tracker.
 local Snacks = require("snacks")
 
+-- Projects root, mirroring the fish `cl` abbreviation: $XDG_PROJECTS_DIR when
+-- set, else ~/c. Neovide launched from a desktop entry may not inherit the var.
+local function projects_root()
+	local dir = vim.env.XDG_PROJECTS_DIR
+	return (dir and dir ~= "") and dir or vim.fn.expand("~/c")
+end
+
+-- Flat <repo> and <repo>@<branch> layout: scan the root for .git entries (the
+-- worktree .git is a file), then cd globally on confirm instead of snacks'
+-- load_session default.
+local function pick_project()
+	Snacks.picker.projects({
+		title = "Projects",
+		dev = { projects_root() },
+		patterns = { ".git" },
+		recent = false,
+		confirm = function(picker, item)
+			picker:close()
+			if item then
+				vim.fn.chdir(Snacks.picker.util.dir(item))
+			end
+		end,
+	})
+end
+
 Snacks.dashboard.sections.frecency_recent = function(opts)
 	local limit = opts.limit or 5
 	local root = opts.cwd and vim.fs.normalize(opts.cwd == true and vim.fn.getcwd() or opts.cwd) or nil
@@ -473,6 +498,20 @@ end
 require("snacks").setup({
 	-- The stock dashboard ships a `startup` section that requires lazy.nvim.
 	dashboard = {
+		-- preset.keys REPLACES the stock menu (it is not additive), so the
+		-- entries below are the stock ones that can actually render. Session is
+		-- omitted (no session manager) and Lazy too (no lazy.nvim).
+		preset = {
+			keys = {
+				{ icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
+				{ icon = " ", key = "p", desc = "Projects", action = pick_project },
+				{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+				{ icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
+				{ icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+				{ icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+				{ icon = " ", key = "q", desc = "Quit", action = ":qa" },
+			},
+		},
 		sections = {
 			{ section = "header" },
 			{ section = "keys", gap = 1, padding = 1 },
@@ -553,31 +592,6 @@ vim.schedule(function()
 	end
 	vim.print = _G.dd -- intentional override
 end)
-
--- Projects root, mirroring the fish `cl` abbreviation: $XDG_PROJECTS_DIR when
--- set, else ~/c. Neovide launched from a desktop entry may not inherit the var.
-local function projects_root()
-	local dir = vim.env.XDG_PROJECTS_DIR
-	return (dir and dir ~= "") and dir or vim.fn.expand("~/c")
-end
-
--- Flat <repo> and <repo>@<branch> layout: scan the root for .git entries (the
--- worktree .git is a file), then cd globally on confirm instead of snacks'
--- load_session default.
-local function pick_project()
-	Snacks.picker.projects({
-		title = "Projects",
-		dev = { projects_root() },
-		patterns = { ".git" },
-		recent = false,
-		confirm = function(picker, item)
-			picker:close()
-			if item then
-				vim.fn.chdir(Snacks.picker.util.dir(item))
-			end
-		end,
-	})
-end
 
 -- Table-driven. mode defaults to "n"; desc doubles as the which-key label;
 -- nowait is only needed where a longer mapping shares a prefix (grr).
