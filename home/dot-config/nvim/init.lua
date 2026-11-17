@@ -435,15 +435,89 @@ local function projects_root()
 	return (dir and dir ~= "") and dir or vim.fn.expand("~/c")
 end
 
+-- Project MRU, persisted in stdpath("state") like the file slots. Recorded from
+-- DirChanged rather than from the picker, so any cd into a project counts.
+local mru_path = vim.fn.stdpath("state") .. "/project-mru.json"
+
+local function mru_load()
+	local f = io.open(mru_path, "r")
+	if not f then
+		return {}
+	end
+	local ok, data = pcall(vim.json.decode, f:read("*a"))
+	f:close()
+	if not ok or type(data) ~= "table" then
+		return {}
+	end
+	return vim.tbl_filter(function(dir)
+		return type(dir) == "string"
+	end, data)
+end
+
+local function mru_save(dir)
+	local out = { dir }
+	for _, other in ipairs(mru_load()) do
+		if other ~= dir then
+			out[#out + 1] = other
+		end
+	end
+	for i = #out, 51, -1 do
+		out[i] = nil
+	end
+	local f = io.open(mru_path, "w")
+	if not f then
+		return
+	end
+	f:write(vim.json.encode(out))
+	f:close()
+end
+
+-- Only existing direct children of the current root, newest first.
+local function mru_projects(root)
+	local prefix = root:sub(-1) == "/" and root or root .. "/"
+	local ret = {}
+	for _, dir in ipairs(mru_load()) do
+		if vim.startswith(dir, prefix) and vim.fn.isdirectory(dir) == 1 then
+			ret[#ret + 1] = dir
+		end
+	end
+	return ret
+end
+
+vim.api.nvim_create_autocmd("DirChanged", {
+	group = vim.api.nvim_create_augroup("project-mru", { clear = true }),
+	callback = function()
+		local cwd = vim.fs.normalize(vim.fn.getcwd())
+		if vim.fs.dirname(cwd) == vim.fs.normalize(projects_root()) then
+			mru_save(cwd)
+		end
+	end,
+})
+
 -- Flat <repo> and <repo>@<branch> layout: scan the root for .git entries (the
 -- worktree .git is a file), then cd globally on confirm instead of snacks'
--- load_session default.
+-- load_session default. MRU projects are injected via `projects` (the finder
+-- adds them first) and ranked with a sort field, so the last visited project
+-- is at the top; the rest keep snacks' frecency order.
 local function pick_project()
+	local root = vim.fs.normalize(projects_root())
+	local mru = mru_projects(root)
+	local rank = {}
+	for i, dir in ipairs(mru) do
+		rank[dir] = i
+	end
 	Snacks.picker.projects({
 		title = "Projects",
-		dev = { projects_root() },
+		dev = { root },
+		projects = mru,
 		patterns = { ".git" },
 		recent = false,
+		sort = { fields = { "mru", "score:desc", "idx" } },
+		transform = function(item)
+			if item.dir then
+				item.mru = rank[item.file] or #mru + 1
+			end
+		end,
 		confirm = function(picker, item)
 			picker:close()
 			if item then
