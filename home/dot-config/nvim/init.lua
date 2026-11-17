@@ -1784,6 +1784,27 @@ if vim.g.neovide then
 	vim.g.neovide_padding_left = 20
 	vim.g.neovide_padding_right = 20
 
+	-- Permanent baseline: font and padding render at 1.5x.
+	vim.g.neovide_scale_factor = 1.5
+	local neovide_initial_scale = vim.g.neovide_scale_factor
+
+	-- Neovide has no built-in font zoom (unlike a terminal's Ctrl+=), so bind it
+	-- to the global scale factor, which is multiplied with the OS scale + font.
+	-- Clamp the lower bound so the grid can't shrink to nothing.
+	local function neovide_zoom(delta)
+		local scale = vim.g.neovide_scale_factor or neovide_initial_scale
+		vim.g.neovide_scale_factor = math.max(0.5, scale + delta)
+	end
+	vim.keymap.set({ "n", "v" }, "<C-=>", function()
+		neovide_zoom(0.1)
+	end, { desc = "Zoom in" })
+	vim.keymap.set({ "n", "v" }, "<C-->", function()
+		neovide_zoom(-0.1)
+	end, { desc = "Zoom out" })
+	vim.keymap.set({ "n", "v" }, "<C-0>", function()
+		vim.g.neovide_scale_factor = neovide_initial_scale
+	end, { desc = "Reset zoom" })
+
 	-- Whole-window glass rather than colorscheme-level transparency.
 	vim.g.neovide_opacity = 0.96
 	vim.g.neovide_normal_opacity = 0.96
