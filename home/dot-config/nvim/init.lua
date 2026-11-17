@@ -554,6 +554,31 @@ vim.schedule(function()
 	vim.print = _G.dd -- intentional override
 end)
 
+-- Projects root, mirroring the fish `cl` abbreviation: $XDG_PROJECTS_DIR when
+-- set, else ~/c. Neovide launched from a desktop entry may not inherit the var.
+local function projects_root()
+	local dir = vim.env.XDG_PROJECTS_DIR
+	return (dir and dir ~= "") and dir or vim.fn.expand("~/c")
+end
+
+-- Flat <repo> and <repo>@<branch> layout: scan the root for .git entries (the
+-- worktree .git is a file), then cd globally on confirm instead of snacks'
+-- load_session default.
+local function pick_project()
+	Snacks.picker.projects({
+		title = "Projects",
+		dev = { projects_root() },
+		patterns = { ".git" },
+		recent = false,
+		confirm = function(picker, item)
+			picker:close()
+			if item then
+				vim.fn.chdir(Snacks.picker.util.dir(item))
+			end
+		end,
+	})
+end
+
 -- Table-driven. mode defaults to "n"; desc doubles as the which-key label;
 -- nowait is only needed where a longer mapping shares a prefix (grr).
 local snacks_keys = {
@@ -679,6 +704,13 @@ local snacks_keys = {
 			Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
 		end,
 		desc = "Search [n]eovim files",
+	},
+	{
+		"<leader>sp",
+		function()
+			pick_project()
+		end,
+		desc = "Search [p]rojects",
 	},
 	{
 		"\\",
