@@ -472,12 +472,15 @@ local function mru_save(dir)
 	f:close()
 end
 
--- Only existing direct children of the current root, newest first.
+-- Only existing repo/worktree dirs directly under the current root, newest first.
 local function mru_projects(root)
-	local prefix = root:sub(-1) == "/" and root or root .. "/"
 	local ret = {}
 	for _, dir in ipairs(mru_load()) do
-		if vim.startswith(dir, prefix) and vim.fn.isdirectory(dir) == 1 then
+		if
+			vim.fs.dirname(dir) == root
+			and vim.fn.isdirectory(dir) == 1
+			and vim.fn.getftype(dir .. "/.git") ~= ""
+		then
 			ret[#ret + 1] = dir
 		end
 	end
@@ -487,8 +490,10 @@ end
 vim.api.nvim_create_autocmd("DirChanged", {
 	group = vim.api.nvim_create_augroup("project-mru", { clear = true }),
 	callback = function()
+		local root = vim.fs.normalize(projects_root())
 		local cwd = vim.fs.normalize(vim.fn.getcwd())
-		if vim.fs.dirname(cwd) == vim.fs.normalize(projects_root()) then
+		-- `.git` is a dir in a checkout and a file in a worktree.
+		if vim.fs.dirname(cwd) == root and vim.fn.getftype(cwd .. "/.git") ~= "" then
 			mru_save(cwd)
 		end
 	end,
