@@ -427,7 +427,7 @@ if status is-interactive
     abbr -a d0 'CUDA_VISIBLE_DEVICES=0'
     abbr -a d1 'CUDA_VISIBLE_DEVICES=1'
     abbr -a d2 'CUDA_VISIBLE_DEVICES=2'
-    abbr -a f 'git fetch --all --prune'
+    abbr -a f 'git fetch --all --prune; git status'
     abbr -a g lazygit
     abbr -a i 'uv run --with ipython -- ipython -i'
     abbr -a j 'clear; just'
