@@ -1,0 +1,39 @@
+[[repos]]
+repo = "builtin"
+hooks = [
+  { id = "trailing-whitespace", args = [
+    "--markdown-linebreak-ext=md",
+  ] },
+  { id = "check-added-large-files" },
+  { id = "check-case-conflict" },
+  { id = "check-illegal-windows-names" },
+  { id = "end-of-file-fixer" },
+  { id = "requirements-txt-fixer" },
+  { id = "fix-byte-order-marker" },
+  { id = "forbid-new-submodules" },
+  { id = "check-json" },
+  { id = "check-json5" },
+  { id = "check-jsonc" },
+  { id = "pretty-format-json", args = [
+    "--autofix",
+    "--no-sort-keys",
+    "--no-ensure-ascii",
+  ] },
+  { id = "check-toml" },
+  { id = "check-vcs-permalinks" },
+  { id = "check-yaml", args = [
+    "--disallow-unknown-tags",
+  ] },
+  { id = "check-xml" },
+  { id = "mixed-line-ending", args = [
+    "--fix=lf",
+  ] },
+  { id = "check-symlinks" },
+  { id = "destroyed-symlinks" },
+  { id = "check-merge-conflict" },
+  { id = "detect-private-key" },
+  { id = "no-commit-to-branch" },
+  { id = "check-shebang-scripts-are-executable" },
+  { id = "check-executables-have-shebangs" },
+]
+

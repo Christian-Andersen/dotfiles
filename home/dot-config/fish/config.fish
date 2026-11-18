@@ -52,28 +52,35 @@ end
 
 function bp --description "Copy or append language-specific config boilerplate to current directory"
     if test (count $argv) -eq 0
-        echo "Error: Please specify a language (e.g., boilerplate python)"
+        echo "Error: Please specify a language (e.g., bp python)"
         return 1
     end
     set -l lang $argv[1]
-    set -l source_dir "$HOME/dotfiles/boilerplate/$lang"
+    set -l root_dir "$HOME/dotfiles/boilerplate"
+    set -l source_dir "$root_dir/$lang"
     if not test -d $source_dir
         echo "Error: No configuration directory found at $source_dir"
         return 1
     end
-    echo "Applying boilerplate for: $lang..."
-    for source_file in $source_dir/{.,}*
-        if test -f $source_file
-            set -l filename (basename $source_file)
-            if not test -e ./$filename
-                cp $source_file ./$filename
-                echo " -> Created ./$filename"
-            else
-                cat $source_file >>./$filename
-                echo " -> Appended to ./$filename"
+    set -l apply_files
+    function _bp_apply_dir --no-scope-shadowing
+        for source_file in $argv[1]/{.,}*
+            if test -f $source_file
+                set -l filename (basename $source_file)
+                if not test -e ./$filename
+                    cp $source_file ./$filename
+                    echo " -> Created ./$filename"
+                else
+                    cat $source_file >>./$filename
+                    echo " -> Appended to ./$filename"
+                end
             end
         end
     end
+    echo "Applying boilerplate for: $lang..."
+    _bp_apply_dir $root_dir
+    _bp_apply_dir $source_dir
+    functions -q _bp_apply_dir; and functions -e _bp_apply_dir
     echo "Done!"
 end
 
