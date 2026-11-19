@@ -476,11 +476,7 @@ end
 local function mru_projects(root)
 	local ret = {}
 	for _, dir in ipairs(mru_load()) do
-		if
-			vim.fs.dirname(dir) == root
-			and vim.fn.isdirectory(dir) == 1
-			and vim.fn.getftype(dir .. "/.git") ~= ""
-		then
+		if vim.fs.dirname(dir) == root and vim.fn.isdirectory(dir) == 1 and vim.fn.getftype(dir .. "/.git") ~= "" then
 			ret[#ret + 1] = dir
 		end
 	end
@@ -587,7 +583,12 @@ require("snacks").setup({
 				{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
 				{ icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
 				{ icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
-				{ icon = " ", key = "c", desc = "Config", action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+				{
+					icon = " ",
+					key = "c",
+					desc = "Config",
+					action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",
+				},
 				{ icon = " ", key = "q", desc = "Quit", action = ":qa" },
 			},
 		},
@@ -1777,6 +1778,7 @@ vim.keymap.set("v", "<C-S-Tab>", "<Esc><cmd>bprevious<CR>", { desc = "Previous b
 -- alone: JetBrainsMono Nerd Font is not installed, so Neovim's default chain
 -- (Source Code Pro -> DejaVu Sans Mono -> monospace) applies.
 if vim.g.neovide then
+	vim.keymap.set("i", "<C-v>", "<C-r>+", { desc = "Paste from system clipboard" })
 	-- Breathing room: padding around the grid plus roomier lines.
 	vim.o.linespace = 4
 	vim.g.neovide_padding_top = 16
