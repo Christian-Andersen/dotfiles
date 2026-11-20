@@ -370,46 +370,61 @@ vim.pack.add({
 
 -- taplo is absent on purpose: the taplo LSP package provides the binary conform uses.
 require("mason").setup()
+
+-- Assigned by the LSP section below. :U adds these to the forced check, because
+-- mason-lspconfig only installs missing servers - it never updates them.
+local servers
+
+local mason_tools = {
+	-- Formatters
+	"oxfmt",
+	"oxlint",
+	"buf",
+	"clang-format",
+	"markdownlint-cli2",
+	"shfmt",
+	"sql-formatter",
+	"stylua",
+	"yamlfmt",
+
+	-- Linters
+	"shellcheck",
+	"dotenv-linter",
+	"statix",
+	"golangci-lint",
+	"ty",
+
+	-- Debuggers
+	"delve",
+	"debugpy",
+}
 require("mason-tool-installer").setup({
-	ensure_installed = {
-		-- Formatters
-		"oxfmt",
-		"oxlint",
-		"buf",
-		"clang-format",
-		"markdownlint-cli2",
-		"shfmt",
-		"sql-formatter",
-		"stylua",
-		"yamlfmt",
-
-		-- Linters
-		"shellcheck",
-		"dotenv-linter",
-		"statix",
-		"golangci-lint",
-		-- Also installed as an LSP by mason-lspconfig, which only ensures
-		-- presence; listing it here makes :U update it.
-		"ty",
-
-		-- Debuggers
-		"delve",
-		"debugpy",
-	},
+	ensure_installed = mason_tools,
 	auto_update = false,
 	run_on_start = true,
 })
 
--- Tools are separate from plugins: auto_update=false only installs missing
--- tools on start. This forces an update of the tools above, then updates the
--- plugins without the review buffer (force=true applies immediately).
--- :MasonUpdate only refreshes registries; LSP servers not listed above need
--- :Mason + U.
+-- Tools and plugins are separate: auto_update=false only installs missing tools
+-- on start. :U forces an update of the tools above *and* of the LSP servers from
+-- the LSP section, then updates the plugins without the review buffer (force=true
+-- applies immediately). The forced check also refreshes the registries, so a
+-- separate :MasonUpdate is not needed.
 -- :restart afterwards picks up the new plugin code.
 vim.api.nvim_create_user_command("U", function()
+	-- Re-register with the server names added. lspconfig names (e.g. lua_ls,
+	-- cmake) map to Mason package names via the plugin's built-in
+	-- mason-lspconfig integration. Servers already in the tool list (ty) are
+	-- skipped, so no package is updated twice.
+	local names = vim.deepcopy(mason_tools)
+	for _, server in ipairs(vim.tbl_keys(servers or {})) do
+		if not vim.tbl_contains(names, server) then
+			names[#names + 1] = server
+		end
+	end
+	require("mason-tool-installer").setup({ ensure_installed = names })
 	require("mason-tool-installer").check_install(true)
 	vim.pack.update(nil, { force = true })
-end, { desc = "Update Mason tools and vim.pack plugins" })
+end, { desc = "Update Mason tools, LSP servers and vim.pack plugins" })
 
 -- [[ TINY-CMDLINE ]] ---------------------------------------------------------
 
@@ -1505,7 +1520,8 @@ vim.diagnostic.config({
 
 -- mason-lspconfig installs and enables these (automatic_enable), so no
 -- vim.lsp.enable() call is needed. Capabilities are merged from blink below.
-local servers = {
+-- Declared in the Mason section above so :U can read its keys.
+servers = {
 	["bashls"] = {},
 	["clangd"] = {},
 	["jsonls"] = {},
