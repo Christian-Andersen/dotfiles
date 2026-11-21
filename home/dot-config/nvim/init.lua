@@ -149,6 +149,21 @@ local function google_ai_search()
 end
 vim.keymap.set({ "n", "v" }, "<leader><CR>", google_ai_search, { desc = "Search Google AI with Prompt" })
 
+-- Signed TODO on a new line below, using the buffer's commentstring so it works
+-- in any filetype. Google-style TODO(username): puts the name before the colon;
+-- the todo-comments patterns are extended below to match that form.
+local function insert_todo()
+	local indent = vim.api.nvim_get_current_line():match("^%s*") or ""
+	local commentstring = vim.bo.commentstring ~= "" and vim.bo.commentstring or "%s"
+	local comment = commentstring:gsub("%%s", "TODO(christian): ")
+	local line = indent .. comment
+	local row = vim.api.nvim_win_get_cursor(0)[1]
+	vim.api.nvim_buf_set_lines(0, row, row, false, { line })
+	vim.api.nvim_win_set_cursor(0, { row + 1, #line })
+	vim.cmd("startinsert!")
+end
+vim.keymap.set("n", "<leader>T", insert_todo, { desc = "Insert [T]ODO comment" })
+
 -- [[ FILE SLOTS ]] -----------------------------------------------------------
 
 -- Number -> file slots ("marks for files"), persisted in stdpath("state") and
@@ -1436,7 +1451,15 @@ require("nvim-autopairs").setup({})
 -- [[ TODO-COMMENTS ]] --------------------------------------------------------
 
 -- <leader>st / <leader>sT drive :TodoQuickFix; search needs plenary.
-require("todo-comments").setup({})
+-- Defaults require the colon directly after the keyword, which misses the
+-- Google-style `TODO(username):` form. Allow an optional parenthetical between
+-- keyword and colon. The parenthetical is a non-capturing group so the keyword
+-- stays capture group 1 (todo-comments reads that for the tag/icon). Plain
+-- `TODO:` still matches. Highlight is Vim regex; search is ripgrep regex.
+require("todo-comments").setup({
+	highlight = { pattern = [[.*<(KEYWORDS)%(%(\([^)]*\))?)\s*:]] },
+	search = { pattern = [[\b(KEYWORDS)(\([^)]*\))?:]] },
+})
 
 -- [[ TROUBLE ]] --------------------------------------------------------------
 
