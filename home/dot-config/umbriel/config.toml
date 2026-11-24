@@ -126,15 +126,15 @@ hide_when_typing = false
 hide_timeout_ms = 0
 
 [input.focus]
-follows_mouse = false
+follows_mouse = "off"
 
 # ─────────────────────────────── Keybinds ───────────────────────────────────
 
 [keybinds]
 
 # ── Applications and session ──────────────────────────────────────────────────
-"Mod+Return" = "spawn:zellij terminal"
-"Mod+Backslash" = "spawn:firefox"
+"Mod+Return" = "spawn zellij terminal"
+"Mod+Backslash" = "spawn firefox"
 "Mod+Shift+Q" = "window-close"
 "Mod+Shift+C" = "config-reload"
 "Mod+Shift+E" = "session-quit"
@@ -143,9 +143,9 @@ follows_mouse = false
 "Mod+Shift+Escape" = { action = "shortcuts-inhibit-toggle", allow_when_inhibited = true, repeat = false }
 
 # ── Noctalia shell integration ────────────────────────────────────────────────
-"Mod+Space" = "spawn:noctalia msg panel-toggle launcher"
-"Mod+N" = "spawn:noctalia msg panel-toggle control-center"
-"Mod+M" = "spawn:noctalia msg panel-toggle control-center media"
+"Mod+Space" = "spawn noctalia msg panel-toggle launcher"
+"Mod+N" = "spawn noctalia msg panel-toggle control-center"
+"Mod+M" = "spawn noctalia msg panel-toggle control-center media"
 # Windows+L-ish: blank the displays (DPMS off) instead of suspending.
 # The OLED sees the panel "not in use" and runs its refresh; the system stays
 # awake and every program keeps running. Move the mouse or press a key to wake.
@@ -174,45 +174,45 @@ follows_mouse = false
 # ── Window state ──────────────────────────────────────────────────────────────
 "Mod+F" = "window-toggle-fullscreen"
 "Mod+V" = "window-toggle-floating"
-"Mod+E" = "workspace-set-layout:toggle"
+"Mod+E" = "workspace-set-layout toggle"
 
 # Overview (umbriel-native)
 "Mod+O" = { action = "overview-toggle", repeat = false }
 
 # ── Resize submap ───────────────────────
-"Mod+R" = { action = "submap:resize", repeat = false }
-"submap[resize],H" = "window-modify-primary-extent:-0.05"
-"submap[resize],L" = "window-modify-primary-extent:0.05"
-"submap[resize],K" = "window-modify-secondary-extent:-0.05"
-"submap[resize],J" = "window-modify-secondary-extent:0.05"
-"submap[resize],Left" = "window-modify-primary-extent:-0.05"
-"submap[resize],Right" = "window-modify-primary-extent:0.05"
-"submap[resize],Up" = "window-modify-secondary-extent:-0.05"
-"submap[resize],Down" = "window-modify-secondary-extent:0.05"
-"submap[resize],Return" = "submap:reset"
-"submap[resize],Escape" = "submap:reset"
+"Mod+R" = { action = "submap resize", repeat = false }
+"submap[resize],H" = "window-modify-primary-extent -0.05"
+"submap[resize],L" = "window-modify-primary-extent 0.05"
+"submap[resize],K" = "window-modify-secondary-extent -0.05"
+"submap[resize],J" = "window-modify-secondary-extent 0.05"
+"submap[resize],Left" = "window-modify-primary-extent -0.05"
+"submap[resize],Right" = "window-modify-primary-extent 0.05"
+"submap[resize],Up" = "window-modify-secondary-extent -0.05"
+"submap[resize],Down" = "window-modify-secondary-extent 0.05"
+"submap[resize],Return" = "submap reset"
+"submap[resize],Escape" = "submap reset"
 
 # ── Workspaces ────────────────────────────────────────────────────────────────
-"Mod+1" = "workspace-switch:1"
-"Mod+2" = "workspace-switch:2"
-"Mod+3" = "workspace-switch:3"
-"Mod+4" = "workspace-switch:4"
-"Mod+5" = "workspace-switch:5"
-"Mod+6" = "workspace-switch:6"
-"Mod+7" = "workspace-switch:7"
-"Mod+8" = "workspace-switch:8"
-"Mod+9" = "workspace-switch:9"
-"Mod+0" = "workspace-switch:10"
-"Mod+Shift+1" = "window-move-to-workspace:1"
-"Mod+Shift+2" = "window-move-to-workspace:2"
-"Mod+Shift+3" = "window-move-to-workspace:3"
-"Mod+Shift+4" = "window-move-to-workspace:4"
-"Mod+Shift+5" = "window-move-to-workspace:5"
-"Mod+Shift+6" = "window-move-to-workspace:6"
-"Mod+Shift+7" = "window-move-to-workspace:7"
-"Mod+Shift+8" = "window-move-to-workspace:8"
-"Mod+Shift+9" = "window-move-to-workspace:9"
-"Mod+Shift+0" = "window-move-to-workspace:10"
+"Mod+1" = "workspace-switch 1"
+"Mod+2" = "workspace-switch 2"
+"Mod+3" = "workspace-switch 3"
+"Mod+4" = "workspace-switch 4"
+"Mod+5" = "workspace-switch 5"
+"Mod+6" = "workspace-switch 6"
+"Mod+7" = "workspace-switch 7"
+"Mod+8" = "workspace-switch 8"
+"Mod+9" = "workspace-switch 9"
+"Mod+0" = "workspace-switch 10"
+"Mod+Shift+1" = "window-move-to-workspace 1"
+"Mod+Shift+2" = "window-move-to-workspace 2"
+"Mod+Shift+3" = "window-move-to-workspace 3"
+"Mod+Shift+4" = "window-move-to-workspace 4"
+"Mod+Shift+5" = "window-move-to-workspace 5"
+"Mod+Shift+6" = "window-move-to-workspace 6"
+"Mod+Shift+7" = "window-move-to-workspace 7"
+"Mod+Shift+8" = "window-move-to-workspace 8"
+"Mod+Shift+9" = "window-move-to-workspace 9"
+"Mod+Shift+0" = "window-move-to-workspace 10"
 
 # ── Scratchpad ────────────────────────────────────────────────────────────────
 "Mod+Shift+Space" = "window-move-to-scratchpad"
@@ -220,17 +220,17 @@ follows_mouse = false
 "Mod+Tab" = "scratchpad-focus-next"
 
 # ── Media keys ───────────────
-"XF86AudioMute" = { action = "spawn:pactl set-sink-mute @DEFAULT_SINK@ toggle", allow_when_locked = true }
-"XF86AudioLowerVolume" = { action = "spawn:pactl set-sink-volume @DEFAULT_SINK@ -5%", allow_when_locked = true }
-"XF86AudioRaiseVolume" = { action = "spawn:pactl set-sink-volume @DEFAULT_SINK@ +5%", allow_when_locked = true }
-"XF86AudioPlay" = { action = "spawn:spotify_player playback play-pause", allow_when_locked = true }
-"XF86AudioPrev" = { action = "spawn:spotify_player playback previous", allow_when_locked = true }
-"XF86AudioNext" = { action = "spawn:spotify_player playback next", allow_when_locked = true }
-"XF86MonBrightnessDown" = { action = "spawn:brightnessctl set 5%-", allow_when_locked = true }
-"XF86MonBrightnessUp" = { action = "spawn:brightnessctl set 5%+", allow_when_locked = true }
+"XF86AudioMute" = { action = "spawn pactl set-sink-mute @DEFAULT_SINK@ toggle", allow_when_locked = true }
+"XF86AudioLowerVolume" = { action = "spawn pactl set-sink-volume @DEFAULT_SINK@ -5%", allow_when_locked = true }
+"XF86AudioRaiseVolume" = { action = "spawn pactl set-sink-volume @DEFAULT_SINK@ +5%", allow_when_locked = true }
+"XF86AudioPlay" = { action = "spawn spotify_player playback play-pause", allow_when_locked = true }
+"XF86AudioPrev" = { action = "spawn spotify_player playback previous", allow_when_locked = true }
+"XF86AudioNext" = { action = "spawn spotify_player playback next", allow_when_locked = true }
+"XF86MonBrightnessDown" = { action = "spawn brightnessctl set 5%-", allow_when_locked = true }
+"XF86MonBrightnessUp" = { action = "spawn brightnessctl set 5%+", allow_when_locked = true }
 
 # ── Screenshot ────────────────────────────────────────────────────────────────
-"Mod+Shift+S" = "spawn:sh -c 'grim -g \"$(slurp)\" - | wl-copy'"
+"Mod+Shift+S" = "spawn sh -c 'grim -g \"$(slurp)\" - | wl-copy'"
 
 # ─────────────────────────────── Layout ─────────────────────────────────────
 
@@ -387,7 +387,7 @@ action = "overview-toggle"
 [hot_corners.bottom_right]
 enabled = false
 delay_ms = 500
-action = "spawn:notify-send 'Bottom right'"
+action = "spawn notify-send 'Bottom right'"
 
 # ─────────────────────── Security Context Rules ─────────────────────────────
 
