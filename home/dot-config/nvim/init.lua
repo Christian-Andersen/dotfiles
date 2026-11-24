@@ -1307,6 +1307,10 @@ end, { desc = "Format, save, next diagnostic" })
 
 -- No alphabetization requirement for env files.
 require("lint").linters.dotenv_linter.args = { "check", "--quiet", "--ignore-checks", "UnorderedKey" }
+-- MD013 (line-length) never reaches the UI; it is dropped in the diagnostic
+-- sink below. markdownlint-cli2 has no per-rule CLI flag, and a project's own
+-- config replaces any config file we pass, so nothing in init.lua can turn the
+-- rule off reliably.
 require("lint").linters_by_ft = {
 	javascript = { "oxlint" },
 	typescript = { "oxlint" },
@@ -1505,10 +1509,15 @@ end
 -- [[ LSP ]] ------------------------------------------------------------------
 
 -- ty emits hint-level notes that duplicate real diagnostics; filter them out.
+-- MD013 (line-length) is dropped here too, regardless of which source publishes
+-- it, so a project markdownlint config cannot bring it back.
 local original_diagnostic_set = vim.diagnostic.set
 ---@diagnostic disable-next-line: duplicate-set-field
 vim.diagnostic.set = function(ns, bufnr, diagnostics, opts)
 	local filtered = vim.tbl_filter(function(d)
+		if d.message and d.message:find("MD013", 1, true) then
+			return false
+		end
 		return not (d.source == "ty" and d.severity == vim.diagnostic.severity.HINT)
 	end, diagnostics)
 	original_diagnostic_set(ns, bufnr, filtered, opts)
